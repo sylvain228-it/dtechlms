@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class AdminEtudiantsController extends Controller
+{
+    public function index()
+    {
+        return inertia('admin/etudiants/index');
+    }
+}

@@ -1,0 +1,64 @@
+// import {
+//     DropdownMenuGroup,
+//     DropdownMenuItem,
+//     DropdownMenuLabel,
+//     DropdownMenuSeparator,
+// } from '@/components/ui/dropdown-menu';
+// import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
+// import { logout } from '@/routes';
+// import { edit } from '@/routes/profile';
+// import { type Admin } from '@/types';
+// import { Link, router } from '@inertiajs/react';
+// import { LogOut, Settings } from 'lucide-react';
+// import { AdminInfo } from './admin-info';
+
+// interface AdminMenuContentProps {
+//     admin: Admin;
+// }
+
+// export function AdminMenuContent({ admin }: AdminMenuContentProps) {
+//     const cleanup = useMobileNavigation();
+
+//     const handleLogout = () => {
+//         cleanup();
+//         router.flushAll();
+//     };
+
+//     return (
+//         <>
+//             <DropdownMenuLabel className="p-0 font-normal">
+//                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+//                     <AdminInfo admin={admin} showEmail={true} />
+//                 </div>
+//             </DropdownMenuLabel>
+//             <DropdownMenuSeparator />
+//             <DropdownMenuGroup>
+//                 <DropdownMenuItem asChild>
+//                     <Link
+//                         className="block w-full"
+//                         href={edit()}
+//                         as="button"
+//                         prefetch
+//                         onClick={cleanup}
+//                     >
+//                         <Settings className="mr-2" />
+//                         Paramètres
+//                     </Link>
+//                 </DropdownMenuItem>
+//             </DropdownMenuGroup>
+//             <DropdownMenuSeparator />
+//             <DropdownMenuItem asChild>
+//                 <Link
+//                     className="block w-full"
+//                     href={logout()}
+//                     as="button"
+//                     onClick={handleLogout}
+//                     data-test="logout-button"
+//                 >
+//                     <LogOut className="mr-2 text-red-700" />
+//                     Se déconnecter
+//                 </Link>
+//             </DropdownMenuItem>
+//         </>
+//     );
+// }
