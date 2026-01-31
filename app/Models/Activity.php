@@ -28,6 +28,14 @@ class Activity extends Model
     {
         return $this->hasMany(Submission::class);
     }
+    public function quiz()
+    {
+        return $this->hasOne(Quiz::class);
+    }
+    public function evaluation()
+    {
+        return $this->hasOne(Evaluation::class);
+    }
     public function resources()
     {
         return $this->morphMany(EntityResource::class, 'entitytable');

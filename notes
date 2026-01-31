@@ -6,3 +6,50 @@
 
 http://192.168.144.1:8000
 
+
+
+Tu es un développeur front-end senior.
+
+Génère une page complète de quiz fonctionnelle.
+
+Exigences fonctionnelles :
+
+Afficher un quiz composé de plusieurs questions.
+
+Les questions doivent être affichées une par page, avec :
+
+boutons Suivant / Précédent
+
+indicateur de progression (ex : Question 3 / 10)
+
+Chaque question peut avoir :
+
+une seule réponse possible (radio)
+
+ou plusieurs réponses possibles (checkbox)
+
+Les réponses sélectionnées doivent être sauvegardées automatiquement dans le stockage local du navigateur.
+
+Le temps écoulé du quiz doit être chronométré et enregistré localement.
+
+Si la page est rafraîchie ou fermée, l’étudiant doit reprendre exactement là où il s’est arrêté (question courante, réponses, temps).
+
+Ajouter un bouton « Envoyer » à la fin du quiz :
+
+envoie les réponses + le temps via une requête HTTP (POST) vers une API
+
+après succès, supprime les données locales
+
+affiche un message de confirmation
+
+Contraintes techniques :
+
+Code clair, structuré et commenté
+
+Séparer la logique (state, timer, navigation, API)
+
+Données :
+
+Simuler un tableau JSON de questions (id, titre, choix, type de réponse)
+
+Génère le code complet et prêt à l’emploi.

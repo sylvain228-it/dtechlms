@@ -27,7 +27,6 @@ export default function StudentActivityDetails() {
         activity.scope == 'course' && activity.course_id != null
             ? activity.course
             : null;
-
     return (
         <StudentLayouts title={`Détails activité ${activity.title}`}>
             <div className="sticky top-[56px] z-30 border-b border-l-2 border-blue-900 bg-white shadow-sm">
@@ -45,7 +44,7 @@ export default function StudentActivityDetails() {
                         </h2>
                         <div
                             onClick={() => history.back()}
-                            className="cursor-pointer rounded-sm border px-5 py-1 text-2xl"
+                            className="inline-block h-10 cursor-pointer rounded-sm border px-5 py-1 text-2xl"
                         >
                             <ArrowRight size={30} className="text-gray-600" />
                         </div>
@@ -91,10 +90,11 @@ export default function StudentActivityDetails() {
                                 className="text-blue-400"
                             >
                                 {sequence?.title ?? 'Séquence'}
-                            </Link>
+                            </Link>{' '}
+                            <span>/</span>
                         </span>
                     )}
-                    /
+
                     <span className="text-md mt-1 font-semibold text-gray-600">
                         {activity.title}
                     </span>

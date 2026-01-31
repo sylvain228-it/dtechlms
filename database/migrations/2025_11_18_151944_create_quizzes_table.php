@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
-            // Rattachement pédagogique
-            $table->morphs('quizzable'); // Course | Module | Sequence | Activity
 
             $table->foreignId('parent_course_id')->constrained('courses')->cascadeOnDelete();
             $table->foreignId('activity_id')->constrained('activities')->cascadeOnDelete();
@@ -50,7 +48,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['quizzable_type', 'quizzable_id', 'slug']);
+            $table->unique(['slug']);
         });
     }
 

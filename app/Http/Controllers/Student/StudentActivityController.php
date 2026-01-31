@@ -27,13 +27,24 @@ class StudentActivityController extends Controller
     {
         $courseIds = $this->studentsCoursesIds();
         $activity = Activity::whereIn('parent_course_id', $courseIds)->where('slug', $slug)->firstOrFail();
-        if ($activity->module_id != null && $activity->scope == "module") {
-            $activity = Activity::with(['resources.resource', 'module'])->whereIn('parent_course_id', $courseIds)->where('slug', $slug)->firstOrFail();
-        } else if ($activity->sequence_id != null && $activity->scope == "sequence") {
-            $activity = Activity::with(['resources.resource', 'sequence.module'])->whereIn('parent_course_id', $courseIds)->where('slug', $slug)->firstOrFail();
-        } else {
-            $activity = Activity::with(['resources.resource', 'course'])->whereIn('parent_course_id', $courseIds)->where('slug', $slug)->firstOrFail();
+        $related = ['resources.resource'];
+
+        if (in_array($activity->activity_type, ['quiz', 'assessment'], true)) {
+            $related[] = 'quiz';
+            $related[] = 'evaluation';
         }
+
+        if ($activity->module_id !== null && $activity->scope === 'module') {
+            $related[] = 'module';
+        } elseif ($activity->sequence_id !== null && $activity->scope === 'sequence') {
+            $related[] = 'sequence.module';
+        } else {
+            $related[] = 'course';
+        }
+
+        $related = array_values(array_unique($related));
+        $activity = Activity::with($related)->whereIn('parent_course_id', $courseIds)->where('slug', $slug)->firstOrFail();
+        // dd($activity);
         return Inertia::render('students/activities/details', [
             'activity' => $activity,
             'current_course' => $activity->parentCourse

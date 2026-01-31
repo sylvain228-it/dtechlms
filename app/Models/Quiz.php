@@ -32,6 +32,14 @@ class Quiz extends Model
     {
         return $this->belongsTo(Course::class);
     }
+    public function parentCourse()
+    {
+        return $this->belongsTo(Course::class, 'parent_course_id');
+    }
+    public function activity()
+    {
+        return $this->belongsTo(Activity::class);
+    }
 
     protected $fillable = [
         'title',

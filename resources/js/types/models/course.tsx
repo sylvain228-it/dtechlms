@@ -14,7 +14,7 @@ import {
     SequenceType,
 } from '@/lib/type';
 import { InstitutProfileProps, Student, Teacher } from './institut';
-import { EntityResource } from './others';
+import { EntityResource, Evaluation, Quiz } from './others';
 
 export interface Domaine {
     id: number;
@@ -375,6 +375,8 @@ export interface CourseActivity {
     course?: Course | null;
     parent_course?: Course | null;
     resources?: EntityResource[] | null;
+    quiz?: Quiz | null;
+    evaluation?: Evaluation | null;
 
     // Index signature pour champs non anticipés
     [key: string]: unknown;

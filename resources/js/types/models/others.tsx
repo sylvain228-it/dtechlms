@@ -13,6 +13,7 @@ import {
     SaveStatus,
     StorageType,
 } from '@/lib/type';
+import { CourseActivity } from './course';
 import { Skill } from './skill';
 
 export interface Prerequisite {
@@ -142,9 +143,8 @@ export interface Quiz {
     updated_at?: string;
     // Versioning
     version: number;
-
-    quizzable_type: string;
-    quizzable_id: number;
+    questions?: QuizQuestion[] | [];
+    activity?: CourseActivity | null;
 }
 
 export interface QuizQuestion {
@@ -166,6 +166,7 @@ export interface QuizQuestion {
     // Feedback
     feedback_correct?: string | null;
     feedback_incorrect?: string | null;
+    answers?: QuizAnswer[] | [];
     created_at?: string;
     updated_at?: string;
 }
@@ -253,6 +254,7 @@ export interface Evaluation {
     // Métadonnées
     language: string;
     published_at?: string | null;
+    activity?: CourseActivity | null;
 
     // Timestamps
     created_at?: string;

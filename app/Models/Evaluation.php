@@ -121,6 +121,10 @@ class Evaluation extends Model
     {
         return $this->belongsTo(Course::class);
     }
+    public function parentCourse()
+    {
+        return $this->belongsTo(Course::class, 'parent_course_id');
+    }
     public function evaluationCriterias()
     {
         return $this->hasMany(EvaluationCriteria::class);
@@ -148,5 +152,9 @@ class Evaluation extends Model
     public function quizzes()
     {
         return $this->morphMany(Quiz::class, 'quizzable');
+    }
+    public function activity()
+    {
+        return $this->belongsTo(Activity::class);
     }
 }

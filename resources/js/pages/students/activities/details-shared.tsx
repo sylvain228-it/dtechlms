@@ -15,10 +15,12 @@ import {
     formatCompleteDate,
     formatMinutes,
 } from '@/lib/utils';
+import { details as quizeDetails } from '@/routes/students/quizzes';
 import { CourseActivity } from '@/types/models/course';
 import { EntityResource, Resource } from '@/types/models/others';
+import { Link } from '@inertiajs/react';
 import { Separator } from '@radix-ui/react-separator';
-import { Download } from 'lucide-react';
+import { ArrowRight, Download } from 'lucide-react';
 
 export default function ActivityDetailsShered({
     activity,
@@ -31,6 +33,17 @@ export default function ActivityDetailsShered({
     const canRequiredAttendance =
         activity.activity_type == 'lecture' ||
         activity.activity_type == 'discussion';
+
+    const quiz =
+        activity.activity_type == 'quiz' ||
+        activity.activity_type == 'assessment'
+            ? activity.quiz
+            : null;
+    const evaluation =
+        activity.activity_type == 'quiz' ||
+        activity.activity_type == 'assessment'
+            ? activity.evaluation
+            : null;
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
             {/* Main Content */}
@@ -242,6 +255,57 @@ export default function ActivityDetailsShered({
                                             )}
                                         </div>
                                     </div>
+
+                                    {quiz && (
+                                        <div className="my-5 border-b border-gray-200 bg-gray-50 p-6 shadow-sm">
+                                            <Separator className="my-3" />
+                                            <div className="grid gap-4 md:grid-cols-2">
+                                                <div>
+                                                    <div className="text-sm text-gray-500">
+                                                        {activity.is_evaluated
+                                                            ? 'Evaluation quize'
+                                                            : 'Quize'}
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <div className="text-sm text-gray-500">
+                                                        Seuil de succès
+                                                    </div>
+                                                    <div className="mt-1 text-sm font-bold text-gray-900">
+                                                        {quiz.success_threshold ??
+                                                            '-'}
+                                                        {activity.note_unit}
+                                                    </div>
+                                                </div>
+                                                <div className="md:col-span-2">
+                                                    <div className="text-sm text-gray-500">
+                                                        Titre
+                                                    </div>
+                                                    <div className="text-md mt-1 font-bold text-gray-600">
+                                                        <Link
+                                                            href={quizeDetails(
+                                                                quiz.slug,
+                                                            )}
+                                                        >
+                                                            {quiz.title}
+                                                        </Link>
+                                                    </div>
+                                                    <div className="text-md mt-4 font-bold text-blue-600">
+                                                        <Link
+                                                            className="btn-primary flex max-w-[300px] items-center justify-center gap-2"
+                                                            href={quizeDetails(
+                                                                quiz.slug,
+                                                            )}
+                                                        >
+                                                            Détails du quiz
+                                                            <ArrowRight />
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                     <Divider />
                                     {activity.resources_summary && (
                                         <div>
@@ -267,7 +331,7 @@ export default function ActivityDetailsShered({
 
                     {/* Right: Resources Sidebar */}
                     <div className="lg:col-span-1">
-                        <div className="sticky top-24 overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:shadow-lg">
+                        <div className="sticky top-32 overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:shadow-lg">
                             <div className="p-6">
                                 <h4 className="text-sm font-semibold text-gray-700">
                                     Planification
