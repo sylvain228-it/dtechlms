@@ -23,6 +23,7 @@ class StoreOrUpdateQuizRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'activity_id' => ['required', 'exists:activities,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'quize_instructions' => ['nullable', 'string'],

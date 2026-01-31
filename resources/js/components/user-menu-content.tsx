@@ -7,12 +7,11 @@ import {
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes/auth';
-import { edit } from '@/routes/profile';
+import { index as settings } from '@/routes/auth/settings';
 import { type User } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
 import React from 'react';
-
 interface UserMenuContentProps {
     user: User;
 }
@@ -26,7 +25,6 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
         router.flushAll();
         router.post(logout(), { _method: 'post' });
     };
-
     return (
         <>
             <DropdownMenuLabel className="p-0 font-normal">
@@ -39,7 +37,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                 <DropdownMenuItem asChild>
                     <Link
                         className="block w-full"
-                        href={edit()}
+                        href={settings()}
                         as="button"
                         prefetch
                         onClick={cleanup}

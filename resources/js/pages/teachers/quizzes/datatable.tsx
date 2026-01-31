@@ -20,12 +20,7 @@ import {
 } from '@/components/ui/table';
 import { subStrText } from '@/lib/tasks';
 import { getQuizeTypeLabel } from '@/lib/type';
-import {
-    createEntityQuize,
-    destroyEntityQuize,
-    editEntityQuize,
-    showEntityQuize,
-} from '@/routes/teachers/quizzes';
+import { destroy, edit, show } from '@/routes/teachers/quizzes';
 import { index as listQuest } from '@/routes/teachers/quizzes/questions';
 import { Quiz as QuizeMod } from '@/types/models/others';
 import { Link, router } from '@inertiajs/react';
@@ -45,7 +40,6 @@ import { ArrowRight, ChevronDown, MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { FcViewDetails } from 'react-icons/fc';
-import { IoAdd } from 'react-icons/io5';
 import { MdDelete } from 'react-icons/md';
 
 export const columns: ColumnDef<QuizeMod>[] = [
@@ -87,18 +81,11 @@ export const columns: ColumnDef<QuizeMod>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const quize = row.original;
-            const quizType =
-                quize.quizzable_type.split('\\').pop()?.toLocaleLowerCase() ??
-                '';
             function handleDelete(e: React.MouseEvent) {
                 e.preventDefault();
                 if (confirm('Êtes-vous sûr de vouloir supprimer ce quize ?')) {
                     router.delete(
-                        destroyEntityQuize([
-                            quize.id,
-                            quizType,
-                            quize.quizzable_id,
-                        ]),
+                        destroy([quize?.activity?.id ?? '', quize.id]),
                     );
                 }
             }
@@ -129,10 +116,9 @@ export const columns: ColumnDef<QuizeMod>[] = [
                             </DropdownMenuItem>
                         </Link>
                         <Link
-                            href={showEntityQuize([
+                            href={show([
+                                quize?.activity?.slug ?? '',
                                 quize.slug,
-                                quizType,
-                                quize.quizzable_id,
                             ])}
                         >
                             <DropdownMenuItem>
@@ -143,10 +129,9 @@ export const columns: ColumnDef<QuizeMod>[] = [
                             </DropdownMenuItem>
                         </Link>
                         <Link
-                            href={editEntityQuize([
+                            href={edit([
+                                quize?.activity?.slug ?? '',
                                 quize.slug,
-                                quizType,
-                                quize.quizzable_id,
                             ])}
                         >
                             <DropdownMenuItem>
@@ -171,14 +156,8 @@ export const columns: ColumnDef<QuizeMod>[] = [
 
 type Props = {
     quizzes: QuizeMod[];
-    entity_type: string;
-    entity_id: number;
 };
-export default function QuizzesDataTable({
-    entity_type,
-    entity_id,
-    quizzes,
-}: Props) {
+export default function QuizzesDataTable({ quizzes }: Props) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
@@ -251,12 +230,6 @@ export default function QuizzesDataTable({
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <Link
-                    href={createEntityQuize([entity_type, entity_id])}
-                    className="btn-primary inline-block bg-app-blue !py-2 text-center text-white"
-                >
-                    Ajouter <IoAdd className="inline-block h-7 w-7" />
-                </Link>
             </div>
             <div className="overflow-hidden rounded-md border">
                 <Table>

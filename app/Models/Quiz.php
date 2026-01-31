@@ -42,6 +42,7 @@ class Quiz extends Model
     }
 
     protected $fillable = [
+        'activity_id',
         'title',
         'slug',
         'description',

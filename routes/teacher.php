@@ -55,34 +55,15 @@ Route::group(['prefix' => '/enseignants', 'middleware' => ['status.user', 'teach
     Route::get('dashboard', [TeacherDashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('mes-cours', [TeacherCoursManageController::class, 'courses'])->name('mycourses');
 
-    Route::group(['prefix' => '/{activity}/quizzes/', 'as' => 'quizzes.'], function () {
-        Route::get('/', [TeacherQuizeController::class, 'index'])->name('index');
-        Route::get('create', [TeacherQuizeController::class, 'create'])->name('create');
-        Route::post('store', [TeacherQuizeController::class, 'store'])->name('store');
-        Route::get('détails/{quiz}', [TeacherQuizeController::class, 'show'])->name('show');
-        Route::get('{quiz}/edit', [TeacherQuizeController::class, 'edit'])->name('edit');
-        Route::put('update/{quiz}', [TeacherQuizeController::class, 'update'])->name('update');
-        Route::delete('delete/{quiz}', [TeacherQuizeController::class, 'destroy'])->name('destroy');
-
+    Route::group(['prefix' => '/{activity}'], function () {
+        Route::resource('quizzes', TeacherQuizeController::class);
+    });
+    Route::group(['prefix' => '/{quiz}', 'as' => 'quizzes.'], function () {
         // quize questions
-        Route::group(['prefix' => '{quiz}/', 'as' => 'questions.'], function () {
-            Route::get('/', [TeacherQuizeQuestionController::class, 'index'])->name('index');
-            Route::get('create', [TeacherQuizeQuestionController::class, 'create'])->name('create');
-            Route::post('store', [TeacherQuizeQuestionController::class, 'store'])->name('store');
-            Route::get('détails/{id}', [TeacherQuizeQuestionController::class, 'show'])->name('show');
-            Route::get('edit/{id}', [TeacherQuizeQuestionController::class, 'edit'])->name('edit');
-            Route::put('update/{id}', [TeacherQuizeQuestionController::class, 'update'])->name('update');
-            Route::delete('delete/{id}', [TeacherQuizeQuestionController::class, 'destroy'])->name('destroy');
-        });
+        Route::resource('questions', TeacherQuizeQuestionController::class);
         // quize questions response
-        Route::group(['prefix' => '{quiz}/réponse/{question}/', 'as' => 'responses.'], function () {
-            Route::get('/', [TeacherQuestionResponseController::class, 'index'])->name('index');
-            Route::get('create', [TeacherQuestionResponseController::class, 'create'])->name('create');
-            Route::post('store', [TeacherQuestionResponseController::class, 'store'])->name('store');
-            Route::get('détails/{id}', [TeacherQuestionResponseController::class, 'show'])->name('show');
-            Route::get('edit/{id}', [TeacherQuestionResponseController::class, 'edit'])->name('edit');
-            Route::put('update/{id}', [TeacherQuestionResponseController::class, 'update'])->name('update');
-            Route::delete('delete/{id}', [TeacherQuestionResponseController::class, 'destroy'])->name('destroy');
+        Route::group(['prefix' => '/{question}'], function () {
+            Route::resource('responses', TeacherQuestionResponseController::class);
         });
     });
 
@@ -92,13 +73,7 @@ Route::group(['prefix' => '/enseignants', 'middleware' => ['status.user', 'teach
     });
 
     // evaluations
-    Route::group(['prefix' => '/{activity}/évaluations/', 'as' => 'evaluations.'], function () {
-        Route::get('', [TeacherEvaluationController::class, 'index'])->name('index');
-        Route::get('create/', [TeacherEvaluationController::class, 'create'])->name('create');
-        Route::post('store/', [TeacherEvaluationController::class, 'store'])->name('store');
-        Route::get('détails/{evaluation}/', [TeacherEvaluationController::class, 'show'])->name('show');
-        Route::get('{evaluation}/edit/', [TeacherEvaluationController::class, 'edit'])->name('edit');
-        Route::put('update/{evaluation}/', [TeacherEvaluationController::class, 'update'])->name('update');
-        Route::delete('delete/{evaluation}/', [TeacherEvaluationController::class, 'destroy'])->name('destroy');
+    Route::group(['prefix' => '/{activity}'], function () {
+        Route::resource('evaluations', TeacherEvaluationController::class);
     });
 });

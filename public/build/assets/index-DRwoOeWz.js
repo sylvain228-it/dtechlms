@@ -1,0 +1,1 @@
+import{q as r}from"./index-CMWG4mbA.js";const o=t=>({url:o.url(t),method:"post"});o.definition={methods:["post"],url:"/institut-login"};o.url=t=>o.definition.url+r(t);o.post=t=>({url:o.url(t),method:"post"});const s=t=>({action:o.url(t),method:"post"});s.post=t=>({action:o.url(t),method:"post"});o.form=s;const i={store:Object.assign(o,o)};export{i as l,o as s};

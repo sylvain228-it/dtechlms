@@ -1,5 +1,5 @@
 import { getStudyLevelLabel, StudyLevel } from '@/lib/type';
-import { destroy, edit } from '@/routes/geststudents';
+import { destroy, edit } from '@/routes/institut/students';
 import { Student } from '@/types/models/institut';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import PartnerStudentAssignUser from './assign-user';

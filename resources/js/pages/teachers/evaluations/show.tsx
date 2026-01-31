@@ -5,29 +5,23 @@ import {
     getEvaluateTypeLabel,
     getModalityTypeLabel,
     getPlateformeConferenceLabel,
+    getSaveStatusLabel,
 } from '@/lib/type';
 import { formatBooleanText, formatDate } from '@/lib/utils';
-import {
-    destroyEvaluation as destroy,
-    editEvaluation as edit,
-} from '@/routes/teachers/evaluations';
-import { entityQuizzes } from '@/routes/teachers/quizzes';
+import { destroy, edit } from '@/routes/teachers/evaluations';
 import { Evaluation } from '@/types/models/others';
 import { Link, router, usePage } from '@inertiajs/react';
-import { ArrowRight, Edit, Trash } from 'lucide-react';
+import { Edit, Trash } from 'lucide-react';
 
 type Props = {
     evaluation: Evaluation;
-    entity_type: string;
-    entity_id: number;
 };
 export default function TeacherEvaluationShow() {
-    const { entity_type, entity_id, evaluation } = usePage()
-        .props as unknown as Props;
+    const { evaluation } = usePage().props as unknown as Props;
 
     const handleDelete = () => {
         if (!confirm('Confirmer la suppression de cette évaluation ?')) return;
-        router.delete(destroy([evaluation.slug, entity_type, entity_id]));
+        router.delete(destroy([evaluation.activity?.id ?? '', evaluation.id]));
     };
 
     return (
@@ -76,9 +70,8 @@ export default function TeacherEvaluationShow() {
                     <div className="flex items-center gap-3">
                         <Link
                             href={edit([
+                                evaluation?.activity?.slug ?? '',
                                 evaluation.slug,
-                                entity_type,
-                                entity_id,
                             ])}
                             className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
                         >
@@ -455,29 +448,10 @@ export default function TeacherEvaluationShow() {
                                         Statut
                                     </div>
                                     <div className="mt-1 font-medium">
-                                        {getEvaluateTypeLabel(
+                                        {getSaveStatusLabel(
                                             evaluation.status,
                                         ) || '—'}
                                     </div>
-                                </div>
-
-                                <div>
-                                    <div className="text-xs text-gray-500">
-                                        Quiz associé
-                                    </div>
-                                    <Link
-                                        href={entityQuizzes([
-                                            'evaluation',
-                                            evaluation.id,
-                                        ])}
-                                    >
-                                        <div className="flex items-center gap-1">
-                                            <dt className="font-bold text-app-blue">
-                                                Liste/ajouter
-                                            </dt>
-                                            <ArrowRight className="text-app-blue" />
-                                        </div>
-                                    </Link>
                                 </div>
 
                                 <hr className="my-3" />

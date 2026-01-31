@@ -2,10 +2,7 @@ import { getQuizeTypeLabel, getSaveStatusLabel } from '@/lib/type';
 import { formatBooleanText, formatDate } from '@/lib/utils';
 
 import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
-import {
-    destroyEntityQuize as destroy,
-    editEntityQuize as edit,
-} from '@/routes/teachers/quizzes';
+import { destroy, edit } from '@/routes/teachers/quizzes';
 import { index as listQuizQuest } from '@/routes/teachers/quizzes/questions';
 import { Quiz } from '@/types/models/others';
 import { Link, router, usePage } from '@inertiajs/react';
@@ -14,16 +11,13 @@ import QuizQuestionFormDialog from './questions/add-question-dialog';
 
 type Props = {
     quize: Quiz;
-    entity_type: string;
-    entity_id: number;
 };
 export default function TeacherQuizeShow() {
-    const { entity_type, entity_id, quize } = usePage()
-        .props as unknown as Props;
+    const { quize } = usePage().props as unknown as Props;
 
     const handleDelete = () => {
         if (!confirm('Confirmer la suppression de ce quiz ?')) return;
-        router.delete(destroy([quize.id, entity_type, entity_id]));
+        router.delete(destroy([quize.activity?.id ?? '', quize.id]));
     };
 
     return (
@@ -62,7 +56,10 @@ export default function TeacherQuizeShow() {
 
                     <div className="flex items-center gap-3">
                         <Link
-                            href={edit([entity_type, entity_id, quize.slug])}
+                            href={edit([
+                                quize.activity?.slug ?? '',
+                                quize.slug,
+                            ])}
                             className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
                         >
                             <Edit size={16} /> Modifier

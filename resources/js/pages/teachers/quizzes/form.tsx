@@ -9,23 +9,23 @@ import { Spinner } from '@/components/ui/spinner';
 import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
 import { noteUnitLabels, quizeTypeLabels, QuizType } from '@/lib/type';
 import { store, update } from '@/routes/teachers/quizzes';
+import { CourseActivity } from '@/types/models/course';
 import { Quiz } from '@/types/models/others';
 import { router, useForm, usePage } from '@inertiajs/react';
 import React, { useState } from 'react';
 
 type Props = {
+    activity: CourseActivity;
     quize?: Quiz;
-    entity_type: string;
-    entity_id: number;
 };
 export default function QuizeForm() {
     // backend may return 'quize' prop
-    const { entity_type, entity_id, quize } = usePage()
-        .props as unknown as Props;
+    const { activity, quize } = usePage().props as unknown as Props;
     const isEdit = !!quize;
     const { errors } = usePage().props;
 
     const { data, setData, reset } = useForm({
+        activity_id: activity.id,
         title: quize?.title ?? '',
         description: quize?.description ?? '',
         quize_instructions: quize?.quize_instructions ?? '',
@@ -40,8 +40,6 @@ export default function QuizeForm() {
         show_correct_answers: quize?.show_correct_answers ?? false,
         max_score: quize?.max_score ?? null,
         success_threshold: quize?.success_threshold ?? null,
-        quizzable_type: entity_type,
-        quizzable_id: entity_id,
     });
 
     const [processing, setProcessing] = useState(false);
@@ -54,11 +52,11 @@ export default function QuizeForm() {
             _method: isEdit ? 'put' : 'post',
         };
         if (isEdit && quize?.id) {
-            router.put(update([quize.id, entity_type, entity_id]), payload, {
+            router.put(update([activity.id, quize.id]), payload, {
                 onFinish: onFinish,
             });
         } else {
-            router.post(store(), payload, {
+            router.post(store(activity.id), payload, {
                 onFinish: onFinish,
             });
         }

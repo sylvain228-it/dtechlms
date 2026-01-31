@@ -17,6 +17,7 @@ class StoreOrUpdateEvaluationRequest extends FormRequest
         return [
             // Relations
             'quiz_id' => ['nullable', 'exists:quizzes,id'],
+            'activity_id' => ['required', 'exists:activities,id'],
 
             // Identification
             'title' => ['required', 'string', 'max:255'],

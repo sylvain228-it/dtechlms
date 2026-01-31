@@ -20,12 +20,7 @@ import {
 } from '@/components/ui/table';
 import { subStrText } from '@/lib/tasks';
 import { getEvaluateTypeLabel } from '@/lib/type';
-import {
-    createEvaluation,
-    destroyEvaluation,
-    editEvaluation,
-    showEvaluation,
-} from '@/routes/teachers/evaluations';
+import { destroy, edit, show } from '@/routes/teachers/evaluations';
 import { Evaluation } from '@/types/models/others';
 import { Link, router } from '@inertiajs/react';
 import {
@@ -44,7 +39,6 @@ import { ChevronDown, MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { FcViewDetails } from 'react-icons/fc';
-import { IoAdd } from 'react-icons/io5';
 import { MdDelete } from 'react-icons/md';
 
 export const columns: ColumnDef<Evaluation>[] = [
@@ -86,19 +80,13 @@ export const columns: ColumnDef<Evaluation>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const evaluation = row.original;
-            const evaluable_type =
-                evaluation.evaluable_type
-                    .split('\\')
-                    .pop()
-                    ?.toLocaleLowerCase() ?? '';
             function handleDelete(e: React.MouseEvent) {
                 e.preventDefault();
                 if (confirm('Êtes-vous sûr de vouloir supprimer ce quize ?')) {
                     router.delete(
-                        destroyEvaluation([
+                        destroy([
+                            evaluation?.activity?.id ?? '',
                             evaluation.id,
-                            evaluable_type,
-                            evaluation.evaluable_id,
                         ]),
                     );
                 }
@@ -122,10 +110,9 @@ export const columns: ColumnDef<Evaluation>[] = [
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <Link
-                            href={showEvaluation([
+                            href={show([
+                                evaluation?.activity?.slug ?? '',
                                 evaluation.slug,
-                                evaluable_type,
-                                evaluation.evaluable_id,
                             ])}
                         >
                             <DropdownMenuItem>
@@ -136,10 +123,9 @@ export const columns: ColumnDef<Evaluation>[] = [
                             </DropdownMenuItem>
                         </Link>
                         <Link
-                            href={editEvaluation([
+                            href={edit([
+                                evaluation?.activity?.slug ?? '',
                                 evaluation.slug,
-                                evaluable_type,
-                                evaluation.evaluable_id,
                             ])}
                         >
                             <DropdownMenuItem>
@@ -164,14 +150,8 @@ export const columns: ColumnDef<Evaluation>[] = [
 
 type Props = {
     evaluations: Evaluation[];
-    entity_type: string;
-    entity_id: number;
 };
-export default function EvaluationsDataTable({
-    entity_type,
-    entity_id,
-    evaluations,
-}: Props) {
+export default function EvaluationsDataTable({ evaluations }: Props) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
@@ -201,7 +181,7 @@ export default function EvaluationsDataTable({
     return (
         <div className="w-full">
             <div className="mb-3 flex flex-col justify-between gap-2 lg:flex-row lg:gap-4">
-                <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
                     <Input
                         placeholder="Filtrer par titre..."
                         value={
@@ -244,12 +224,6 @@ export default function EvaluationsDataTable({
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <Link
-                    href={createEvaluation([entity_type, entity_id])}
-                    className="btn-primary inline-block bg-app-blue !py-2 text-center text-white"
-                >
-                    Ajouter <IoAdd className="inline-block h-7 w-7" />
-                </Link>
             </div>
             <div className="overflow-hidden rounded-md border">
                 <Table>

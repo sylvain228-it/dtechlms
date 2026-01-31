@@ -14,10 +14,12 @@ export default function TeacherQuizzesIndex() {
         <TeacherLayouts
             title={`Liste des réponse pour : ${question.question_text}`}
         >
-            <div className="my-2 flex justify-center border bg-gray-50 p-1 text-center">
-                <b>Quize : </b> <span>{question.quize?.title}</span> /
-                <b> {question.question_text} </b>
-            </div>
+            {quiz_quest_answers.length > 0 && (
+                <div className="my-2 flex justify-center border bg-gray-50 p-1 text-center">
+                    <b>Quize : </b> <span>{question.quize?.title}</span> /
+                    <b> {question.question_text} </b>
+                </div>
+            )}
             <QuestResponsesDataTable
                 questAnswers={quiz_quest_answers}
                 question={question}

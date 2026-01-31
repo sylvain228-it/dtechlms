@@ -18,26 +18,24 @@ import {
     noteUnitLabels,
     plateformeConferenceLabels,
 } from '@/lib/type';
-import {
-    storeEvaluation,
-    updateEvaluation,
-} from '@/routes/teachers/evaluations';
+import { store, update } from '@/routes/teachers/evaluations';
+import { CourseActivity } from '@/types/models/course';
 import { Evaluation } from '@/types/models/others';
 import { router, useForm, usePage } from '@inertiajs/react';
 import React, { useState } from 'react';
 
 type Props = {
+    activity: CourseActivity;
     evaluation?: Evaluation;
-    entity_type: string;
-    entity_id: number;
     c_modality: ModalityType;
 };
 export default function EvaluationForm() {
-    const { entity_type, entity_id, evaluation, c_modality } = usePage()
+    const { activity, evaluation, c_modality } = usePage()
         .props as unknown as Props;
     const isEdit = !!evaluation;
     const { errors } = usePage().props;
     const { data, setData, reset } = useForm({
+        activity_id: activity.id,
         // Identification
         title: evaluation?.title ?? '',
         description: evaluation?.description ?? '',
@@ -99,10 +97,6 @@ export default function EvaluationForm() {
 
         // Métadonnées
         language: evaluation?.language ?? 'fr',
-
-        // Relations
-        quizzable_type: entity_type,
-        quizzable_id: entity_id,
     });
 
     const [processing, setProcessing] = useState(false);
@@ -116,15 +110,11 @@ export default function EvaluationForm() {
             _method: isEdit ? 'put' : 'post',
         };
         if (isEdit && evaluation?.id) {
-            router.put(
-                updateEvaluation([evaluation.id, entity_type, entity_id]),
-                payload,
-                {
-                    onFinish: onFinish,
-                },
-            );
+            router.put(update([activity.id, evaluation.id]), payload, {
+                onFinish: onFinish,
+            });
         } else {
-            router.post(storeEvaluation([entity_type, entity_id]), payload, {
+            router.post(store(activity.id), payload, {
                 onFinish: onFinish,
             });
         }
