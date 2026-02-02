@@ -36,23 +36,21 @@ export default function PasswordRequest() {
             className="flex min-h-screen items-center justify-center"
             style={bgStyle}
         >
-            <div className="w-full max-w-md bg-white p-8 shadow-md sm:rounded-2xl">
-                <h2 className="text-gray mb-6 text-center text-2xl font-bold">
+            <div className="w-full max-w-md bg-white p-8 shadow-md sm:rounded-2xl dark:bg-gray-800">
+                <h2 className="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-gray-200">
                     Réinitialiser votre mot de passe
                 </h2>
 
                 <DisplayFlashMsg />
                 <form onSubmit={submit} className="space-y-5">
-                    <div>
-                        <InputField
-                            value={data.login}
-                            onChange={(val) => setData('login', val)}
-                            label="Identifiant"
-                            placeholder="Adresse email, numéro ou identifiant"
-                            required
-                            error={errors.email}
-                        />
-                    </div>
+                    <InputField
+                        value={data.login}
+                        onChange={(val) => setData('login', val)}
+                        label="Identifiant"
+                        placeholder="Adresse email, numéro ou identifiant"
+                        required
+                        error={errors.email}
+                    />
 
                     <div className="flex items-center gap-3">
                         <Button

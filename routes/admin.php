@@ -20,7 +20,7 @@ Route::group(['prefix' => '/dpanel', 'middleware' => ['auth.admin'], 'as' => 'ad
     Route::get('/etudiants', [AdminEtudiantsController::class, 'index'])->name('etudiants');
     Route::resource('domaines', AdminDomaineController::class);
 });
-Route::group(['as' => 'admin.', 'middleware' => ['guest']], function () {
+Route::group(['as' => 'admin.', 'middleware' => ['guest.custom']], function () {
     Route::get('/dpanel-login', [AdminLoginController::class, 'showLoginForm'])->name('login');
     Route::post('/dpanel-login', [AdminLoginController::class, 'login'])->name('login.store');
     Route::post('/dpanel-logout', [AdminLoginController::class, 'logout'])->name('logout');

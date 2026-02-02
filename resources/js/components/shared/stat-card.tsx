@@ -13,12 +13,12 @@ export function StatCard({
     href?: string;
 }) {
     return (
-        <div className="flex items-center gap-4 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+        <div className="flex items-center gap-4 rounded-lg bg-white p-6 shadow-sm dark:bg-cdcard">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-200">
                 {children}
             </div>
             <div className="w-full">
-                <div className="flex w-full justify-between gap-3 text-sm text-gray-500">
+                <div className="flex w-full justify-between gap-3 text-sm text-gray-500 dark:text-gray-300">
                     {href ? <Link href={href}>{title}</Link> : title}
 
                     {href && (

@@ -91,7 +91,14 @@ export default function QuizeForm() {
                         Enregistrer
                     </Button>
                 </div>
-
+                <div className="my-4 border-l-2 border-cblue p-3">
+                    <h4 className=" ">
+                        <span className="capitalize">Quiz</span> pour l'activité{' '}
+                        <b>
+                            <i>{activity.title}</i>
+                        </b>
+                    </h4>
+                </div>
                 <form
                     onSubmit={submitForm}
                     className="rounded-lg border bg-white p-6 shadow"

@@ -18,7 +18,7 @@ export default function CourseDetailstPage() {
     return (
         <PublicLayout>
             <div>
-                <div className="w-full bg-app-gray p-6">
+                <div className="bg-cgray w-full p-6">
                     <div className="container grid lg:max-h-[400px] lg:grid-cols-2">
                         <div>
                             {/* partner logo */}

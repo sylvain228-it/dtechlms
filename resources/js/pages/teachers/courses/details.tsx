@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
 import GetHtmlContent from '@/lib/get-html-content';
 import { loadExistTextHtmlIntoEditor } from '@/lib/lexical-headless';
-import { subStrText } from '@/lib/tasks';
 import { index as activities } from '@/routes/teachers/activities';
 import { edit } from '@/routes/teachers/courses';
 import { index as moduleIndex } from '@/routes/teachers/modules';
@@ -52,16 +51,16 @@ export default function TeacherCourseDetails() {
                             <h1 className="text-2xl font-semibold text-gray-900">
                                 {course.title}
                             </h1>
-                            <p className="mt-1 text-sm text-gray-600">
+                            <p className="mt-1 line-clamp-2 text-sm text-gray-600">
                                 {course.description
-                                    ? subStrText(course.description, 0, 100)
+                                    ? course.description
                                     : 'Aucune description'}
                             </p>
                         </div>
                         <div className="flex items-center gap-3">
                             <Button
                                 onClick={handleEditClicked}
-                                className="rounded-md border border-gray-200 bg-white px-4 py-2 text-sm text-app-blue"
+                                className="rounded-md border border-gray-200 bg-white px-4 py-2 text-sm text-cblue"
                             >
                                 Modifier
                             </Button>
@@ -78,7 +77,7 @@ export default function TeacherCourseDetails() {
                         <h3 className="text-xl font-bold lg:text-2xl">
                             Frais de formation :{' '}
                         </h3>
-                        <h2 className="font-bold text-app-blue lg:text-2xl">
+                        <h2 className="font-bold text-cblue lg:text-2xl">
                             {parseInt(course.price.toString())}F
                         </h2>
                     </div>
@@ -89,7 +88,7 @@ export default function TeacherCourseDetails() {
                                     Modules
                                     <ArrowRight
                                         size={30}
-                                        className="text-app-blue"
+                                        className="text-cblue"
                                     />
                                 </div>
                                 <div className="mt-1 text-2xl font-bold text-gray-900">
@@ -114,7 +113,7 @@ export default function TeacherCourseDetails() {
                                         Étudiants inscrits
                                         <ArrowRight
                                             size={30}
-                                            className="text-app-blue"
+                                            className="text-cblue"
                                         />
                                     </div>
                                     <div className="mt-1 text-2xl font-bold text-gray-900">

@@ -231,8 +231,8 @@ export default function StudentStartQuiz() {
 
     return (
         <StudentLayouts title={`Quiz : ${quiz.title ?? 'Quiz'}`}>
-            <div className="mx-auto mt-6 max-w-3xl px-4">
-                <div className="mb-4 flex items-center justify-between">
+            <div className="mx-auto mt-6 max-w-3xl">
+                <div className="mb-4 flex flex-col items-center justify-between sm:flex-row">
                     <div>
                         <h1 className="text-xl font-bold text-gray-900">
                             {quiz.title ?? 'Quiz'}
@@ -245,7 +245,7 @@ export default function StudentStartQuiz() {
                         </p>
                     </div>
 
-                    <div className="text-sm text-gray-600">
+                    <div className="mt-3 flex w-full flex-row justify-between gap-4 text-sm text-gray-600 sm:flex-col">
                         <div className="mb-1 text-right">Temps écoulé</div>
                         <div className="rounded-md bg-gray-100 px-3 py-1 font-mono text-sm">
                             {formatTime(timeElapsed)}

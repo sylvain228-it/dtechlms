@@ -17,7 +17,7 @@ export default function AuthSimpleLayout({
     return (
         <div className="min-h-svh flex-col gap-6 bg-background p-3 md:p-10">
             {/* logo */}
-            <div className="mb-8 px-5 md:mx-20">
+            <div className="mb-8 inline-block p-2 px-5 md:mx-20 dark:bg-white">
                 <Link href={home()}>
                     <AppLogo className="me-auto max-h-[35px] object-contain" />
                 </Link>

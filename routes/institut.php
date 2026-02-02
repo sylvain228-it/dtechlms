@@ -91,7 +91,7 @@ Route::group(['prefix' => '/institut', 'middleware' => ['auth.institut'], 'as' =
         Route::post('/api/assign-to-user', [InstitutStudentsController::class, 'assignToUser'])->name('assigntouser');
     });
 });
-Route::group(['as' => 'institut.', 'middleware' => ['guest']], function () {
+Route::group(['as' => 'institut.', 'middleware' => ['guest.custom']], function () {
     Route::get('/institut-login', [InstitutLoginController::class, 'showLoginForm'])->name('login');
     Route::post('/institut-login', [InstitutLoginController::class, 'login'])->name('login.store');
     Route::post('/institut-logout', [InstitutLoginController::class, 'logout'])->name('logout');

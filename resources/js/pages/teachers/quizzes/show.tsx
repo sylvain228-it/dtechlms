@@ -10,56 +10,53 @@ import { ArrowRight, Edit, Trash } from 'lucide-react';
 import QuizQuestionFormDialog from './questions/add-question-dialog';
 
 type Props = {
-    quize: Quiz;
+    quiz: Quiz;
 };
-export default function TeacherQuizeShow() {
-    const { quize } = usePage().props as unknown as Props;
+export default function TeacherQuizShow() {
+    const { quiz } = usePage().props as unknown as Props;
 
     const handleDelete = () => {
         if (!confirm('Confirmer la suppression de ce quiz ?')) return;
-        router.delete(destroy([quize.activity?.id ?? '', quize.id]));
+        router.delete(destroy([quiz.activity?.id ?? '', quiz.id]));
     };
 
     return (
-        <TeacherLayouts title={`Quiz : ${quize.title}`}>
+        <TeacherLayouts title={`Quiz : ${quiz.title}`}>
             <div className="mx-auto mt-6 max-w-6xl px-4">
                 {/* Header */}
                 <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
                         <h1 className="mt-3 text-2xl font-bold text-gray-900">
-                            {quize.title}
+                            {quiz.title}
                         </h1>
                         <div className="mt-2 text-sm text-gray-500">
                             <span className="mr-4 inline-block text-xs font-medium text-gray-600">
                                 Type:
                             </span>
                             <span className="text-sm text-gray-700">
-                                {getQuizeTypeLabel(quize.quiz_type)}
+                                {getQuizeTypeLabel(quiz.quiz_type)}
                             </span>
 
                             <span className="mr-2 ml-6 inline-block text-xs font-medium text-gray-600">
                                 Durée:
                             </span>
                             <span className="text-sm text-gray-700">
-                                {quize.time_limit_minutes
-                                    ? `${quize.time_limit_minutes} min`
+                                {quiz.time_limit_minutes
+                                    ? `${quiz.time_limit_minutes} min`
                                     : '—'}
                             </span>
                         </div>
 
-                        {quize.description && (
+                        {quiz.description && (
                             <p className="mt-3 line-clamp-3 text-sm text-gray-600">
-                                {quize.description}
+                                {quiz.description}
                             </p>
                         )}
                     </div>
 
                     <div className="flex items-center gap-3">
                         <Link
-                            href={edit([
-                                quize.activity?.slug ?? '',
-                                quize.slug,
-                            ])}
+                            href={edit([quiz.activity?.slug ?? '', quiz.slug])}
                             className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
                         >
                             <Edit size={16} /> Modifier
@@ -80,16 +77,16 @@ export default function TeacherQuizeShow() {
 
                     <div className="mt-4 grid gap-4 sm:grid-cols-2">
                         <QuizQuestionFormDialog
-                            quizId={quize.id}
-                            title={quize.title}
+                            quizId={quiz.id}
+                            title={quiz.title}
                         />
 
                         <Link
-                            href={listQuizQuest(quize.slug)}
-                            className="btn-primary flex w-full items-center justify-center gap-4 !bg-blue-100 !text-app-blue"
+                            href={listQuizQuest(quiz.slug)}
+                            className="btn-primary flex w-full items-center justify-center gap-4 !bg-blue-100 !text-cblue"
                         >
-                            <b>Liste de questions</b>
-                            <ArrowRight size={30} className="text-app-blue" />
+                            <b>Liste des questions</b>
+                            <ArrowRight size={30} className="text-cblue" />
                         </Link>
                     </div>
                 </div>
@@ -110,7 +107,7 @@ export default function TeacherQuizeShow() {
                                         Type
                                     </p>
                                     <div className="mt-1 text-sm font-medium text-gray-800">
-                                        {getQuizeTypeLabel(quize.quiz_type)}
+                                        {getQuizeTypeLabel(quiz.quiz_type)}
                                     </div>
                                 </div>
 
@@ -119,8 +116,8 @@ export default function TeacherQuizeShow() {
                                         Durée
                                     </p>
                                     <div className="mt-1 text-sm text-gray-800">
-                                        {quize.time_limit_minutes
-                                            ? `${quize.time_limit_minutes} min`
+                                        {quiz.time_limit_minutes
+                                            ? `${quiz.time_limit_minutes} min`
                                             : '—'}
                                     </div>
                                 </div>
@@ -130,7 +127,7 @@ export default function TeacherQuizeShow() {
                                         Tentatives max
                                     </p>
                                     <div className="mt-1 text-sm text-gray-800">
-                                        {quize.max_attempts ?? '—'}
+                                        {quiz.max_attempts ?? '—'}
                                     </div>
                                 </div>
 
@@ -139,9 +136,7 @@ export default function TeacherQuizeShow() {
                                         Obligatoire
                                     </p>
                                     <div className="mt-1 text-sm font-medium text-gray-800">
-                                        {formatBooleanText(
-                                            !!quize.is_mandatory,
-                                        )}
+                                        {formatBooleanText(!!quiz.is_mandatory)}
                                     </div>
                                 </div>
                             </div>
@@ -155,7 +150,7 @@ export default function TeacherQuizeShow() {
                             <div className="mt-3 text-sm text-gray-700">
                                 {(() => {
                                     const instructions = (
-                                        quize as unknown as {
+                                        quiz as unknown as {
                                             quize_instructions?: string;
                                         }
                                     ).quize_instructions;
@@ -183,7 +178,7 @@ export default function TeacherQuizeShow() {
                                     </div>
                                     <div className="mt-1 font-medium">
                                         {formatBooleanText(
-                                            !!quize.shuffle_questions,
+                                            !!quiz.shuffle_questions,
                                         )}
                                     </div>
                                 </div>
@@ -194,7 +189,7 @@ export default function TeacherQuizeShow() {
                                     </div>
                                     <div className="mt-1 font-medium">
                                         {formatBooleanText(
-                                            !!quize.shuffle_answers,
+                                            !!quiz.shuffle_answers,
                                         )}
                                     </div>
                                 </div>
@@ -205,7 +200,7 @@ export default function TeacherQuizeShow() {
                                     </div>
                                     <div className="mt-1 font-medium">
                                         {formatBooleanText(
-                                            !!quize.show_results_immediately,
+                                            !!quiz.show_results_immediately,
                                         )}
                                     </div>
                                 </div>
@@ -216,7 +211,7 @@ export default function TeacherQuizeShow() {
                                     </div>
                                     <div className="mt-1 font-medium">
                                         {formatBooleanText(
-                                            !!quize.show_correct_answers,
+                                            !!quiz.show_correct_answers,
                                         )}
                                     </div>
                                 </div>
@@ -234,7 +229,7 @@ export default function TeacherQuizeShow() {
                                         Score maximum
                                     </div>
                                     <div className="mt-1 font-medium">
-                                        {quize.max_score ?? '—'}
+                                        {quiz.max_score ?? '—'}
                                     </div>
                                 </div>
 
@@ -243,8 +238,8 @@ export default function TeacherQuizeShow() {
                                         Seuil de réussite
                                     </div>
                                     <div className="mt-1 font-medium">
-                                        {quize.success_threshold
-                                            ? `${quize.success_threshold}${quize.note_unit}`
+                                        {quiz.success_threshold
+                                            ? `${quiz.success_threshold}${quiz.note_unit}`
                                             : '—'}
                                     </div>
                                 </div>
@@ -265,8 +260,7 @@ export default function TeacherQuizeShow() {
                                         Statut
                                     </div>
                                     <div className="mt-1 font-medium">
-                                        {getSaveStatusLabel(quize.status) ??
-                                            '-'}
+                                        {getSaveStatusLabel(quiz.status) ?? '-'}
                                     </div>
                                 </div>
 
@@ -275,7 +269,7 @@ export default function TeacherQuizeShow() {
                                         Publié
                                     </div>
                                     <div className="mt-1">
-                                        {formatDate(quize.published_at)}
+                                        {formatDate(quiz.published_at)}
                                     </div>
                                 </div>
 
@@ -284,7 +278,7 @@ export default function TeacherQuizeShow() {
                                         Score maximum
                                     </div>
                                     <div className="mt-1 font-medium">
-                                        {quize.max_score ?? '-'}
+                                        {quiz.max_score ?? '-'}
                                     </div>
                                 </div>
 
@@ -293,8 +287,8 @@ export default function TeacherQuizeShow() {
                                         Seuil de réussite
                                     </div>
                                     <div className="mt-1 font-medium">
-                                        {quize.success_threshold
-                                            ? `${quize.success_threshold}%`
+                                        {quiz.success_threshold
+                                            ? `${quiz.success_threshold}%`
                                             : '-'}
                                     </div>
                                 </div>
@@ -304,7 +298,7 @@ export default function TeacherQuizeShow() {
                                         Version
                                     </div>
                                     <div className="mt-1">
-                                        {quize.version ?? '-'}
+                                        {quiz.version ?? '-'}
                                     </div>
                                 </div>
 
@@ -313,7 +307,7 @@ export default function TeacherQuizeShow() {
                                         Créé
                                     </div>
                                     <div className="mt-1">
-                                        {formatDate(quize.created_at)}
+                                        {formatDate(quiz.created_at)}
                                     </div>
                                 </div>
 
@@ -322,7 +316,7 @@ export default function TeacherQuizeShow() {
                                         Dernière mise à jour
                                     </div>
                                     <div className="mt-1">
-                                        {formatDate(quize.updated_at)}
+                                        {formatDate(quiz.updated_at)}
                                     </div>
                                 </div>
                             </div>

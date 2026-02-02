@@ -1,7 +1,7 @@
 import { Divider } from '@/components/divider';
 import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
 import GetHtmlContent from '@/lib/get-html-content';
-import { handleEditClicked, subStrText } from '@/lib/tasks';
+import { handleEditClicked } from '@/lib/tasks';
 import { getModalityTypeLabel, getModuleTypeLabel } from '@/lib/type';
 import { formatMinutes } from '@/lib/utils';
 import { show } from '@/routes/teachers/courses';
@@ -59,8 +59,8 @@ export default function TeacherCoursModuleShow() {
                             </h1>
                         </div>
 
-                        <p className="mt-2 max-w-2xl text-sm text-gray-600">
-                            {subStrText(module.description ?? '', 0, 100)}
+                        <p className="mt-2 line-clamp-1 max-w-2xl text-sm text-gray-600">
+                            {module.description ?? ''}
                         </p>
 
                         <div className="mt-3 flex flex-wrap items-center gap-2">

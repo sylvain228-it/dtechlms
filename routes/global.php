@@ -26,8 +26,13 @@ Route::group(['middleware' => ['simpleAuth']], function () {
 
     // 
     Route::get('/redirect-to-dashboard', function () {
-        if (Auth::check() && Auth::user()->account_role == "teacher") {
-            return to_route('teachers.dashboard');
+        if (Auth::check()) {
+            if (Auth::user()->account_role == "student") {
+                return to_route('students.dashboard');
+            } elseif (Auth::user()->account_role == "teacher") {
+                return to_route('teachers.dashboard');
+            }
+            return redirect('/');
         } else if (Auth::guard('institut')) {
             return to_route('institut.dashboard');
         } else {

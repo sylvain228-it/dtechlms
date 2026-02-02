@@ -126,7 +126,12 @@ export default function Login({ status }: LoginProps) {
                     </div>
 
                     <div className="flex items-center space-x-3">
-                        <Checkbox id="remember" name="remember" tabIndex={3} />
+                        <Checkbox
+                            className="dark:border-white"
+                            id="remember"
+                            name="remember"
+                            tabIndex={3}
+                        />
                         <Label htmlFor="remember">Souviens-toi de moi</Label>
                     </div>
 
@@ -145,7 +150,7 @@ export default function Login({ status }: LoginProps) {
                 <div className="text-center text-sm text-muted-foreground">
                     Vous n'avez pas de compte ?{' '}
                     <TextLink
-                        className="text-app-blue"
+                        className="text-cblue"
                         href={register()}
                         tabIndex={5}
                     >

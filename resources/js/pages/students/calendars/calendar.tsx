@@ -87,17 +87,19 @@ export default function StudentCalendar({
 
     return (
         <div>
-            <h1 className="mb-2 text-3xl font-bold">
-                Calendrier des activités avenirs
-            </h1>
-            <p className="mb-4 text-sm text-muted-foreground">
-                {activities.length} activité{activities.length !== 1 ? 's' : ''}{' '}
-                à venir
-            </p>
+            <div className="p-2">
+                <h1 className="mb-2 text-3xl font-bold">
+                    Calendrier des activités avenirs
+                </h1>
+                <p className="mb-4 text-sm text-muted-foreground">
+                    {activities.length} activité
+                    {activities.length !== 1 ? 's' : ''} à venir
+                </p>
+            </div>
 
             <TooltipProvider>
                 <div className="my-4">
-                    <div className="rounded-lg border bg-white p-4 shadow-sm">
+                    <div className="rounded-lg border p-4 shadow-sm">
                         <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-3">
                             {/* Calendrier */}
                             <div className="lg:col-span-2">
@@ -143,7 +145,7 @@ export default function StudentCalendar({
                                                 ).map((activity) => (
                                                     <Popover key={activity.id}>
                                                         <PopoverTrigger asChild>
-                                                            <div className="cursor-pointer rounded-lg border border-blue-200 bg-blue-50 p-3 transition-colors hover:bg-blue-100">
+                                                            <div className="cursor-pointer rounded-lg border border-blue-200 bg-blue-50 p-3 transition-colors hover:bg-blue-100 dark:bg-indigo-200">
                                                                 <h4 className="truncate text-sm font-medium text-blue-900">
                                                                     {
                                                                         activity.title
@@ -267,7 +269,7 @@ export default function StudentCalendar({
                                     {activities.map((activity) => (
                                         <Tooltip key={activity.id}>
                                             <TooltipTrigger asChild>
-                                                <div className="cursor-pointer rounded-lg border p-4 transition-shadow hover:shadow-md">
+                                                <div className="cursor-pointer rounded-lg border p-4 transition-shadow hover:shadow-md dark:bg-cdcard">
                                                     <h4 className="truncate text-sm font-medium">
                                                         {activity.title}
                                                     </h4>
@@ -292,8 +294,8 @@ export default function StudentCalendar({
                                                     </Link>
                                                 </div>
                                             </TooltipTrigger>
-                                            <TooltipContent>
-                                                <div className="max-w-sm">
+                                            <TooltipContent className="max-w-xs sm:max-w-xl dark:bg-cdcard">
+                                                <div className="max-w-sm dark:text-gray-200">
                                                     <p className="font-medium">
                                                         {activity.title}
                                                     </p>

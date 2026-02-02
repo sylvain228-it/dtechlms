@@ -49,7 +49,7 @@ export default function StudentCourseDetails() {
     return (
         <StudentLayouts title="">
             <Head title={`${courseName} - détails`} />
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen">
                 {/* Hero Banner */}
                 <div
                     className="relative h-[280px] w-full overflow-hidden bg-cover bg-center"
@@ -82,8 +82,8 @@ export default function StudentCourseDetails() {
                 </div>
 
                 {/* Navigation Tabs */}
-                <div className="sticky top-[56px] z-30 border-b border-gray-200 bg-white shadow-sm">
-                    <nav className="mx-auto flex gap-3 overflow-x-auto p-3 px-2 sm:max-w-6xl sm:p-6">
+                <div className="sticky top-[56px] z-30 border-b border-gray-200 bg-white shadow-sm dark:bg-cdcard">
+                    <nav className="mx-auto flex gap-3 overflow-x-auto px-2 sm:max-w-6xl sm:px-6">
                         <button
                             onClick={() => {
                                 if (!showCalendar) {
@@ -91,7 +91,7 @@ export default function StudentCourseDetails() {
                                     setShowCourseDetails(false);
                                 }
                             }}
-                            className={`flex items-center gap-2 text-sm whitespace-nowrap sm:text-xl ${showCalendar ? 'border-b-2 font-semibold text-blue-600' : 'dark:text-gray-500'} border-blue-500 px-1 py-4`}
+                            className={`flex items-center gap-2 text-sm whitespace-nowrap sm:text-xl ${showCalendar ? 'border-b-2 font-semibold text-blue-600' : ''} border-blue-500 px-1 py-4`}
                         >
                             <Calendar size={16} />
                             Activités
@@ -103,14 +103,14 @@ export default function StudentCourseDetails() {
                                     setShowCalendar(false);
                                 }
                             }}
-                            className={`flex items-center gap-2 text-sm whitespace-nowrap sm:text-xl ${showCourseDetails ? 'border-b-2 font-semibold text-blue-600' : 'dark:text-gray-500'} border-blue-500 px-1 py-4`}
+                            className={`flex items-center gap-2 text-sm whitespace-nowrap sm:text-xl ${showCourseDetails ? 'border-b-2 font-semibold text-blue-600' : ''} border-blue-500 px-1 py-4`}
                         >
                             <BookOpen size={16} />
                             Détails
                         </button>
                         <Link
                             href={content(course.slug)}
-                            className="flex items-center gap-2 border-b-2 border-transparent px-1 py-4 text-sm whitespace-nowrap text-gray-600 transition hover:border-gray-300 hover:text-gray-900 sm:text-xl"
+                            className="flex items-center gap-2 border-b-2 border-transparent px-1 py-4 text-sm whitespace-nowrap transition hover:border-gray-300 hover:text-gray-900 sm:text-xl"
                         >
                             <ListCollapseIcon size={16} />
                             Contenu
@@ -118,6 +118,12 @@ export default function StudentCourseDetails() {
                     </nav>
                 </div>
 
+                {/* events */}
+                {showCalendar && (
+                    <div className="mx-auto mt-3 max-w-6xl px-2 sm:px-8">
+                        <StudentCalendar activities={activities} />
+                    </div>
+                )}
                 {/* Main Content */}
                 <div className="mx-auto max-w-6xl px-2 py-12 sm:px-8">
                     {showCourseDetails && (
@@ -182,19 +188,19 @@ export default function StudentCourseDetails() {
                                 </div>
 
                                 {/* Description Section */}
-                                <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-6">
-                                    <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-gray-900 sm:text-2xl">
+                                <div className="rounded-lg border border-gray-200 p-3 shadow-sm sm:p-6">
+                                    <h2 className="mb-4 flex items-center gap-2 text-xl font-bold sm:text-2xl">
                                         <BookOpen
                                             size={24}
                                             className="text-blue-600"
                                         />
                                         À propos du cours
                                     </h2>
-                                    <div className="prose prose-sm max-w-none leading-relaxed text-gray-700">
+                                    <div className="prose prose-sm max-w-none leading-relaxed">
                                         {courseDescription ? (
                                             <p>{courseDescription}</p>
                                         ) : (
-                                            <p className="text-gray-500 italic">
+                                            <p className="italic">
                                                 Pas de description disponible
                                                 pour ce cours.
                                             </p>
@@ -204,8 +210,8 @@ export default function StudentCourseDetails() {
 
                                 {/* Learning Outcomes Section */}
                                 {course.learning_outcomes && (
-                                    <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-6">
-                                        <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-gray-900">
+                                    <div className="rounded-lg border border-gray-200 p-3 shadow-sm sm:p-6">
+                                        <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold">
                                             <CheckCircle
                                                 size={24}
                                                 className="text-green-600"
@@ -230,7 +236,7 @@ export default function StudentCourseDetails() {
                                                                   size={20}
                                                                   className="mt-1 flex-shrink-0 text-green-600"
                                                               />
-                                                              <span className="text-gray-800">
+                                                              <span className="text-gray-700">
                                                                   {outcome}
                                                               </span>
                                                           </div>
@@ -243,8 +249,8 @@ export default function StudentCourseDetails() {
 
                                 {/* Modules Section */}
                                 {modules && modules.length > 0 && (
-                                    <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-6">
-                                        <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900 sm:text-2xl">
+                                    <div className="rounded-lg border border-gray-200 p-3 shadow-sm sm:p-6">
+                                        <h2 className="mb-6 flex items-center gap-2 text-xl font-bold sm:text-2xl">
                                             <BookOpen
                                                 size={24}
                                                 className="text-blue-600"
@@ -262,19 +268,19 @@ export default function StudentCourseDetails() {
                                                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600">
                                                             {index + 1}
                                                         </div>
-                                                        <h3 className="text-md mb-1 font-semibold text-gray-900 sm:text-lg">
+                                                        <h3 className="text-md mb-1 font-semibold sm:text-lg">
                                                             {module.title}
                                                         </h3>
                                                     </div>
                                                     <div className="min-w-0 flex-1">
                                                         {module.description && (
-                                                            <p className="line-clamp-2 text-sm text-gray-600">
+                                                            <p className="line-clamp-2 text-sm">
                                                                 {
                                                                     module.description
                                                                 }
                                                             </p>
                                                         )}
-                                                        <div className="mt-3 flex items-center gap-4 text-sm text-gray-500">
+                                                        <div className="mt-3 flex items-center gap-4 text-sm">
                                                             {module.estimated_hours && (
                                                                 <span className="flex items-center gap-1">
                                                                     <Clock
@@ -304,8 +310,8 @@ export default function StudentCourseDetails() {
                                 {/* Prerequisites Section */}
 
                                 {course.prerequisites && (
-                                    <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 sm:p-6">
-                                        <h3 className="mb-3 text-xl font-bold text-black">
+                                    <div className="rounded-lg border border-amber-200 p-3 sm:p-6">
+                                        <h3 className="mb-3 text-xl font-bold">
                                             Pré-requis
                                         </h3>
                                         <div className="flex items-start gap-4">
@@ -325,8 +331,8 @@ export default function StudentCourseDetails() {
                                 )}
 
                                 {/* Teacher Info Section */}
-                                <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-6">
-                                    <h2 className="mb-4 flex items-center gap-2 text-xl font-bold text-gray-900 sm:text-2xl">
+                                <div className="rounded-lg border border-gray-200 p-3 shadow-sm sm:p-6">
+                                    <h2 className="mb-4 flex items-center gap-2 text-xl font-bold sm:text-2xl">
                                         <Users
                                             size={24}
                                             className="text-blue-600"
@@ -350,11 +356,11 @@ export default function StudentCourseDetails() {
                                             />
                                         )}
                                         <div>
-                                            <h3 className="text-lg font-semibold text-gray-900">
+                                            <h3 className="text-lg font-semibold">
                                                 {teacher.first_name}{' '}
                                                 {teacher.last_name}
                                             </h3>
-                                            <p className="text-sm text-gray-600">
+                                            <p className="text-sm">
                                                 {teacher.bio ||
                                                     'Pas de biographie disponible.'}
                                             </p>
@@ -366,14 +372,14 @@ export default function StudentCourseDetails() {
                             {/* Right Column - Sidebar */}
                             <div className="lg:col-span-1">
                                 {/* Course Info Card */}
-                                <div className="sticky top-24 space-y-6 rounded-lg border border-gray-200 bg-white p-3 shadow-md sm:p-6">
+                                <div className="sticky top-32 space-y-6 rounded-lg border border-gray-200 p-3 shadow-md sm:p-6">
                                     {/* Info Items */}
                                     <div className="space-y-4">
                                         <div>
-                                            <p className="mb-1 text-xs font-semibold tracking-wide text-gray-600 uppercase">
+                                            <p className="mb-1 text-xs font-semibold tracking-wide uppercase">
                                                 Langue
                                             </p>
-                                            <p className="font-semibold text-gray-900">
+                                            <p className="font-semibold">
                                                 {getLanguageLabel(
                                                     course.language as Language,
                                                 )}
@@ -381,10 +387,10 @@ export default function StudentCourseDetails() {
                                         </div>
 
                                         <div>
-                                            <p className="mb-1 text-xs font-semibold tracking-wide text-gray-600 uppercase">
+                                            <p className="mb-1 text-xs font-semibold tracking-wide uppercase">
                                                 Modalité
                                             </p>
-                                            <p className="font-semibold text-gray-900">
+                                            <p className="font-semibold">
                                                 {getModalityTypeLabel(
                                                     course.modality,
                                                 )}
@@ -392,10 +398,10 @@ export default function StudentCourseDetails() {
                                         </div>
 
                                         <div>
-                                            <p className="mb-1 text-xs font-semibold tracking-wide text-gray-600 uppercase">
+                                            <p className="mb-1 text-xs font-semibold tracking-wide uppercase">
                                                 Type de cours
                                             </p>
-                                            <p className="font-semibold text-gray-900 capitalize">
+                                            <p className="font-semibold capitalize">
                                                 {course.course_type ||
                                                     'Professionnel'}
                                             </p>
@@ -403,7 +409,7 @@ export default function StudentCourseDetails() {
 
                                         {course.is_certifying === 1 && (
                                             <div>
-                                                <p className="mb-1 text-xs font-semibold tracking-wide text-gray-600 uppercase">
+                                                <p className="mb-1 text-xs font-semibold tracking-wide uppercase">
                                                     Certification
                                                 </p>
                                                 <div className="flex items-center gap-2">
@@ -425,11 +431,11 @@ export default function StudentCourseDetails() {
                                     {/* Stats */}
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between py-2">
-                                            <span className="flex items-center gap-2 text-gray-600">
+                                            <span className="flex items-center gap-2">
                                                 <Users size={18} />
                                                 Inscrits
                                             </span>
-                                            <span className="font-semibold text-gray-900">
+                                            <span className="font-semibold">
                                                 {course.nb_of_enrollments || 0}
                                             </span>
                                         </div>
@@ -439,13 +445,6 @@ export default function StudentCourseDetails() {
                         </div>
                     )}
                 </div>
-
-                {/* events */}
-                {showCalendar && (
-                    <div className="mx-auto max-w-6xl px-2 sm:px-8">
-                        <StudentCalendar activities={activities} />
-                    </div>
-                )}
             </div>
         </StudentLayouts>
     );

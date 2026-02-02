@@ -5,7 +5,7 @@ export const FormField: React.FC<{
     children: React.ReactNode;
 }> = ({ label, error, required = false, children }) => (
     <div>
-        <label className="mb-2 block font-medium text-gray-700">
+        <label className="mb-2 block font-medium text-gray-700 dark:text-gray-400">
             {label}
             {required && <span className="text-red-500">*</span>}
         </label>
@@ -77,9 +77,15 @@ export const SelectField: React.FC<{
                 error ? 'border-red-300' : 'border-gray-300'
             } `}
         >
-            <option value="">{emptyOption ?? 'Sélectionner une option'}</option>
+            <option value="" className="dark:text-gray-600">
+                {emptyOption ?? 'Sélectionner une option'}
+            </option>
             {options.map((option) => (
-                <option key={option.key} value={option.key}>
+                <option
+                    className="dark:text-gray-600"
+                    key={option.key}
+                    value={option.key}
+                >
                     {option.value}
                 </option>
             ))}

@@ -1,4 +1,5 @@
 import AppLogo from '@/components/app-logo-icon';
+import AppearanceToggler from '@/components/appearance-toggler';
 import { Divider } from '@/components/divider';
 import DefualtProfileSvg from '@/components/profile-svg';
 import { ProfileItemsTrigger } from '@/components/shared/user-profile-trigger';
@@ -12,8 +13,12 @@ import { cn, resolveUrl } from '@/lib/utils';
 import { index as profile } from '@/routes/auth/profile';
 import { index as settings } from '@/routes/auth/settings';
 import { dashboard } from '@/routes/students';
-import { index } from '@/routes/students/courses';
-import { BreadcrumbItem, SharedData, User as UserModel } from '@/types';
+import {
+    BreadcrumbItem,
+    NavItem,
+    SharedData,
+    User as UserModel,
+} from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { Menu, Settings, User, X } from 'lucide-react';
@@ -43,7 +48,9 @@ export default function TeacherSpaceLayouts({
         window.innerWidth >= 1024,
     );
 
-    const navItems = [{ title: 'Mes Cours', href: index().url }];
+    const navItems: NavItem[] = [
+        // { title: 'Mes Cours', href: index().url }
+    ];
 
     // const dropdownItems = [
     //     { title: 'Progression', href: '/progress' },
@@ -72,7 +79,7 @@ export default function TeacherSpaceLayouts({
             setMainMarginClass(`lg:ml-[300px]`);
         }
     }
-    const isActiveClass = '!bg-app-blue !text-white';
+    const isActiveClass = '!bg-cblue !text-white';
     return (
         <>
             {/* header */}
@@ -100,96 +107,109 @@ export default function TeacherSpaceLayouts({
                                 )}
                             </div>
 
-                            {/* Desktop Navigation */}
-                            <div className="hidden lg:flex lg:items-center lg:gap-8">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
-                                    >
-                                        {item.title}
-                                    </Link>
-                                ))}
+                            <div className="flex items-center">
+                                {/* Desktop Navigation */}
+                                <div className="hidden lg:flex lg:items-center lg:gap-8">
+                                    {navItems.map((item, idx) => (
+                                        <Link
+                                            key={idx}
+                                            href={item.href}
+                                            className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
+                                        >
+                                            {item.title}
+                                        </Link>
+                                    ))}
 
-                                {/* Dropdown */}
-                            </div>
+                                    {/* Dropdown */}
+                                </div>
 
-                            {/* Right Section - Desktop */}
-                            {auth.user != null && (
-                                <div className="hidden lg:block">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                className="size-10 rounded-full p-1"
-                                            >
+                                {/* Right Section - Desktop */}
+                                <div className="flex items-center justify-end gap-3">
+                                    <AppearanceToggler />
+                                    {auth.user != null && (
+                                        <div className="hidden lg:block">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="size-10 rounded-full p-1"
+                                                    >
+                                                        <ProfileItemsTrigger
+                                                            user={
+                                                                auth.user as UserModel
+                                                            }
+                                                        />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent
+                                                    className="w-56 transition-all duration-300 ease-in-out"
+                                                    align="end"
+                                                >
+                                                    <div>
+                                                        {profileItemsTriggers.map(
+                                                            (item) => {
+                                                                const Icon =
+                                                                    item.icon;
+                                                                return (
+                                                                    <Link
+                                                                        key={
+                                                                            item.href
+                                                                        }
+                                                                        href={
+                                                                            item.href
+                                                                        }
+                                                                        className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                                                                        onClick={() => {
+                                                                            setIsOpenMobileNav(
+                                                                                false,
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <Icon
+                                                                            size={
+                                                                                16
+                                                                            }
+                                                                        />
+                                                                        {
+                                                                            item.title
+                                                                        }
+                                                                    </Link>
+                                                                );
+                                                            },
+                                                        )}
+
+                                                        <LogoutUserBtn />
+                                                    </div>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                                    )}
+                                </div>
+                                {/* Mobile Menu Button */}
+
+                                <button
+                                    onClick={handleMenuOpenNav}
+                                    className="rounded-lg p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
+                                >
+                                    {isOpenMobileNav ? (
+                                        <X size={24} />
+                                    ) : (
+                                        <div>
+                                            {auth.user == null ? (
+                                                <DefualtProfileSvg />
+                                            ) : (
                                                 <ProfileItemsTrigger
                                                     user={
-                                                        auth.user as UserModel
+                                                        auth.user as
+                                                            | UserModel
+                                                            | undefined
                                                     }
                                                 />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent
-                                            className="w-56 transition-all duration-300 ease-in-out"
-                                            align="end"
-                                        >
-                                            <div>
-                                                {profileItemsTriggers.map(
-                                                    (item) => {
-                                                        const Icon = item.icon;
-                                                        return (
-                                                            <Link
-                                                                key={item.href}
-                                                                href={item.href}
-                                                                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                                                                onClick={() => {
-                                                                    setIsOpenMobileNav(
-                                                                        false,
-                                                                    );
-                                                                }}
-                                                            >
-                                                                <Icon
-                                                                    size={16}
-                                                                />
-                                                                {item.title}
-                                                            </Link>
-                                                        );
-                                                    },
-                                                )}
-
-                                                <LogoutUserBtn />
-                                            </div>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                            )}
-
-                            {/* Mobile Menu Button */}
-
-                            <button
-                                onClick={handleMenuOpenNav}
-                                className="rounded-lg p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
-                            >
-                                {isOpenMobileNav ? (
-                                    <X size={24} />
-                                ) : (
-                                    <div>
-                                        {auth.user == null ? (
-                                            <DefualtProfileSvg />
-                                        ) : (
-                                            <ProfileItemsTrigger
-                                                user={
-                                                    auth.user as
-                                                        | UserModel
-                                                        | undefined
-                                                }
-                                            />
-                                        )}
-                                    </div>
-                                )}
-                            </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </nav>
@@ -212,9 +232,9 @@ export default function TeacherSpaceLayouts({
                                 </button>
                             </div>
 
-                            {navItems.map((item) => (
+                            {navItems.map((item, idx) => (
                                 <Link
-                                    key={item.href}
+                                    key={idx}
                                     href={item.href}
                                     className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
                                 >

@@ -55,7 +55,7 @@ export default function CourseModulesNav({
                                         (sequence) => (
                                             <li
                                                 key={sequence.id}
-                                                className={`p-2 text-sm text-gray-600 hover:text-blue-600 ${sequenceId === sequence.id ? 'border-l-2 border-app-blue bg-app-blue/5 font-semibold' : ''}`}
+                                                className={`p-2 text-sm text-gray-600 hover:text-blue-600 ${sequenceId === sequence.id ? 'border-cblue bg-cblue/5 border-l-2 font-semibold' : ''}`}
                                             >
                                                 <Link
                                                     href={reading([

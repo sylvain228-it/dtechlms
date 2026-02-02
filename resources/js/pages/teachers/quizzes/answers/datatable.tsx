@@ -120,7 +120,7 @@ export const columns: ColumnDef<QuizAnswer>[] = [
                                 question={questAnswer.question ?? null}
                                 triggerTexte={false}
                                 iconSize={20}
-                                className="flex items-center justify-between !py-2 text-center text-app-blue"
+                                className="text-cblue flex items-center justify-between !py-2 text-center"
                             />
                         </div>
 
@@ -221,7 +221,7 @@ export default function QuestResponsesDataTable({
                     quizId={question.quize?.id ?? 0}
                     title={question.quize?.title ?? ''}
                     question={question ?? null}
-                    className="btn-primary flex items-center bg-app-blue !py-2 text-center text-white"
+                    className="btn-primary bg-cblue flex items-center !py-2 text-center text-white"
                 />
             </div>
             <div className="overflow-hidden rounded-md border">

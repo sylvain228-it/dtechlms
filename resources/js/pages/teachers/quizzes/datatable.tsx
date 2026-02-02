@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
@@ -36,7 +35,7 @@ import {
     useReactTable,
     VisibilityState,
 } from '@tanstack/react-table';
-import { ArrowRight, ChevronDown, MoreHorizontal } from 'lucide-react';
+import { ArrowRight, MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { FcViewDetails } from 'react-icons/fc';
@@ -187,7 +186,7 @@ export default function QuizzesDataTable({ quizzes }: Props) {
     return (
         <div className="w-full">
             <div className="mb-3 flex flex-col justify-between gap-2 lg:flex-row lg:gap-4">
-                <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
                     <Input
                         placeholder="Filtrer par titre..."
                         value={
@@ -200,35 +199,8 @@ export default function QuizzesDataTable({ quizzes }: Props) {
                                 .getColumn('title')
                                 ?.setFilterValue(event.target.value)
                         }
-                        className="max-w-sm"
+                        className=""
                     />
-
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">
-                                Colonne <ChevronDown />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {table
-                                .getAllColumns()
-                                .filter((column) => column.getCanHide())
-                                .map((column) => {
-                                    return (
-                                        <DropdownMenuCheckboxItem
-                                            key={column.id}
-                                            className="capitalize"
-                                            checked={column.getIsVisible()}
-                                            onCheckedChange={(value) =>
-                                                column.toggleVisibility(!!value)
-                                            }
-                                        >
-                                            {column.id}
-                                        </DropdownMenuCheckboxItem>
-                                    );
-                                })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
                 </div>
             </div>
             <div className="overflow-hidden rounded-md border">

@@ -17,7 +17,7 @@ export default function SequenceDetailsShared({
     );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 px-6 py-8">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 {/* Left: Sequence Details */}
                 <div className="space-y-6 lg:col-span-2">
@@ -54,7 +54,7 @@ export default function SequenceDetailsShared({
                         </div>
                         <Divider />
                         {sequence.syllabus ? (
-                            <div className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
+                            <div className="mt-6 rounded-lg border bg-white p-2 shadow-sm sm:p-4">
                                 <h2 className="text-lg font-medium text-gray-900">
                                     Contenu
                                 </h2>
@@ -69,7 +69,7 @@ export default function SequenceDetailsShared({
                 </div>
 
                 {/* Right: Sidebar */}
-                <div className="space-y-6 lg:col-span-1">
+                <div className="order-first space-y-6 lg:order-last lg:col-span-1">
                     <div className="rounded-lg border bg-white p-4 shadow-sm">
                         <h3 className="text-sm font-medium text-gray-700">
                             Informations

@@ -1,4 +1,4 @@
-import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import {
@@ -254,8 +254,6 @@ export default function ActivityForm() {
         <TeacherLayouts
             title={isEdit ? 'Modifier activité' : 'Nouvelle activité'}
         >
-            <Head title={isEdit ? 'Modifier activité' : 'Nouvelle activité'} />
-
             <div className="mx-auto mt-8 max-w-4xl">
                 <div className="mb-5 flex items-center justify-between border-b p-3">
                     <h2 className="mb-4 text-lg font-semibold">
@@ -272,7 +270,7 @@ export default function ActivityForm() {
                 </div>
                 <form
                     onSubmit={handleSubmit}
-                    className="rounded-lg border bg-white p-6 shadow"
+                    className="rounded-lg border bg-white p-3 shadow sm:p-6"
                 >
                     {/* INFOS GÉNÉRALES */}
 
@@ -672,7 +670,7 @@ export default function ActivityForm() {
                     {/* =======================
                         ACTIONS
                     ======================= */}
-                    <div className="mt-6 flex justify-end gap-3 border-t pt-4">
+                    <div className="mt-6 flex items-center justify-end gap-3 border-t pt-4">
                         <button
                             type="button"
                             onClick={() => history.back()}

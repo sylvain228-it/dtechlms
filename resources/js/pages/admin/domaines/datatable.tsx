@@ -181,7 +181,7 @@ export default function DomaineDataTable({
                     <div className="space-x-3">
                         {/* <Link
                             href={create()}
-                            className="btn-primary ml-auto inline-block bg-app-blue !py-2 text-white"
+                            className="btn-primary ml-auto inline-block bg-cblue !py-2 text-white"
                         >
                             Ajouter <IoAdd className="inline-block h-7 w-7" />
                         </Link> */}

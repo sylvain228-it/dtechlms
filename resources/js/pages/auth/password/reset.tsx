@@ -56,13 +56,13 @@ export default function ResetPassword() {
             className="flex min-h-screen items-center justify-center"
             style={bgStyle}
         >
-            <div className="w-full max-w-lg bg-white p-8 shadow-md sm:rounded-2xl">
+            <div className="w-full max-w-lg bg-white p-8 shadow-md sm:rounded-2xl dark:bg-gray-800">
                 <HeadingSmall title="Réinitialiser le mot de passe" />
 
                 <DisplayFlashMsg />
                 <form
                     onSubmit={submit}
-                    className="mt-3 space-y-6 rounded-lg bg-white p-6 shadow"
+                    className="mt-3 space-y-6 rounded-lg p-6 shadow"
                 >
                     <div className="grid gap-2">
                         <Label>{data.email}</Label>

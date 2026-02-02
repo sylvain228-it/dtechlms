@@ -12,7 +12,6 @@ use App\Traits\AppUtilityTrait;
 use App\Traits\TeacherTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -26,7 +25,7 @@ class TeacherCourseActivity extends Controller
     public function index($courseSlug)
     {
         $course = Course::where('slug', $courseSlug)->firstOrFail();
-        $activities = Activity::with('parentCourse')->where('parent_course_id', $course->id)->get();
+        $activities = Activity::with('parentCourse')->where('parent_course_id', $course->id)->orderByDesc('created_at')->get();
         return Inertia::render('teachers/courses/activities/index', [
             'course' => $course,
             'activities' => $activities,
@@ -54,6 +53,7 @@ class TeacherCourseActivity extends Controller
         ]);
     }
 
+    // api
     public function getEntityData(Request $request, $courseSlug)
     {
         try {
@@ -117,13 +117,20 @@ class TeacherCourseActivity extends Controller
     {
         $course = Course::where('slug', $courseSlug)->firstOrFail();
         $activity = Activity::where('slug', $slug)->first();
-        if ($activity->module_id != null && $activity->scope == "module") {
-            $activity = Activity::with('module')->where('slug', $slug)->first();
-        } else if ($activity->sequence_id != null && $activity->scope == "sequence") {
-            $activity = Activity::with('sequence.module')->where('slug', $slug)->first();
+        $related = ['resources.resource'];
+        if (in_array($activity->activity_type, ['quiz', 'assessment'], true)) {
+            $related[] = 'quiz';
+            $related[] = 'evaluation';
+        } elseif ($activity->module_id !== null && $activity->scope === 'module') {
+            $related[] = 'module';
+        } elseif ($activity->sequence_id !== null && $activity->scope === 'sequence') {
+            $related[] = 'sequence.module';
         } else {
-            $activity = Activity::with('course')->where('slug', $slug)->first();
+            $related[] = 'course';
         }
+
+        $related = array_values(array_unique($related));
+        $activity = Activity::with($related)->where('slug', $slug)->firstOrFail();
         return Inertia::render('teachers/courses/activities/show', [
             'activity' => $activity,
             'current_course' => $course

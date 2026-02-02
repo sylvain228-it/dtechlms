@@ -1,7 +1,6 @@
 import { Divider } from '@/components/divider';
 import StudentLayouts from '@/layouts/student/student-layouts';
 import GetHtmlContent from '@/lib/get-html-content';
-import { subStrText } from '@/lib/tasks';
 import { getModalityTypeLabel, getModuleTypeLabel } from '@/lib/type';
 import { details } from '@/routes/students/courses';
 import { Course, Module } from '@/types/models/course';
@@ -32,8 +31,8 @@ export default function CoursModuleShow() {
                             </h1>
                         </div>
 
-                        <p className="mt-2 max-w-2xl text-sm text-gray-600">
-                            {subStrText(module.description ?? '', 0, 100)}
+                        <p className="mt-2 line-clamp-1 max-w-2xl text-sm text-gray-600">
+                            {module.description ?? ''}
                         </p>
 
                         <div className="mt-3 flex flex-wrap items-center gap-2">

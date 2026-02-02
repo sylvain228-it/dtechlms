@@ -58,7 +58,7 @@ export default function UploadFileDialog({
             >
                 <Button
                     variant="outline"
-                    className="cursor-pointer bg-app-blue/30 text-white"
+                    className="bg-cblue/30 cursor-pointer text-white"
                 >
                     <Edit2Icon />
                 </Button>

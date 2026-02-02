@@ -29,14 +29,17 @@ export default function StudentActivityDetails() {
             : null;
     return (
         <StudentLayouts title={`Détails activité ${activity.title}`}>
-            <div className="sticky top-[56px] z-30 border-b border-l-2 border-blue-900 bg-white shadow-sm">
+            <div className="border-b border-l-2 border-blue-900 shadow-sm">
                 <div className="px-6 py-4">
                     <div className="flex justify-between gap-6">
-                        <h2 className="mb-2 text-xl text-gray-500">
+                        <h2 className="mb-2 text-gray-500 sm:text-xl">
                             Activité du cours :{' '}
                             <b>
                                 <i>
-                                    <Link href={details(current_course.slug)}>
+                                    <Link
+                                        href={details(current_course.slug)}
+                                        className="text-md line-clamp-2"
+                                    >
                                         {current_course.title}
                                     </Link>
                                 </i>
@@ -44,7 +47,7 @@ export default function StudentActivityDetails() {
                         </h2>
                         <div
                             onClick={() => history.back()}
-                            className="inline-block h-10 cursor-pointer rounded-sm border px-5 py-1 text-2xl"
+                            className="inline-block h-10 cursor-pointer rounded-sm border px-3 py-1 text-xl"
                         >
                             <ArrowRight size={30} className="text-gray-600" />
                         </div>
@@ -53,12 +56,12 @@ export default function StudentActivityDetails() {
             </div>
 
             <div>
-                <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+                <div className="mt-2 gap-2 text-sm text-gray-500">
                     {course && (
                         <>
                             <Link
                                 href={details(course?.slug)}
-                                className="text-blue-400"
+                                className="line-clamp-2 inline-block text-blue-400"
                             >
                                 {course?.title ?? 'Cours inconnu'}
                             </Link>
@@ -72,7 +75,7 @@ export default function StudentActivityDetails() {
                                     current_course.slug,
                                     module?.slug,
                                 ])}
-                                className="text-blue-400"
+                                className="line-clamp-2 inline-block text-blue-400"
                             >
                                 {module?.title ?? 'Module'}
                             </Link>
@@ -87,7 +90,7 @@ export default function StudentActivityDetails() {
                                     current_course.slug,
                                     sequence?.slug,
                                 ])}
-                                className="text-blue-400"
+                                className="line-clamp-2 inline-block text-blue-400"
                             >
                                 {sequence?.title ?? 'Séquence'}
                             </Link>{' '}
@@ -95,7 +98,7 @@ export default function StudentActivityDetails() {
                         </span>
                     )}
 
-                    <span className="text-md mt-1 font-semibold text-gray-600">
+                    <span className="text-md mt-1 line-clamp-2 inline-block font-semibold text-gray-600">
                         {activity.title}
                     </span>
                 </div>

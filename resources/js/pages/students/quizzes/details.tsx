@@ -1,10 +1,11 @@
 import { Button } from '@/components/ui/button';
 import StudentLayouts from '@/layouts/student/student-layouts';
 import { getQuizeTypeLabel } from '@/lib/type';
+import { details } from '@/routes/students/activities';
 import { index as indexQuizzes, start } from '@/routes/students/quizzes';
 import { Quiz, QuizQuestion } from '@/types/models/others';
 import { Link, usePage } from '@inertiajs/react';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, Eye, Play } from 'lucide-react';
 
 export default function StudentQuizDetails() {
     const { quiz } = usePage().props as unknown as { quiz: Quiz };
@@ -43,6 +44,18 @@ export default function StudentQuizDetails() {
                             <p className="mt-3 line-clamp-3 text-sm text-gray-600">
                                 {quiz.description}
                             </p>
+                        )}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        {/* Optional: link to activity details if exist */}
+                        {quiz.activity && (
+                            <Link
+                                href={details(quiz.activity?.slug)}
+                                className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
+                            >
+                                <Eye size={16} /> Voir l'activité
+                            </Link>
                         )}
                     </div>
 

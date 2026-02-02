@@ -8,10 +8,10 @@
 @custom-variant dark (&:is(.dark *));
 
 .form-input {
-    @apply rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-app-blue/70 focus:outline-none;
+    @apply rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-cblue/70 focus:outline-none;
 }
 .btn-primary {
-    @apply cursor-pointer rounded bg-app-blue px-4 py-2 text-white transition hover:bg-app-blue/90;
+    @apply cursor-pointer rounded bg-cblue px-4 py-2 text-white transition hover:bg-cblue/90;
 }
 .container {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
@@ -26,8 +26,12 @@ button {
         'Noto Color Emoji';
 
     /* custom */
-    --color-app-blue: #0d6efd;
-    --color-app-gray: #f2f6fd;
+    --color-csuccess: rgb(0, 150, 136);
+    --color-cblue: #007bff;
+    --color-cdark: #0c2a40;
+    --color-clcard: #cccccc;
+    --color-cdcard: #0c2a40;
+    --color-cgray: #f2f6fd;
     /* fin */
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);

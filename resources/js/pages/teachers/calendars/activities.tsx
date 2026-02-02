@@ -1,9 +1,12 @@
 import { SelectField } from '@/components/shared/form';
+import { Badge } from '@/components/ui/badge';
+import { subStrText } from '@/lib/tasks';
 import {
     activityStatusTypeLabels,
     activityTypeLabels,
     eventVisibilityTypeLabels,
     getActivityStatusTypeLabel,
+    getActivityTypeLabel,
     getModalityTypeLabel,
     modalityTypeLabels,
 } from '@/lib/type';
@@ -161,13 +164,6 @@ export default function TeacherActivities({
                             Gérez et organisez vos activités pédagogiques
                         </p>
                     </div>
-                    {/* <Link
-                            href="/events/create"
-                            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 font-medium text-white shadow-md transition-all duration-200 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg"
-                        >
-                            <Plus className="h-5 w-5" />
-                            Ajouter un événement
-                        </Link> */}
                 </div>
 
                 {/* Stats Cards */}
@@ -256,7 +252,7 @@ export default function TeacherActivities({
                     </div>
 
                     {/* Filter Toggle & View Mode */}
-                    <div className="mb-4 flex items-center justify-between">
+                    <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
                         <button
                             onClick={() => setExpandedFilters(!expandedFilters)}
                             className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
@@ -312,7 +308,7 @@ export default function TeacherActivities({
                                 {/* Type Event Filter */}
 
                                 <SelectField
-                                    label=" Type d'événement"
+                                    label="Type d'activité"
                                     value={filters.activityType}
                                     emptyOption="Tous les types"
                                     options={activityTypeLabels}
@@ -417,27 +413,32 @@ export default function TeacherActivities({
 
                                             {/* Badges */}
                                             <div className="mb-4 flex flex-wrap gap-2">
-                                                <span
-                                                    className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getactivityTypeColor(activity.activity_type)}`}
+                                                <Badge
+                                                    className={`text-xs font-semibold ${getactivityTypeColor(activity.activity_type)}`}
                                                 >
-                                                    {activityTypeLabels.find(
-                                                        (t) =>
-                                                            t.key ===
+                                                    {subStrText(
+                                                        getActivityTypeLabel(
                                                             activity.activity_type,
-                                                    )?.value ||
-                                                        activity.activity_type}
-                                                </span>
-                                                <span
-                                                    className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getStatusBadgeColor(activity.status)}`}
-                                                >
-                                                    {getActivityStatusTypeLabel(
-                                                        activity.activity_status,
+                                                        ),
+                                                        0,
+                                                        35,
                                                     )}
-                                                </span>
+                                                </Badge>
+                                                <Badge
+                                                    className={`text-xs font-semibold ${getStatusBadgeColor(activity.status)}`}
+                                                >
+                                                    {subStrText(
+                                                        getActivityStatusTypeLabel(
+                                                            activity.activity_status,
+                                                        ),
+                                                        0,
+                                                        35,
+                                                    )}
+                                                </Badge>
                                             </div>
 
                                             {/* Date & Time */}
-                                            <div className="mb-4 space-y-2 border-t border-gray-200 pt-4">
+                                            <div className="space-y-2 border-t border-gray-200 pt-4">
                                                 <div className="flex items-center gap-2 text-sm text-gray-700">
                                                     <Calendar className="h-4 w-4 text-gray-400" />
                                                     <span>
@@ -461,12 +462,20 @@ export default function TeacherActivities({
                                                 )}
 
                                                 <div className="flex items-center gap-2 text-sm text-gray-700">
-                                                    {getLocationIcon(activity)}
                                                     <span>
-                                                        {getModalityTypeLabel(
-                                                            activity.modality,
+                                                        {getLocationIcon(
+                                                            activity,
                                                         )}
                                                     </span>
+                                                    <Badge>
+                                                        {subStrText(
+                                                            getModalityTypeLabel(
+                                                                activity.modality,
+                                                            ),
+                                                            0,
+                                                            30,
+                                                        )}
+                                                    </Badge>
                                                 </div>
                                             </div>
 
@@ -501,10 +510,10 @@ export default function TeacherActivities({
                                 {filteredActivities.map((activity) => (
                                     <div
                                         key={activity.id}
-                                        className="group flex items-center justify-between border-b border-gray-200 p-6 transition-colors last:border-b-0 hover:bg-gray-50"
+                                        className="group flex flex-col items-start justify-between gap-4 border-b border-gray-200 p-2 transition-colors last:border-b-0 hover:bg-gray-50 sm:flex-row sm:items-center sm:p-4"
                                     >
                                         {/* Left: Color Bar + Info */}
-                                        <div className="flex flex-1 items-center gap-4">
+                                        <div className="flex flex-1 items-start gap-4 sm:items-center">
                                             {/* Color Bar */}
                                             <div
                                                 className="h-12 w-1 rounded-full"
@@ -516,20 +525,21 @@ export default function TeacherActivities({
                                             {/* Content */}
                                             <div className="min-w-0 flex-1">
                                                 {/* Title & Type */}
-                                                <div className="mb-2 flex items-center gap-3">
-                                                    <h3 className="truncate text-base font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
+                                                <div className="mb-2 flex flex-1 flex-col items-start gap-3 sm:flex-row sm:items-center">
+                                                    <h3 className="line-clamp-2 text-base font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
                                                         {activity.title}
                                                     </h3>
-                                                    <span
-                                                        className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-semibold whitespace-nowrap ${getactivityTypeColor(activity.activity_type)}`}
+                                                    <Badge
+                                                        className={`text-xs font-semibold whitespace-nowrap ${getactivityTypeColor(activity.activity_type)}`}
                                                     >
-                                                        {activityTypeLabels.find(
-                                                            (t) =>
-                                                                t.key ===
+                                                        {subStrText(
+                                                            getActivityTypeLabel(
                                                                 activity.activity_type,
-                                                        )?.value ||
-                                                            activity.activity_type}
-                                                    </span>
+                                                            ),
+                                                            0,
+                                                            35,
+                                                        )}
+                                                    </Badge>
                                                     <span
                                                         className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-semibold whitespace-nowrap ${getStatusBadgeColor(activity.status)}`}
                                                     >
@@ -540,37 +550,45 @@ export default function TeacherActivities({
                                                 </div>
 
                                                 {/* Details Row */}
-                                                <div className="flex flex-wrap gap-6 text-sm text-gray-600">
-                                                    <div className="flex items-center gap-2">
-                                                        <Calendar className="h-4 w-4 text-gray-400" />
-                                                        <span>
-                                                            {formatCompleteDate(
-                                                                activity.start_at ??
-                                                                    '',
-                                                            )}
-                                                        </span>
-                                                    </div>
-
-                                                    {activity.duration_minutes && (
+                                                <div className="flex flex-wrap gap-3 text-sm text-gray-600">
+                                                    <div className="flex flex-wrap items-center justify-between gap-3">
                                                         <div className="flex items-center gap-2">
-                                                            <Clock className="h-4 w-4 text-gray-400" />
+                                                            <Calendar className="h-4 w-4 text-gray-400" />
                                                             <span>
-                                                                {formatMinutes(
-                                                                    activity.duration_minutes,
+                                                                {formatCompleteDate(
+                                                                    activity.start_at ??
+                                                                        '',
                                                                 )}
                                                             </span>
                                                         </div>
-                                                    )}
+
+                                                        {activity.duration_minutes && (
+                                                            <div className="flex items-center gap-2">
+                                                                <Clock className="h-4 w-4 text-gray-400" />
+                                                                <span>
+                                                                    {formatMinutes(
+                                                                        activity.duration_minutes,
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
 
                                                     <div className="flex items-center gap-2">
-                                                        {getLocationIcon(
-                                                            activity,
-                                                        )}
                                                         <span>
-                                                            {getModalityTypeLabel(
-                                                                activity.modality,
+                                                            {getLocationIcon(
+                                                                activity,
                                                             )}
                                                         </span>
+                                                        <Badge>
+                                                            {subStrText(
+                                                                getModalityTypeLabel(
+                                                                    activity.modality,
+                                                                ),
+                                                                0,
+                                                                30,
+                                                            )}
+                                                        </Badge>
                                                     </div>
                                                 </div>
                                             </div>

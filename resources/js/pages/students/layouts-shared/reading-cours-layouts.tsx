@@ -13,7 +13,8 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import AvatarFallbackShared from '@/layouts/public/avatar-fallback';
-import { subStrText } from '@/lib/tasks';
+import { profileItemsTriggers } from '@/layouts/student/nav-items';
+import LogoutUserBtn from '@/lib/logout-user';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes/students';
 import { index, reading } from '@/routes/students/courses';
@@ -22,7 +23,7 @@ import { Course, Module, Sequence } from '@/types/models/course';
 import { Student } from '@/types/models/institut';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
-import { LogOut, Menu, Settings, User, X } from 'lucide-react';
+import { ListCollapseIcon, Menu, X } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 
 interface ReadingCourseLayoutProps {
@@ -85,12 +86,6 @@ export default function ReadingCourseLayout({
     //     { title: 'Récompenses', href: '/badges' },
     // ];
 
-    const profileItemsTriggers = [
-        { title: 'Mon Profil', href: '/profile', icon: User },
-        { title: 'Paramètres', href: '/settings', icon: Settings },
-        { title: 'Déconnexion', href: '/logout', icon: LogOut },
-    ];
-
     function handleMenuOpenNav() {
         setIsOpenMobileNav(!isOpenMobileNav);
     }
@@ -115,13 +110,13 @@ export default function ReadingCourseLayout({
             {/* header */}
             <div className="sticky top-0 right-0 left-0 z-40 sm:z-50">
                 <nav
-                    className={`h-[56px] border-b border-gray-200 bg-white shadow-sm`}
+                    className={`h-[56px] border-b border-gray-200 bg-white shadow-sm dark:bg-cdark`}
                 >
                     <div className="mx-auto px-4 sm:w-full sm:px-6 lg:px-8">
                         <div className="flex h-16 items-center justify-between">
                             {/* Logo */}
-                            <div className="flex gap-6">
-                                <div className="order-last lg:order-first">
+                            <div className="flex items-center gap-6">
+                                <div className="order-last p-2 lg:order-first dark:bg-white">
                                     <Link
                                         href={dashboard()}
                                         className="flex items-center gap-2"
@@ -131,7 +126,7 @@ export default function ReadingCourseLayout({
                                 </div>
                                 {!isOpenSidebarNav && (
                                     <Menu
-                                        className="text-black"
+                                        className=""
                                         onClick={handleSidebarTrigger}
                                     />
                                 )}
@@ -143,7 +138,7 @@ export default function ReadingCourseLayout({
                                     <Link
                                         key={item.href}
                                         href={item.href}
-                                        className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
+                                        className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-200"
                                     >
                                         {item.title}
                                     </Link>
@@ -156,7 +151,10 @@ export default function ReadingCourseLayout({
                             {auth.user != null && (
                                 <div className="hidden lg:block">
                                     <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
+                                        <DropdownMenuTrigger
+                                            asChild
+                                            className="border dark:border-gray-400"
+                                        >
                                             <Button
                                                 variant="ghost"
                                                 className="size-10 rounded-full p-1"
@@ -171,7 +169,7 @@ export default function ReadingCourseLayout({
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent
-                                            className="w-56 transition-all duration-300 ease-in-out"
+                                            className="w-56 transition-all duration-300 ease-in-out dark:bg-cdcard"
                                             align="end"
                                         >
                                             <div>
@@ -182,7 +180,7 @@ export default function ReadingCourseLayout({
                                                             <Link
                                                                 key={item.href}
                                                                 href={item.href}
-                                                                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                                                                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-200"
                                                                 onClick={() => {
                                                                     setIsOpenMobileNav(
                                                                         false,
@@ -197,6 +195,7 @@ export default function ReadingCourseLayout({
                                                         );
                                                     },
                                                 )}
+                                                <LogoutUserBtn />
                                             </div>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
@@ -281,6 +280,7 @@ export default function ReadingCourseLayout({
                                     </Link>
                                 );
                             })}
+                            <LogoutUserBtn />
                         </div>
                     </div>
                 )}
@@ -300,7 +300,7 @@ export default function ReadingCourseLayout({
                 ></div>
 
                 <div
-                    className={`fixed top-0 left-0 z-50 h-full overflow-y-auto border-t border-r bg-white p-6 text-black shadow-sm transition-all duration-300 ease-in-out sm:top-[56px] ${
+                    className={`fixed top-0 left-0 z-50 h-full overflow-y-auto border-t border-r bg-white p-6 shadow-sm transition-all duration-300 ease-in-out sm:top-[56px] dark:bg-cdcard ${
                         isOpenSidebarNav
                             ? `w-full translate-x-0 sm:w-[400px]`
                             : '-translate-x-full'
@@ -309,8 +309,8 @@ export default function ReadingCourseLayout({
                     <div className="mb-4">
                         {isOpenSidebarNav && (
                             <div className="flex justify-between">
-                                <h3 className="text-xl font-bold">
-                                    {subStrText(course.title, 0, 25)}
+                                <h3 className="line-clamp-1 text-xl font-bold">
+                                    {course.title}
                                 </h3>
                                 <X size={24} onClick={handleSidebarTrigger} />
                             </div>
@@ -329,7 +329,7 @@ export default function ReadingCourseLayout({
                                 >
                                     <AccordionTrigger>
                                         <div>
-                                            <h2 className="text-md mb-1 font-bold text-gray-600">
+                                            <h2 className="text-md mb-1 font-bold text-gray-600 dark:text-gray-400">
                                                 Module {module.order}
                                             </h2>
                                             {module.title}
@@ -340,25 +340,30 @@ export default function ReadingCourseLayout({
                                             {(
                                                 module.sequences as Sequence[]
                                             ).map((sequence) => (
-                                                <li
-                                                    key={sequence.id}
-                                                    className={`p-2 text-sm text-gray-600 hover:text-blue-600 ${sequenceId === sequence.id ? 'border-l-2 border-app-blue bg-app-blue/5 font-semibold' : ''}`}
-                                                >
-                                                    <Link
-                                                        href={reading([
-                                                            course.slug,
-                                                            sequence.slug,
-                                                        ])}
+                                                <div className="flex items-center gap-1">
+                                                    <ListCollapseIcon
+                                                        size={10}
+                                                    />
+                                                    <li
+                                                        key={sequence.id}
+                                                        className={`p-2 text-sm text-gray-600 hover:text-blue-400 dark:text-gray-300 ${sequenceId === sequence.id ? 'border-l-2 border-cblue bg-cblue/5 font-semibold' : ''}`}
                                                     >
-                                                        <span
-                                                            onClick={
-                                                                handleSidebarItemClic
-                                                            }
+                                                        <Link
+                                                            href={reading([
+                                                                course.slug,
+                                                                sequence.slug,
+                                                            ])}
                                                         >
-                                                            {sequence.title}
-                                                        </span>
-                                                    </Link>
-                                                </li>
+                                                            <span
+                                                                onClick={
+                                                                    handleSidebarItemClic
+                                                                }
+                                                            >
+                                                                {sequence.title}
+                                                            </span>
+                                                        </Link>
+                                                    </li>
+                                                </div>
                                             ))}
                                         </ul>
                                     </AccordionContent>
@@ -371,7 +376,7 @@ export default function ReadingCourseLayout({
             {/* main */}
             <div
                 className={cn(
-                    'p-6 transition-all duration-300',
+                    'p-2 transition-all duration-300 sm:p-6',
                     mainMarginClass,
                 )}
             >

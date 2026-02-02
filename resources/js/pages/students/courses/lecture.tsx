@@ -60,7 +60,10 @@ export default function StudentCourseContent() {
                     {showSequenceDetails ? 'Activités' : 'Détails séquence'}
                 </button>
             </div>
-
+            {/* détails séquence */}
+            {showSequenceDetails && (
+                <SequenceDetailsShared sequence={sequence} />
+            )}
             {/* détail activité */}
             {!showSequenceDetails && (
                 <div>
@@ -68,8 +71,8 @@ export default function StudentCourseContent() {
                         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
                             {/* Fixed Pagination Header */}
                             <div className="sticky top-[56px] z-30 border-b border-gray-200 bg-white shadow-sm">
-                                <div className="px-6 py-4">
-                                    <div className="flex items-center justify-between">
+                                <div className="px-2 py-4 sm:px-6">
+                                    <div className="flex flex-col items-center justify-between sm:flex-row">
                                         <div className="flex-1">
                                             <h2 className="mb-2 text-xl font-semibold text-gray-900">
                                                 {currentActivity?.title}
@@ -92,7 +95,7 @@ export default function StudentCourseContent() {
                                         </div>
 
                                         {/* Navigation Buttons */}
-                                        <div className="ml-6 flex items-center gap-3">
+                                        <div className="ml-6 flex items-center justify-end gap-3">
                                             <button
                                                 onClick={handlePrevious}
                                                 disabled={
@@ -120,11 +123,7 @@ export default function StudentCourseContent() {
                             </div>
 
                             {/* Main Content */}
-                            <div className="px-6 py-8">
-                                <ActivityDetailsShered
-                                    activity={currentActivity}
-                                />
-                            </div>
+                            <ActivityDetailsShered activity={currentActivity} />
                         </div>
                     ) : (
                         <div>
@@ -135,11 +134,6 @@ export default function StudentCourseContent() {
                         </div>
                     )}
                 </div>
-            )}
-
-            {/* détails séquence */}
-            {showSequenceDetails && (
-                <SequenceDetailsShared sequence={sequence} />
             )}
         </ReadingCoursLayouts>
     );

@@ -311,7 +311,7 @@ export default function ModuleSequenceDataTable({
                                 ? create([module.course?.slug, module.id])
                                 : '#'
                         }
-                        className="btn-primary inline-block bg-app-blue !py-2 text-center text-white"
+                        className="btn-primary bg-cblue inline-block !py-2 text-center text-white"
                     >
                         Ajouter <IoAdd className="inline-block h-7 w-7" />
                     </Link>

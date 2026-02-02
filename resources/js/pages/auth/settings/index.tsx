@@ -28,7 +28,7 @@ export default function UserSettings() {
             icon: null,
         },
     ];
-    const isActiveClass = '!text-app-blue border-b border-app-blue';
+    const isActiveClass = '!text-cblue border-b border-cblue';
     function handleNavItemClic(e: React.MouseEvent, item: NavItem) {
         e.preventDefault();
         setShowIndex(item.index);

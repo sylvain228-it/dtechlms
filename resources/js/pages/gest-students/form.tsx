@@ -272,7 +272,7 @@
 //                                         </div>
 //                                         <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
 //                                             <div
-//                                                 className="h-full rounded-full bg-app-blue transition-all duration-300"
+//                                                 className="h-full rounded-full bg-cblue transition-all duration-300"
 //                                                 style={{
 //                                                     width: `${uploadProgress}%`,
 //                                                 }}

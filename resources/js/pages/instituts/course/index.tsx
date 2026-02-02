@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { useInitials } from '@/hooks/use-initials';
 import InstitutLayouts from '@/layouts/instituts/institut-layouts';
 import { BuildCoursStatusBadge } from '@/lib/simple-utility';
-import { subStrText } from '@/lib/tasks';
 import { saveStatusLabels } from '@/lib/type';
 import { formatDate } from '@/lib/utils';
 import { dashboard } from '@/routes/institut';
@@ -116,8 +115,8 @@ export default function InstitutCoursesListe() {
 
                                     <div className="px-4 pt-2 pb-4">
                                         <Link href={details(c.slug)}>
-                                            <h3 className="mb-2 text-[15px] font-semibold text-gray-800 capitalize">
-                                                {subStrText(c.title, 0, 25)}
+                                            <h3 className="mb-2 line-clamp-1 text-[15px] font-semibold text-gray-800 capitalize">
+                                                {c.title}
                                             </h3>
                                         </Link>
 
@@ -158,13 +157,9 @@ export default function InstitutCoursesListe() {
                                                         )}
                                                     </AvatarFallback>
                                                 </Avatar>
-                                                <p className="text-sm text-gray-500">
-                                                    {subStrText(
-                                                        c.teacher?.first_name ??
-                                                            '',
-                                                        0,
-                                                        15,
-                                                    )}{' '}
+                                                <p className="line-clamp-1 text-sm text-gray-500">
+                                                    {c.teacher?.first_name ??
+                                                        ''}{' '}
                                                 </p>
                                             </div>
                                             <span className="text-[10px] text-gray-400">

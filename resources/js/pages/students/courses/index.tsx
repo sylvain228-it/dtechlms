@@ -1,9 +1,8 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useInitials } from '@/hooks/use-initials';
-import { subStrText } from '@/lib/tasks';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { details } from '@/routes/students/courses';
 import { Course, Enrollment } from '@/types/models/course';
 
+import AvatarFallbackShared from '@/layouts/public/avatar-fallback';
 import StudentLayouts from '@/layouts/student/student-layouts';
 import { Link, usePage } from '@inertiajs/react';
 import React from 'react';
@@ -24,16 +23,15 @@ export default function StudentCourses() {
             (c.description ?? '').toLowerCase().includes(query.toLowerCase()),
     );
     // const lessonsCount = student?.courses.sequentces?.length ?? 0;
-    const getInitials = useInitials();
     return (
         <StudentLayouts title="Mes cours">
-            <div className="mx-auto mt-6 max-w-6xl px-4">
+            <div className="mx-auto mt-6 max-w-6xl px-4 pb-20">
                 <div className="mb-6 flex flex-col items-center justify-between sm:flex-row">
                     <div className="mb-4">
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             Mes cours
                         </h1>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
                             Accédez à vos cours, suivez votre progression et
                             retrouvez vos enseignants.
                         </p>
@@ -46,7 +44,7 @@ export default function StudentCourses() {
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 placeholder="Rechercher un cours..."
-                                className="w-72 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm shadow-sm placeholder:text-gray-400"
+                                className="form-input !w-72"
                             />
                             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
                                 <svg
@@ -68,11 +66,11 @@ export default function StudentCourses() {
                 </div>
 
                 {filtered.length === 0 ? (
-                    <div className="rounded-lg border bg-white p-8 text-center">
-                        <h2 className="text-lg font-semibold text-gray-900">
+                    <div className="rounded-lg border p-8 text-center">
+                        <h2 className="text-lg font-semibold">
                             Aucun cours trouvé
                         </h2>
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm">
                             Vous n'êtes inscrit à aucun cours pour le moment.
                             Explorez la plateforme pour trouver des cours
                             intéressants.
@@ -91,7 +89,7 @@ export default function StudentCourses() {
                         {filtered.map((course: Course) => (
                             <article
                                 key={course.id}
-                                className="group rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md"
+                                className="group rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md dark:bg-cdcard"
                             >
                                 <div className="relative h-40 overflow-hidden rounded-md">
                                     <Link href={details(course.slug)}>
@@ -109,29 +107,21 @@ export default function StudentCourses() {
                                             Gratuit
                                         </div>
                                     ) : (
-                                        <div className="absolute top-3 left-3 rounded-full bg-yellow-600 px-3 py-1 text-xs font-semibold text-white">
+                                        <div className="absolute top-3 left-3 rounded-full bg-yellow-700 px-3 py-1 text-xs font-semibold text-white">
                                             Payant
                                         </div>
                                     )}
                                 </div>
 
-                                <div className="mt-3 flex items-start justify-between gap-3">
+                                <div className="mt-3 flex flex-col items-start justify-between gap-3 sm:flex-row">
                                     <div className="flex-1">
                                         <Link href={details(course.slug)}>
-                                            <h3 className="text-md font-semibold text-gray-900">
-                                                {subStrText(
-                                                    course.title ?? '',
-                                                    0,
-                                                    50,
-                                                )}
+                                            <h3 className="text-md line-clamp-1 font-semibold text-gray-900 dark:text-gray-200">
+                                                {course.title ?? ''}
                                             </h3>
                                         </Link>
-                                        <p className="mt-1 line-clamp-2 text-sm text-gray-500">
-                                            {subStrText(
-                                                course.description ?? '',
-                                                0,
-                                                100,
-                                            )}
+                                        <p className="mt-2 line-clamp-2 text-sm text-gray-500 dark:text-gray-300">
+                                            {course.description ?? ''}
                                         </p>
                                     </div>
 
@@ -154,8 +144,7 @@ export default function StudentCourses() {
                                                     key={course.teacher.id}
                                                     src={
                                                         course.teacher
-                                                            .profile_picture_url ??
-                                                        '/assets/avatar-placeholder.png'
+                                                            .profile_picture_url
                                                     }
                                                     alt={`${course.teacher.first_name} ${course.teacher.last_name}`}
                                                     className="h-8 w-8 rounded-full shadow-xs ring-1 ring-white"
@@ -163,7 +152,7 @@ export default function StudentCourses() {
                                             )}
                                     </div>
 
-                                    <div className="text-xs text-gray-500">
+                                    <div className="text-xs text-gray-500 dark:text-gray-300">
                                         Dernière mise à jour:{' '}
                                         {new Date(
                                             course.updated_at ?? '',
@@ -172,7 +161,7 @@ export default function StudentCourses() {
                                 </div>
                                 <div className="mt-1 border-t px-4 pt-2">
                                     <div className="flex items-center gap-2">
-                                        <Avatar className="cursor-pointer overflow-hidden rounded-full">
+                                        <Avatar className="cursor-pointer overflow-hidden rounded-full border dark:border-gray-100">
                                             {course.profile_picture_url !=
                                                 null && (
                                                 <AvatarImage
@@ -187,23 +176,17 @@ export default function StudentCourses() {
                                                     }
                                                 />
                                             )}
-                                            <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                                {getInitials(
+                                            <AvatarFallbackShared
+                                                first_name={
                                                     course.teacher
                                                         ?.first_name ??
-                                                        course.teacher
-                                                            ?.last_name ??
-                                                        '',
-                                                )}
-                                            </AvatarFallback>
+                                                    course.teacher?.last_name
+                                                }
+                                            />
                                         </Avatar>
-                                        <p className="text-sm text-gray-500">
-                                            {subStrText(
-                                                course.teacher?.first_name ??
-                                                    '',
-                                                0,
-                                                15,
-                                            )}{' '}
+                                        <p className="line-clamp-1 text-sm text-gray-500 dark:text-gray-200">
+                                            {course.teacher?.first_name ??
+                                                ''}{' '}
                                         </p>
                                     </div>
                                 </div>

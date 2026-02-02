@@ -31,7 +31,7 @@ export const PublicNav = () => {
                         <div className="flex items-center space-x-2">
                             <Link
                                 href={login()}
-                                className="btn-primary !hover:bg-app-blue !hover:text-white !my-1 border border-current !bg-transparent !text-app-blue"
+                                className="btn-primary !hover:bg-cblue !hover:text-white !text-cblue !my-1 border border-current !bg-transparent"
                             >
                                 Se connecter
                             </Link>

@@ -4,7 +4,7 @@ import { User } from '@/types';
 
 export function ProfileItemsTrigger({ user }: { user: User | undefined }) {
     return (
-        <Avatar className="size-8 overflow-hidden rounded-full">
+        <Avatar className="size-8 overflow-hidden rounded-full border dark:border-gray-300">
             <AvatarImage
                 src={user?.profile_picture_url ?? ''}
                 alt={user?.first_name ?? ''}

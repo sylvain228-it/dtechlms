@@ -10,7 +10,7 @@ export default function AvatarFallbackShared({
 }: Propos) {
     const getInitials = useInitials();
     return (
-        <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+        <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-cdcard dark:text-white">
             {getInitials(`${first_name ?? ''} ${last_name ?? ''}`)}
         </AvatarFallback>
     );

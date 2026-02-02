@@ -1,1 +1,0 @@
-import{c as s,j as r}from"./app-CjIWy3eH.js";function m(o){const t=s.c(2),{contentHtml:n}=o;let e;return t[0]!==n?(e=r.jsx("div",{className:"article-content prose max-w-none",dangerouslySetInnerHTML:{__html:n}}),t[0]=n,t[1]=e):e=t[1],e}export{m as G};

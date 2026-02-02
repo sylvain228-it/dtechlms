@@ -8,7 +8,7 @@ import { formatDate, formatMinutes } from '@/lib/utils';
 import { details, start } from '@/routes/students/quizzes';
 import { Quiz } from '@/types/models/others';
 import { Link, usePage } from '@inertiajs/react';
-import { Clock, Eye, Play, Repeat } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Clock, Eye, Play, Repeat } from 'lucide-react';
 import React from 'react';
 
 export default function StudentQuizzes() {
@@ -29,7 +29,7 @@ export default function StudentQuizzes() {
 
     return (
         <StudentLayouts title="Quizzes">
-            <div className="mx-auto mt-6 max-w-6xl px-4">
+            <div className="mx-auto mt-6 max-w-6xl px-4 pb-6">
                 <div className="mb-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">
@@ -98,44 +98,38 @@ export default function StudentQuizzes() {
                             {paginated.map((quiz) => (
                                 <article
                                     key={quiz.id}
-                                    className="group rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md"
+                                    className="group max-w-xs rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md"
                                 >
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="flex-1">
-                                            <h3 className="text-md font-semibold text-gray-900">
-                                                {subStrText(
-                                                    quiz.title ?? '',
-                                                    0,
-                                                    60,
-                                                )}
-                                            </h3>
-                                            <p className="mt-1 line-clamp-3 text-sm text-gray-500">
-                                                {subStrText(
-                                                    quiz.description ?? '',
-                                                    0,
-                                                    100,
-                                                )}
-                                            </p>
+                                    <div className="flex flex-col items-start justify-between gap-3">
+                                        <h3 className="text-md line-clamp-2 font-semibold text-gray-900">
+                                            {quiz.title ?? ''}
+                                        </h3>
+                                        <p className="mt-1 line-clamp-3 text-sm text-gray-500">
+                                            {quiz.description ?? ''}
+                                        </p>
 
-                                            <Badge className="my-2">
-                                                {getQuizeTypeLabel(
+                                        <Badge className="my-2">
+                                            {subStrText(
+                                                getQuizeTypeLabel(
                                                     quiz.quiz_type,
-                                                )}
-                                            </Badge>
-                                            <div className="mt-3 flex flex-wrap items-center gap-2">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
-                                                        <Repeat className="h-3 w-3" />
-                                                        Tentatives:{' '}
-                                                        {quiz.max_attempts}
-                                                    </div>
+                                                ),
+                                                0,
+                                                35,
+                                            )}
+                                        </Badge>
+                                        <div className="mt-3 flex flex-wrap items-center gap-2">
+                                            <div className="flex items-center gap-3">
+                                                <div className="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
+                                                    <Repeat className="h-3 w-3" />
+                                                    Tentatives:{' '}
+                                                    {quiz.max_attempts}
                                                 </div>
-                                                {quiz.is_mandatory && (
-                                                    <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-                                                        Obligatoire
-                                                    </span>
-                                                )}
                                             </div>
+                                            {quiz.is_mandatory && (
+                                                <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                                    Obligatoire
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
 
@@ -200,7 +194,10 @@ export default function StudentQuizzes() {
                                         setPage((p) => Math.max(1, p - 1))
                                     }
                                 >
-                                    Précédent
+                                    <span className="hidden sm:block">
+                                        Précédent
+                                    </span>
+                                    <ArrowLeft className="text-2xl sm:hidden" />
                                 </Button>
                                 <div className="text-sm text-gray-600">
                                     Page {page} sur {pages}
@@ -213,7 +210,10 @@ export default function StudentQuizzes() {
                                         setPage((p) => Math.min(pages, p + 1))
                                     }
                                 >
-                                    Suivant
+                                    <span className="hidden sm:block">
+                                        Suivant
+                                    </span>
+                                    <ArrowRight className="text-2xl sm:hidden" />
                                 </Button>
                             </div>
                         </div>

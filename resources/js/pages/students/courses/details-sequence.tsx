@@ -1,7 +1,6 @@
 import { Divider } from '@/components/divider';
 import StudentLayouts from '@/layouts/student/student-layouts';
 import GetHtmlContent from '@/lib/get-html-content';
-import { subStrText } from '@/lib/tasks';
 import { getSequenceTypeLabel } from '@/lib/type';
 import { formatHours } from '@/lib/utils';
 import { details, moduleDetails } from '@/routes/students/courses';
@@ -49,9 +48,9 @@ export default function SequenceDetails() {
                             </h1>
                         </div>
 
-                        <p className="mt-2 max-w-2xl text-sm text-gray-600">
+                        <p className="mt-2 line-clamp-1 max-w-2xl text-sm text-gray-600">
                             {sequence.description ? (
-                                subStrText(sequence.description, 0, 100)
+                                sequence.description
                             ) : (
                                 <span className="text-gray-400">
                                     Aucune description fournie.

@@ -1,3 +1,4 @@
+import { StudyLevel } from '@/lib/type';
 import { User } from '..';
 import { Course, Enrollment } from './course';
 
@@ -191,7 +192,7 @@ export interface Student {
 
     // Informations académiques
     student_code?: string | null; // Matricule étudiant
-    current_level?: string | null; // ex : L1, Terminale, BTS 2
+    current_level?: StudyLevel; // ex : L1, Terminale, BTS 2
     program?: string | null; // Filière / formation
     interests?: string[] | null; // intérêts d'apprentissage
     enrollment_date?: string | null; // ISO date string

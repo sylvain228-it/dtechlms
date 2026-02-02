@@ -26,7 +26,7 @@ export default function UserPageBanner({ title }: { title: string }) {
                 <div className="flex items-center gap-4">
                     <Button
                         onClick={() => history.back()}
-                        className="btn-primary border border-app-blue !bg-transparent !py-1 text-white"
+                        className="btn-primary border-cblue border !bg-transparent !py-1 text-white"
                     >
                         <ArrowLeft />
                     </Button>

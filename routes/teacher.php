@@ -38,8 +38,10 @@ Route::group(['prefix' => '/enseignants', 'middleware' => ['status.user', 'teach
         Route::resource('activities', TeacherCourseActivity::class);
         Route::get('/api/get-entity-data', [TeacherCourseActivity::class, 'getEntityData'])->name('getEntityData');
     });
-    Route::get('liste-des-activités', [TeacherCourseActivity::class, 'allActivities'])->name('allActivities');
     Route::resource('skills', SkillController::class);
+    Route::get('liste-des-activites', [TeacherCourseActivity::class, 'allActivities'])->name('allActivities');
+    Route::get('liste-des-evaluation', [TeacherEvaluationController::class, 'allEvaluations'])->name('allEvaluations');
+    Route::get('liste-des-quizzes', [TeacherQuizeController::class, 'allQuizzes'])->name('allQuizzes');
 
 
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {

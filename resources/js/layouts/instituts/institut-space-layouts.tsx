@@ -91,7 +91,7 @@ export default function InstitutSpaceLayouts({
             setMainMarginClass(`lg:ml-[300px]`);
         }
     }
-    const isActiveClass = '!bg-app-blue !text-white';
+    const isActiveClass = '!bg-cblue !text-white';
     return (
         <>
             {/* header */}

@@ -1,4 +1,5 @@
 import AppLogo from '@/components/app-logo-icon';
+import AppearanceToggler from '@/components/appearance-toggler';
 import { Divider } from '@/components/divider';
 import DefualtProfileSvg from '@/components/profile-svg';
 import { ProfileItemsTrigger } from '@/components/shared/user-profile-trigger';
@@ -24,7 +25,7 @@ function AuthButton() {
         <div className="flex items-center space-x-2">
             <Link
                 href={login()}
-                className="btn-primary !hover:bg-app-blue !hover:text-white !my-1 border border-current !bg-transparent !text-app-blue"
+                className="btn-primary !hover:bg-cblue !hover:text-white !my-1 border border-current !bg-transparent !text-cblue"
             >
                 Se connecter
             </Link>
@@ -61,13 +62,13 @@ export default function PublicNavbar() {
     return (
         <div className="sticky top-0 right-0 left-0 z-40 sm:z-50">
             <nav
-                className={`h-[56px] border-b border-gray-200 bg-white shadow-sm`}
+                className={`h-[56px] border-b border-gray-200 bg-white shadow-sm dark:bg-cdcard`}
             >
                 <div className="mx-auto px-4 sm:w-full sm:px-6 lg:px-8">
                     <div className="flex h-16 items-center justify-between">
                         {/* Logo */}
-                        <div className="flex gap-6">
-                            <div className="order-last lg:order-first">
+                        <div className="flex items-center gap-6">
+                            <div className="order-last p-2 lg:order-first dark:bg-white">
                                 <Link
                                     href={'/'}
                                     className="flex items-center gap-2"
@@ -77,93 +78,108 @@ export default function PublicNavbar() {
                             </div>
                         </div>
 
-                        {/* Desktop Navigation */}
-                        <div className="hidden lg:flex lg:items-center lg:gap-8">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
-                                >
-                                    {item.title}
-                                </Link>
-                            ))}
-
-                            {auth.user == null && <AuthButton />}
-
-                            {/* Dropdown */}
-                        </div>
-
-                        {/* Right Section - Desktop */}
-                        {auth.user != null && (
-                            <div className="hidden lg:block">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            className="size-10 rounded-full p-1"
-                                        >
-                                            <ProfileItemsTrigger
-                                                user={auth.user as UserModel}
-                                            />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        className="w-56 transition-all duration-300 ease-in-out"
-                                        align="end"
+                        <div className="flex items-center">
+                            {/* Desktop Navigation */}
+                            <div className="hidden lg:flex lg:items-center lg:gap-8">
+                                {navItems.map((item) => (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-200"
                                     >
-                                        <div>
-                                            {profileItemsTriggers.map(
-                                                (item) => {
-                                                    const Icon = item.icon;
-                                                    return (
-                                                        <Link
-                                                            key={item.href}
-                                                            href={item.href}
-                                                            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                                                            onClick={() => {
-                                                                setIsOpenMobileNav(
-                                                                    false,
-                                                                );
-                                                            }}
-                                                        >
-                                                            <Icon size={16} />
-                                                            {item.title}
-                                                        </Link>
-                                                    );
-                                                },
-                                            )}
-                                        </div>
-                                        <LogoutUserBtn />
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                        {item.title}
+                                    </Link>
+                                ))}
+
+                                {auth.user == null && <AuthButton />}
+
+                                {/* Dropdown */}
                             </div>
-                        )}
 
-                        {/* Mobile Menu Button */}
+                            {/* Right Section - Desktop */}
+                            <div className="flex items-center justify-end gap-4">
+                                <AppearanceToggler />
+                                {auth.user != null && (
+                                    <div className="hidden lg:block">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    className="size-10 rounded-full p-1"
+                                                >
+                                                    <ProfileItemsTrigger
+                                                        user={
+                                                            auth.user as UserModel
+                                                        }
+                                                    />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent
+                                                className="w-56 transition-all duration-300 ease-in-out dark:bg-cdcard"
+                                                align="end"
+                                            >
+                                                <div>
+                                                    {profileItemsTriggers.map(
+                                                        (item) => {
+                                                            const Icon =
+                                                                item.icon;
+                                                            return (
+                                                                <Link
+                                                                    key={
+                                                                        item.href
+                                                                    }
+                                                                    href={
+                                                                        item.href
+                                                                    }
+                                                                    className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-300"
+                                                                    onClick={() => {
+                                                                        setIsOpenMobileNav(
+                                                                            false,
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    <Icon
+                                                                        size={
+                                                                            16
+                                                                        }
+                                                                    />
+                                                                    {item.title}
+                                                                </Link>
+                                                            );
+                                                        },
+                                                    )}
+                                                </div>
+                                                <LogoutUserBtn />
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                )}
+                            </div>
+                            {/* Mobile Menu Button */}
 
-                        <button
-                            onClick={handleMenuOpenNav}
-                            className="rounded-lg p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
-                        >
-                            {isOpenMobileNav ? (
-                                <X size={24} />
-                            ) : (
-                                <div>
-                                    {auth.user == null ? (
-                                        <DefualtProfileSvg />
-                                    ) : (
-                                        <ProfileItemsTrigger
-                                            user={
-                                                auth.user as
-                                                    | UserModel
-                                                    | undefined
-                                            }
-                                        />
-                                    )}
-                                </div>
-                            )}
-                        </button>
+                            <button
+                                onClick={handleMenuOpenNav}
+                                className="rounded-lg p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
+                            >
+                                {isOpenMobileNav ? (
+                                    <X size={24} />
+                                ) : (
+                                    <div>
+                                        {auth.user == null ? (
+                                            <DefualtProfileSvg />
+                                        ) : (
+                                            <ProfileItemsTrigger
+                                                user={
+                                                    auth.user as
+                                                        | UserModel
+                                                        | undefined
+                                                }
+                                            />
+                                        )}
+                                    </div>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -175,12 +191,12 @@ export default function PublicNavbar() {
                         className="fixed top-0 z-40 h-full w-full bg-black/50 transition-all duration-300 ease-in-out"
                     ></div>
                     <div
-                        className={`fixed right-0 bottom-0 z-50 w-full animate-in gap-4 overflow-y-auto rounded-t-lg bg-white p-4 shadow-lg transition-all duration-300 ease-in-out ${isOpenMobileNav ? 'slide-in-from-bottom' : 'slide-out-to-bottom'}`}
+                        className={`fixed right-0 bottom-0 z-50 w-full animate-in gap-4 overflow-y-auto rounded-t-lg bg-white p-4 shadow-lg transition-all duration-300 ease-in-out dark:bg-cdcard ${isOpenMobileNav ? 'slide-in-from-bottom' : 'slide-out-to-bottom'}`}
                     >
                         <div className="flex justify-end">
                             <button
                                 onClick={handleMenuOpenNav}
-                                className="rounded-lg p-2 text-gray-700 hover:bg-gray-100"
+                                className="rounded-lg p-2"
                             >
                                 {<X size={24} />}
                             </button>
@@ -190,7 +206,7 @@ export default function PublicNavbar() {
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
+                                className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-300"
                             >
                                 {item.title}
                             </Link>
@@ -205,7 +221,7 @@ export default function PublicNavbar() {
                                     />
 
                                     <div>
-                                        <p className="text-sm font-medium text-gray-900">
+                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                             {auth.user.first_name == null &&
                                             auth.user.last_name == null ? (
                                                 <span>
@@ -218,7 +234,7 @@ export default function PublicNavbar() {
                                                 </span>
                                             )}
                                         </p>
-                                        <p className="text-xs text-gray-600">
+                                        <p className="text-xs text-gray-600 dark:text-gray-300">
                                             {auth.user.email}
                                         </p>
                                     </div>
@@ -229,7 +245,7 @@ export default function PublicNavbar() {
                                         <Link
                                             key={item.href}
                                             href={item.href}
-                                            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                                            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-300"
                                             onClick={() => {
                                                 setIsOpenMobileNav(false);
                                             }}

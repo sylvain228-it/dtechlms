@@ -20,7 +20,7 @@ export default function StudentAllActivitiesIndex() {
             <div className="mb-4 flex justify-end">
                 <button
                     onClick={() => setShowCalendar(!showCalendar)}
-                    className="inline-flex items-center gap-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                    className="inline-flex items-center gap-2 rounded bg-cblue px-4 py-2 text-white hover:bg-blue-700"
                 >
                     <Calendar className="h-4 w-4" />
                     {showCalendar ? 'Voir la liste' : 'Voir le calendrier'}

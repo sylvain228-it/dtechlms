@@ -15,6 +15,7 @@ import {
     formatCompleteDate,
     formatMinutes,
 } from '@/lib/utils';
+import { details as evaluationDetails } from '@/routes/students/evaluations';
 import { details as quizeDetails } from '@/routes/students/quizzes';
 import { CourseActivity } from '@/types/models/course';
 import { EntityResource, Resource } from '@/types/models/others';
@@ -34,30 +35,23 @@ export default function ActivityDetailsShered({
         activity.activity_type == 'lecture' ||
         activity.activity_type == 'discussion';
 
-    const quiz =
-        activity.activity_type == 'quiz' ||
-        activity.activity_type == 'assessment'
-            ? activity.quiz
-            : null;
+    const quiz = activity.activity_type == 'quiz' ? activity.quiz : null;
     const evaluation =
-        activity.activity_type == 'quiz' ||
-        activity.activity_type == 'assessment'
-            ? activity.evaluation
-            : null;
+        activity.activity_type == 'assessment' ? activity.evaluation : null;
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen">
             {/* Main Content */}
-            <div className="px-6 py-8">
+            <div className="px-2 py-8 sm:px-6">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                     {/* Left: Content Area */}
                     <div className="space-y-6 lg:col-span-2">
                         {/* Activity Card */}
                         <div className="overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:shadow-lg">
                             {/* Activity Content */}
-                            <div className="p-8">
+                            <div className="p-3 sm:p-6">
                                 {/* Activity Type Badge */}
                                 <div className="mb-6">
-                                    <span className="inline-block rounded-lg border border-blue-200 bg-gradient-to-r from-blue-100 to-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                                    <span className="inline-block rounded-lg border border-blue-200 bg-gradient-to-r from-blue-100 to-blue-50 px-4 py-2 text-sm font-semibold text-cblue">
                                         {getActivityTypeLabel(
                                             activity.activity_type,
                                         ) || 'Lecture'}
@@ -77,7 +71,7 @@ export default function ActivityDetailsShered({
 
                                 {/* Estimated Time */}
                                 {activity.estimated_minutes && (
-                                    <div className="mb-8 flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
+                                    <div className="mb-8 flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50">
                                         <svg
                                             className="h-5 w-5 text-amber-600"
                                             fill="currentColor"
@@ -101,7 +95,7 @@ export default function ActivityDetailsShered({
                                 )}
 
                                 {/* Content/Exercise */}
-                                <div className="border-b border-gray-200 bg-gray-50 p-6">
+                                <div className="border-b border-gray-200 bg-gray-50">
                                     <div className="rounded-lg border bg-white p-6 shadow-sm">
                                         <div className="grid gap-3 md:grid-cols-2">
                                             <div className="rounded-lg bg-gray-50 p-3">
@@ -144,28 +138,32 @@ export default function ActivityDetailsShered({
                                                         : 'Non'}
                                                 </div>
                                             </div>
-                                            <div>
-                                                <div className="text-sm text-gray-500">
-                                                    Type d'évaluation
-                                                </div>
-                                                <div className="mt-1 text-sm font-bold text-gray-900">
-                                                    {activity.evaluation_type
-                                                        ? getEvaluateTypeLabel(
-                                                              activity.evaluation_type as EvaluateType,
-                                                          )
-                                                        : '-'}
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="text-sm text-gray-500">
-                                                    Poids
-                                                </div>
-                                                <div className="mt-1 text-sm font-bold text-gray-900">
-                                                    {activity.evaluation_weight ??
-                                                        '-'}
-                                                    {activity.note_unit}
-                                                </div>
-                                            </div>
+                                            {activity.is_evaluated && (
+                                                <>
+                                                    <div>
+                                                        <div className="text-sm text-gray-500">
+                                                            Type d'évaluation
+                                                        </div>
+                                                        <div className="mt-1 text-sm font-bold text-gray-900">
+                                                            {activity.evaluation_type
+                                                                ? getEvaluateTypeLabel(
+                                                                      activity.evaluation_type as EvaluateType,
+                                                                  )
+                                                                : '-'}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-sm text-gray-500">
+                                                            Poids
+                                                        </div>
+                                                        <div className="mt-1 text-sm font-bold text-gray-900">
+                                                            {activity.evaluation_weight ??
+                                                                '-'}
+                                                            {activity.note_unit}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
 
                                         <Separator className="my-3" />
@@ -257,7 +255,7 @@ export default function ActivityDetailsShered({
                                     </div>
 
                                     {quiz && (
-                                        <div className="my-5 border-b border-gray-200 bg-gray-50 p-6 shadow-sm">
+                                        <div className="my-5 border-b border-gray-200 bg-gray-50 p-4 shadow-sm">
                                             <Separator className="my-3" />
                                             <div className="grid gap-4 md:grid-cols-2">
                                                 <div>
@@ -267,22 +265,24 @@ export default function ActivityDetailsShered({
                                                             : 'Quize'}
                                                     </div>
                                                 </div>
-
-                                                <div>
-                                                    <div className="text-sm text-gray-500">
-                                                        Seuil de succès
+                                                {quiz.success_threshold && (
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="text-sm text-gray-500">
+                                                            Seuil de succès
+                                                        </div>
+                                                        <div className="mt-1 text-sm font-bold text-gray-900">
+                                                            {Number(
+                                                                quiz.success_threshold,
+                                                            )}{' '}
+                                                            {activity.note_unit}
+                                                        </div>
                                                     </div>
-                                                    <div className="mt-1 text-sm font-bold text-gray-900">
-                                                        {quiz.success_threshold ??
-                                                            '-'}
-                                                        {activity.note_unit}
-                                                    </div>
-                                                </div>
+                                                )}
                                                 <div className="md:col-span-2">
                                                     <div className="text-sm text-gray-500">
                                                         Titre
                                                     </div>
-                                                    <div className="text-md mt-1 font-bold text-gray-600">
+                                                    <div className="text-md mt-1 line-clamp-1 font-bold text-gray-600">
                                                         <Link
                                                             href={quizeDetails(
                                                                 quiz.slug,
@@ -306,11 +306,61 @@ export default function ActivityDetailsShered({
                                             </div>
                                         </div>
                                     )}
+                                    {evaluation && (
+                                        <div className="my-5 border-b border-gray-200 bg-gray-50 p-4 shadow-sm">
+                                            <Separator className="my-3" />
+                                            <div className="grid gap-4 md:grid-cols-2">
+                                                <div>
+                                                    <div className="text-md font-semibold text-gray-500">
+                                                        {'Evaluation'}
+                                                    </div>
+                                                </div>
+                                                {evaluation.weight && (
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="text-sm text-gray-500">
+                                                            Moyènne
+                                                        </div>
+                                                        <div className="mt-1 text-sm font-bold text-gray-900">
+                                                            {Number(
+                                                                evaluation.weight,
+                                                            )}
+                                                            {activity.note_unit}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                <div className="md:col-span-2">
+                                                    <div className="text-sm text-gray-500">
+                                                        Titre
+                                                    </div>
+                                                    <div className="text-md mt-1 line-clamp-1 font-bold text-gray-600">
+                                                        <Link
+                                                            href={evaluationDetails(
+                                                                evaluation.slug,
+                                                            )}
+                                                        >
+                                                            {evaluation.title}
+                                                        </Link>
+                                                    </div>
+                                                    <div className="text-md mt-4 font-bold text-blue-600">
+                                                        <Link
+                                                            className="btn-primary flex max-w-[300px] items-center justify-center gap-2"
+                                                            href={evaluationDetails(
+                                                                evaluation.slug,
+                                                            )}
+                                                        >
+                                                            Détails évaluation
+                                                            <ArrowRight />
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                     <Divider />
                                     {activity.resources_summary && (
                                         <div>
                                             <Separator className="my-4" />
-                                            <h3 className="text-sm font-semibold text-gray-700">
+                                            <h3 className="text-md font-semibold text-gray-700">
                                                 Consignes pédagogiques,
                                                 Ressources & résumé
                                             </h3>
@@ -330,10 +380,10 @@ export default function ActivityDetailsShered({
                     </div>
 
                     {/* Right: Resources Sidebar */}
-                    <div className="lg:col-span-1">
-                        <div className="sticky top-32 overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:shadow-lg">
+                    <div className="order-first lg:order-last lg:col-span-1">
+                        <div className="overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:shadow-lg">
                             <div className="p-6">
-                                <h4 className="text-sm font-semibold text-gray-700">
+                                <h4 className="text-md font-semibold text-gray-700">
                                     Planification
                                 </h4>
                                 <div className="mt-3 text-sm text-gray-600">
@@ -393,7 +443,7 @@ export default function ActivityDetailsShered({
                                                 <div className="w-28 text-xs text-gray-500">
                                                     URL
                                                 </div>
-                                                <div className="font-medium text-app-blue">
+                                                <div className="font-medium text-cblue">
                                                     <a
                                                         href={
                                                             activity.conference_url ??

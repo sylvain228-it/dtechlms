@@ -143,7 +143,7 @@ export const columns: ColumnDef<QuizQuestion>[] = [
                                 question={quizQuest}
                                 triggerTexte={false}
                                 iconSize={20}
-                                className="flex items-center justify-between !py-2 text-center text-app-blue"
+                                className="text-cblue flex items-center justify-between !py-2 text-center"
                             />
                         </div>
 
@@ -239,7 +239,7 @@ export default function QuizQuestDataTable({ quizQuests }: Props) {
                 <QuizQuestionFormDialog
                     quizId={quizQuests[0].quize?.id ?? 0}
                     title={quizQuests[0].quize?.title ?? ''}
-                    className="btn-primary flex items-center bg-app-blue !py-2 text-center text-white"
+                    className="btn-primary bg-cblue flex items-center !py-2 text-center text-white"
                 />
             </div>
             <div className="overflow-hidden rounded-md border">

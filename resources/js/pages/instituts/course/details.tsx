@@ -1,6 +1,5 @@
 import { Spacer } from '@/components/spacer';
 import GetHtmlContent from '@/lib/get-html-content';
-import { subStrText } from '@/lib/tasks';
 import AssignStudentToCourse from '@/pages/teachers/courses/assign-student';
 import { content } from '@/routes/institut/courses';
 import { Course } from '@/types/models/course';
@@ -31,9 +30,9 @@ export default function InstitutCourseDetails() {
                             <h1 className="text-2xl font-semibold text-gray-900">
                                 {course.title}
                             </h1>
-                            <p className="mt-1 text-sm text-gray-600">
+                            <p className="mt-1 line-clamp-2 text-sm text-gray-600">
                                 {course.description
-                                    ? subStrText(course.description, 0, 100)
+                                    ? course.description
                                     : 'Aucune description'}
                             </p>
                         </div>
@@ -42,7 +41,7 @@ export default function InstitutCourseDetails() {
                         <h3 className="text-xl font-bold lg:text-2xl">
                             Frais de formation :{' '}
                         </h3>
-                        <h2 className="font-bold text-app-blue lg:text-2xl">
+                        <h2 className="font-bold text-cblue lg:text-2xl">
                             {parseInt(course.price.toString())}F
                         </h2>
                     </div>

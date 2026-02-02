@@ -100,7 +100,7 @@ const footerNavItems: NavItem[] = [
 
 export function AdminSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset" className="bg-app-blue">
+        <Sidebar collapsible="icon" variant="inset" className="bg-cblue">
             <SidebarHeader className="bg-pink-100">
                 <SidebarMenu>
                     <SidebarMenuItem>

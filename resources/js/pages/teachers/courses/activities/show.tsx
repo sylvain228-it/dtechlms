@@ -20,13 +20,27 @@ import {
     getModalityTypeLabel,
     getPlateformeConferenceLabel,
 } from '@/lib/type';
-import { formatBooleanText, formatDate, formatMinutes } from '@/lib/utils';
+import {
+    formatBooleanText,
+    formatCompleteDate,
+    formatDate,
+    formatMinutes,
+} from '@/lib/utils';
 import { destroy, edit } from '@/routes/teachers/activities';
 import { show as showCourse } from '@/routes/teachers/courses';
+import {
+    create as createEvaluation,
+    show as viewEvaluation,
+} from '@/routes/teachers/evaluations';
 import { show as showModule } from '@/routes/teachers/modules';
+import {
+    create as createQuiz,
+    show as viewQuiz,
+} from '@/routes/teachers/quizzes';
 import { show as showSequ } from '@/routes/teachers/sequences';
 import { Course, CourseActivity } from '@/types/models/course';
 import { Link, router, usePage } from '@inertiajs/react';
+import { ArrowRight } from 'lucide-react';
 
 export default function ActivityDetails() {
     const { activity, current_course } = usePage().props as unknown as {
@@ -54,17 +68,19 @@ export default function ActivityDetails() {
         router.delete(destroy([current_course.slug ?? '', activity.id!]));
     };
     const editUrl = edit([current_course.slug ?? '', activity.slug]).url;
+    const showQuiz = activity.activity_type == 'quiz';
+    const showEvaluation = activity.activity_type == 'assessment';
     return (
         <TeacherLayouts title={`Activité : ${activity.title}`}>
-            <div className="mx-auto max-w-6xl px-4">
-                <div className="mb-6 flex items-start justify-between gap-4">
-                    <div>
-                        <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+            <div className="mx-auto md:max-w-6xl">
+                <div className="mb-6">
+                    <div className="mb-3">
+                        <div className="mt-2 line-clamp-2 text-sm text-gray-500">
                             {course && (
                                 <>
                                     <Link
                                         href={showCourse(course?.slug)}
-                                        className="hover:text-app-blue"
+                                        className="inline-block hover:text-cblue"
                                     >
                                         {course?.title ?? 'Cours inconnu'}
                                     </Link>
@@ -78,11 +94,11 @@ export default function ActivityDetails() {
                                             current_course.slug ?? '',
                                             module?.id,
                                         ])}
-                                        className="hover:text-app-blue"
+                                        className="inline-block hover:text-cblue"
                                     >
                                         {module?.title ?? 'Module'}
+                                        <span> /</span>
                                     </Link>
-                                    <span>/</span>
                                 </>
                             )}
                             {sequence && (
@@ -93,20 +109,20 @@ export default function ActivityDetails() {
                                             sequence.module?.id ?? 0,
                                             sequence?.id,
                                         ])}
-                                        className="hover:text-app-blue"
+                                        className="inline-block hover:text-cblue"
                                     >
                                         {sequence?.title ?? 'Séquence'}
+                                        <span> /</span>
                                     </Link>{' '}
-                                    /
                                 </>
                             )}
-                            <span className="mt-1 text-lg font-semibold text-gray-600">
+                            <span className="mt-1 inline-block text-lg font-semibold text-gray-600">
                                 {activity.title}
                             </span>
                         </div>
-                        <p className="mt-2 text-sm text-gray-600">
+                        <p className="mt-2 line-clamp-2 text-sm text-gray-600">
                             {activity.description
-                                ? subStrText(activity.description, 0, 100)
+                                ? activity.description
                                 : 'Aucune description fournie.'}
                         </p>
                     </div>
@@ -119,7 +135,7 @@ export default function ActivityDetails() {
                                     editUrl,
                                 )
                             }
-                            className="rounded-md border border-gray-200 bg-white px-4 py-2 text-sm text-app-blue"
+                            className="rounded-md border border-gray-200 bg-white px-4 py-2 text-sm text-cblue"
                         >
                             Modifier
                         </Button>
@@ -135,32 +151,44 @@ export default function ActivityDetails() {
 
                 <div className="grid gap-6 md:grid-cols-3">
                     <div className="md:col-span-2">
-                        <div className="rounded-lg border bg-white p-6 shadow-sm">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
+                        <div className="rounded-lg border bg-white p-3 shadow-sm sm:p-6">
+                            <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
+                                <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                                     <Badge
                                         variant="outline"
                                         className="capitalize"
                                     >
-                                        {getActivityTypeLabel(
-                                            activity.activity_type as ActivityType,
+                                        {subStrText(
+                                            getActivityTypeLabel(
+                                                activity.activity_type as ActivityType,
+                                            ),
+                                            0,
+                                            35,
                                         )}
                                     </Badge>
                                     <div className="text-sm text-gray-500">
-                                        Portée :{' '}
-                                        <strong>
-                                            {getActivityScopeLabel(
-                                                activity.scope as ActivityScope,
+                                        <b>Portée : </b>
+                                        <Badge>
+                                            {subStrText(
+                                                getActivityScopeLabel(
+                                                    activity.scope as ActivityScope,
+                                                ),
+                                                0,
+                                                35,
                                             )}
-                                        </strong>
+                                        </Badge>
                                     </div>
                                     <div className="text-sm text-gray-500">
-                                        Mode :{' '}
-                                        <strong>
-                                            {getModalityTypeLabel(
-                                                activity.modality as ModalityType,
+                                        <b>Mode : </b>
+                                        <Badge>
+                                            {subStrText(
+                                                getModalityTypeLabel(
+                                                    activity.modality as ModalityType,
+                                                ),
+                                                0,
+                                                35,
                                             )}
-                                        </strong>
+                                        </Badge>
                                     </div>
                                 </div>
                                 <div className="text-sm text-gray-500">
@@ -177,7 +205,7 @@ export default function ActivityDetails() {
                             <Separator className="my-4" />
 
                             <div className="grid gap-3 md:grid-cols-3">
-                                <div className="rounded-lg bg-gray-50 p-3">
+                                <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-50 p-3">
                                     <div className="text-xs text-gray-500">
                                         Durée estimée
                                     </div>
@@ -187,7 +215,7 @@ export default function ActivityDetails() {
                                         )}
                                     </div>
                                 </div>
-                                <div className="rounded-lg bg-gray-50 p-3">
+                                <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-50 p-3">
                                     <div className="text-xs text-gray-500">
                                         Durée planifiée
                                     </div>
@@ -197,7 +225,7 @@ export default function ActivityDetails() {
                                         )}
                                     </div>
                                 </div>
-                                <div className="rounded-lg bg-gray-50 p-3">
+                                <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-50 p-3">
                                     <div className="text-xs text-gray-500">
                                         Ordre
                                     </div>
@@ -227,7 +255,7 @@ export default function ActivityDetails() {
                             </h3>
                             <Separator className="my-3" />
                             <div className="grid gap-4 md:grid-cols-3">
-                                <div>
+                                <div className="flex items-center justify-between gap-4">
                                     <div className="text-sm text-gray-500">
                                         Evaluée
                                     </div>
@@ -235,7 +263,7 @@ export default function ActivityDetails() {
                                         {activity.is_evaluated ? 'Oui' : 'Non'}
                                     </div>
                                 </div>
-                                <div>
+                                <div className="flex items-center justify-between gap-4">
                                     <div className="text-sm text-gray-500">
                                         Type d'évaluation
                                     </div>
@@ -247,7 +275,7 @@ export default function ActivityDetails() {
                                             : '-'}
                                     </div>
                                 </div>
-                                <div>
+                                <div className="flex items-center justify-between gap-4">
                                     <div className="text-sm text-gray-500">
                                         Poids
                                     </div>
@@ -261,7 +289,7 @@ export default function ActivityDetails() {
                             <Separator className="my-3" />
 
                             <div className="grid gap-4 md:grid-cols-3">
-                                <div>
+                                <div className="flex items-center justify-between gap-4">
                                     <div className="text-sm text-gray-500">
                                         A un livrable
                                     </div>
@@ -285,7 +313,7 @@ export default function ActivityDetails() {
                                                     : '-'}
                                             </div>
                                         </div>
-                                        <div>
+                                        <div className="flex items-center justify-between gap-4">
                                             <div className="text-sm text-gray-500">
                                                 Date limite
                                             </div>
@@ -303,7 +331,7 @@ export default function ActivityDetails() {
 
                             <div className="grid gap-4 md:grid-cols-3">
                                 {activity.requires_feedback && (
-                                    <div>
+                                    <div className="flex items-center justify-between gap-4">
                                         <div className="text-sm text-gray-500">
                                             Feedback requis
                                         </div>
@@ -316,7 +344,7 @@ export default function ActivityDetails() {
                                 )}
                                 {activity.has_deliverable && (
                                     <>
-                                        <div>
+                                        <div className="flex items-center justify-between gap-4">
                                             <div className="text-sm text-gray-500">
                                                 Autorise resoumission
                                             </div>
@@ -327,7 +355,7 @@ export default function ActivityDetails() {
                                             </div>
                                         </div>
                                         {activity.max_attempts && (
-                                            <div>
+                                            <div className="flex items-center justify-between gap-4">
                                                 <div className="text-sm text-gray-500">
                                                     Nombre max de tentatives
                                                 </div>
@@ -360,8 +388,64 @@ export default function ActivityDetails() {
                     </div>
 
                     {/* Right column */}
-                    <aside>
-                        <div className="my-4 rounded-lg border bg-white p-6 shadow-sm">
+                    <aside className="order-first lg:order-last">
+                        {showQuiz && (
+                            <div className="top-24 my-4 rounded-lg border border-gray-400 bg-white p-6 shadow-sm sm:sticky dark:bg-cdcard">
+                                <h4 className="inline-block border-b border-gray-300 pb-1 text-sm font-semibold">
+                                    Quize
+                                </h4>
+                                {activity.quiz ? (
+                                    <div className="mt-3">
+                                        <h3 className="text-md font-semibold text-cblue">
+                                            <Link
+                                                href={viewQuiz([
+                                                    activity.slug,
+                                                    activity.quiz?.slug,
+                                                ])}
+                                            >
+                                                {activity.quiz?.title}
+                                            </Link>
+                                        </h3>
+                                    </div>
+                                ) : (
+                                    <Link
+                                        href={createQuiz(activity.slug)}
+                                        className="btn-primary mt-3 flex items-center justify-center gap-3 text-white"
+                                    >
+                                        Ajouter <ArrowRight />
+                                    </Link>
+                                )}
+                            </div>
+                        )}
+                        {showEvaluation && (
+                            <div className="top-24 my-4 rounded-lg border border-gray-400 bg-white p-6 shadow-sm sm:sticky dark:bg-cdcard">
+                                <h4 className="inline-block border-b border-gray-300 pb-1 text-sm font-semibold">
+                                    Evaluation
+                                </h4>
+                                {activity.evaluation ? (
+                                    <div className="mt-3">
+                                        <h3 className="text-md font-semibold text-cblue">
+                                            <Link
+                                                href={viewEvaluation([
+                                                    activity.slug,
+                                                    activity.evaluation?.slug,
+                                                ])}
+                                            >
+                                                {activity.evaluation?.title}
+                                            </Link>
+                                        </h3>
+                                    </div>
+                                ) : (
+                                    <Link
+                                        href={createEvaluation(activity.slug)}
+                                        className="btn-primary mt-3 flex items-center justify-center gap-3 text-white"
+                                    >
+                                        Ajouter <ArrowRight />
+                                    </Link>
+                                )}
+                            </div>
+                        )}
+                        <div className="my-4 rounded-lg border bg-white p-3 shadow-sm sm:p-4">
                             <h4 className="text-sm font-semibold text-gray-700">
                                 Planification
                             </h4>
@@ -371,7 +455,9 @@ export default function ActivityDetails() {
                                         Début
                                     </div>
                                     <div className="font-medium text-gray-900">
-                                        {formatDate(activity.start_at)}
+                                        {formatCompleteDate(
+                                            activity.start_at ?? '',
+                                        )}
                                     </div>
                                 </div>
                                 <div className="mt-3 flex items-center justify-between">
@@ -410,17 +496,21 @@ export default function ActivityDetails() {
                                             </div>
                                             <div className="font-medium text-gray-900">
                                                 {activity.conference_platform
-                                                    ? getPlateformeConferenceLabel(
-                                                          activity.conference_platform,
+                                                    ? subStrText(
+                                                          getPlateformeConferenceLabel(
+                                                              activity.conference_platform,
+                                                          ),
+                                                          0,
+                                                          30,
                                                       )
                                                     : '-'}
                                             </div>
                                         </div>
-                                        <div className="mt-2 flex items-center gap-2">
+                                        <div className="mt-2 flex flex-wrap items-center gap-2">
                                             <div className="w-28 text-xs text-gray-500">
                                                 URL
                                             </div>
-                                            <div className="font-medium text-app-blue">
+                                            <div className="font-medium text-cblue">
                                                 <a
                                                     href={
                                                         activity.conference_url ??

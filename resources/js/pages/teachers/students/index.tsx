@@ -1,6 +1,7 @@
 import { InputField, SelectField } from '@/components/shared/form';
 import { Button } from '@/components/ui/button';
 import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
+import { getModalityTypeLabel, getStudyLevelLabel } from '@/lib/type';
 import { Course } from '@/types/models/course';
 import { Student, TeacherStudent } from '@/types/models/institut';
 import { usePage } from '@inertiajs/react';
@@ -135,21 +136,19 @@ function StudentProfileCard({ student }: { student: Student }) {
                 <div className="mt-3 flex flex-wrap gap-1 border-t border-gray-200 pt-3">
                     {student.current_level && (
                         <span className="inline-block rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
-                            {student.current_level}
+                            {getStudyLevelLabel(student.current_level)}
                         </span>
                     )}
                     {student.study_mode && (
                         <span className="inline-block rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700">
-                            {student.study_mode === 'online' && 'En ligne'}
-                            {student.study_mode === 'onsite' && 'Sur site'}
-                            {student.study_mode === 'hybrid' && 'Hybride'}
+                            {getModalityTypeLabel(student.study_mode)}
                         </span>
                     )}
-                    {student.credits && (
+                    {/* {student.credits && student.credits > 0 && (
                         <span className="inline-block rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700">
                             {student.credits} crédits
                         </span>
-                    )}
+                    )} */}
                 </div>
             </div>
         </div>

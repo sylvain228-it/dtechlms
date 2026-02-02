@@ -3,6 +3,7 @@
 use App\Http\Controllers\Student\StudentActivityController;
 use App\Http\Controllers\Student\StudentCoursController;
 use App\Http\Controllers\Student\StudentDashboardController;
+use App\Http\Controllers\Student\StudentEvaluationController;
 use App\Http\Controllers\Student\StudentQuizeController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,16 +20,22 @@ Route::group(['prefix' => '/apprenants', 'middleware' => ['status.user', 'studen
     });
 
     // activities
-    Route::group(['prefix' => 'activités/', 'as' => 'activities.'], function () {
+    Route::group(['prefix' => 'activites/', 'as' => 'activities.'], function () {
         Route::get('/calendrier', [StudentActivityController::class, 'index'])->name('calendars');
-        Route::get('/détails/{activity}', [StudentActivityController::class, 'details'])->name('details');
+        Route::get('/details/{activity}', [StudentActivityController::class, 'details'])->name('details');
     });
 
     // quizes
     Route::group(['prefix' => 'quizzes/', 'as' => 'quizzes.'], function () {
         Route::get('/', [StudentQuizeController::class, 'index'])->name('index');
-        Route::get('/détails/{quiz}', [StudentQuizeController::class, 'details'])->name('details');
+        Route::get('/details/{quiz}', [StudentQuizeController::class, 'details'])->name('details');
         Route::get('/{quiz}/start', [StudentQuizeController::class, 'start'])->name('start');
         Route::get('/{quiz}/submit', [StudentQuizeController::class, 'submit'])->name('submit');
+    });
+
+    // évaluations
+    Route::group(['prefix' => 'evaluations/', 'as' => 'evaluations.'], function () {
+        Route::get('/', [StudentEvaluationController::class, 'index'])->name('index');
+        Route::get('/details/{evaluation}', [StudentEvaluationController::class, 'details'])->name('details');
     });
 });

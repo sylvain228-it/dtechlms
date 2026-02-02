@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.admin' => \App\Http\Middleware\AdminAuthMiddleware::class,
             'auth.custom' => \App\Http\Middleware\AuthMiddleware::class,
+            'guest.custom' => \App\Http\Middleware\GuestMiddleware::class,
             'auth.institut' => \App\Http\Middleware\InstitutAuthMiddleware::class,
             'simpleAuth' => \App\Http\Middleware\SimpleAuthMiddleware::class,
             'student' => \App\Http\Middleware\StudentMiddleware::class,

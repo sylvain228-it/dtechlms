@@ -20,22 +20,22 @@
 //             <div className="mt-3 grid gap-3 text-sm text-gray-600">
 //                 <Link href={entityResources([entity_type, entity_id])}>
 //                     <div className="flex items-center justify-between gap-1 bg-blue-50 p-2">
-//                         <dt className="font-bold text-app-blue">Ressources</dt>
-//                         <ArrowRight className="text-app-blue" />
+//                         <dt className="font-bold text-cblue">Ressources</dt>
+//                         <ArrowRight className="text-cblue" />
 //                     </div>
 //                 </Link>
 //                 <Link href={entityQuizzes([entity_type, entity_id])}>
 //                     <div className="flex items-center justify-between gap-1 bg-blue-50 p-2">
-//                         <dt className="font-bold text-app-blue">Quize</dt>
-//                         <ArrowRight className="text-app-blue" />
+//                         <dt className="font-bold text-cblue">Quize</dt>
+//                         <ArrowRight className="text-cblue" />
 //                     </div>
 //                 </Link>
 //                 <Link href={entityEvaluations([entity_type, entity_id])}>
 //                     <div className="flex items-center justify-between gap-1 bg-blue-50 p-2">
-//                         <dt className="font-bold text-app-blue">
+//                         <dt className="font-bold text-cblue">
 //                             Evaluations/Exercices
 //                         </dt>
-//                         <ArrowRight className="text-app-blue" />
+//                         <ArrowRight className="text-cblue" />
 //                     </div>
 //                 </Link>
 //             </div>

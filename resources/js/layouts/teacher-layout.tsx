@@ -1,5 +1,4 @@
 import TeacherLayoutTemplate from '@/layouts/app/teacher-sidebar-layout';
-import { subStrText } from '@/lib/tasks';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { type ReactNode } from 'react';
@@ -19,7 +18,7 @@ export default ({
 }: TeacherLayoutProps) => (
     <TeacherLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
         <Head title={title} />
-        <PageBanner title={subStrText(title, 0, 45)} />
+        <PageBanner title={title} />
         {children}
     </TeacherLayoutTemplate>
 );

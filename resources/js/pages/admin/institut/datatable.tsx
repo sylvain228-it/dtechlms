@@ -134,10 +134,10 @@ export const columns: ColumnDef<PartnerProfileProps>[] = [
                             Copier email
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-app-blue">
+                        <DropdownMenuItem className="text-cblue">
                             Détails
                             <DropdownMenuShortcut>
-                                <MdVisibility className="text-app-blue" />
+                                <MdVisibility className="text-cblue" />
                             </DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
@@ -238,7 +238,7 @@ export default function PartnersDataTable({
                 </div>
                 <Link
                     // href={create()}
-                    className="btn-primary inline-block bg-app-blue !py-2 text-center text-white"
+                    className="btn-primary bg-cblue inline-block !py-2 text-center text-white"
                 >
                     Ajouter <IoAdd className="inline-block h-7 w-7" />
                 </Link>

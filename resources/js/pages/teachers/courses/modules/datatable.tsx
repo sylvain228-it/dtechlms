@@ -281,7 +281,7 @@ export default function CoursesModulesDataTable({
                 <div className="flex items-center gap-2">
                     <Link
                         href={create(course.slug)}
-                        className="btn-primary flex w-full items-center justify-center bg-app-blue !py-1 text-center text-white"
+                        className="btn-primary bg-cblue flex w-full items-center justify-center !py-1 text-center text-white"
                     >
                         Ajouter <IoAdd size={30} />
                     </Link>

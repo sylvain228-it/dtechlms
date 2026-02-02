@@ -252,7 +252,7 @@ export function AppPublicHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                     href={item.href}
                                     className={cn(
                                         item.title === 'Connexion'
-                                            ? 'btn-primary !hover:bg-app-blue !hover:text-white !my-1 border border-current !bg-transparent !text-app-blue'
+                                            ? 'btn-primary !hover:bg-cblue !hover:text-white !text-cblue !my-1 border border-current !bg-transparent'
                                             : 'btn-primary',
                                     )}
                                 >

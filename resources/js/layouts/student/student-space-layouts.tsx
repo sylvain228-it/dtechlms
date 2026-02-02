@@ -8,19 +8,23 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import LogoutUserBtn from '@/lib/logout-user';
-import { subStrText } from '@/lib/tasks';
 import { cn, resolveUrl } from '@/lib/utils';
-import { index as profile } from '@/routes/auth/profile';
-import { index as settings } from '@/routes/auth/settings';
+
+import AppearanceToggler from '@/components/appearance-toggler';
 import { dashboard } from '@/routes/students';
 import { index } from '@/routes/students/courses';
-import { BreadcrumbItem, SharedData, User as UserModel } from '@/types';
+import {
+    BreadcrumbItem,
+    NavItem,
+    SharedData,
+    User as UserModel,
+} from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
-import { Menu, Settings, User, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import { IconType } from 'react-icons/lib';
-import { studentMainNavItems } from './nav-items';
+import { profileItemsTriggers, studentMainNavItems } from './nav-items';
 
 export default function StudentSpaceLayouts({
     children,
@@ -44,18 +48,19 @@ export default function StudentSpaceLayouts({
         window.innerWidth >= 1024,
     );
 
-    const navItems = [{ title: 'Mes Cours', href: index().url }];
+    const navItems: NavItem[] = [];
 
+    if (auth.user != null && auth.user.account_role == 'student') {
+        navItems.push({
+            title: 'Mes Cours',
+            href: index(),
+        });
+    }
     // const dropdownItems = [
     //     { title: 'Progression', href: '/progress' },
     //     { title: 'Certificats', href: '/certificates' },
     //     { title: 'Récompenses', href: '/badges' },
     // ];
-
-    const profileItemsTriggers = [
-        { title: 'Mon Profil', href: profile().url, icon: User },
-        { title: 'Paramètres', href: settings().url, icon: Settings },
-    ];
 
     function handleMenuOpenNav() {
         setIsOpenMobileNav(!isOpenMobileNav);
@@ -73,19 +78,19 @@ export default function StudentSpaceLayouts({
             setMainMarginClass(`lg:ml-[300px]`);
         }
     }
-    const isActiveClass = '!bg-app-blue !text-white';
+    const isActiveClass = '!bg-cblue !text-white';
     return (
         <>
             {/* header */}
             <div className="sticky top-0 right-0 left-0 z-40 sm:z-50">
                 <nav
-                    className={`h-[56px] border-b border-gray-200 bg-white shadow-sm`}
+                    className={`h-[56px] border-b border-gray-200 bg-white shadow-sm dark:bg-cdark`}
                 >
                     <div className="mx-auto px-4 sm:w-full sm:px-6 lg:px-8">
                         <div className="flex h-16 items-center justify-between">
                             {/* Logo */}
-                            <div className="flex gap-6">
-                                <div className="order-last lg:order-first">
+                            <div className="flex items-center gap-6">
+                                <div className="order-last p-2 shadow-sm lg:order-first dark:bg-clcard">
                                     <Link
                                         href={dashboard()}
                                         className="flex items-center gap-2"
@@ -95,102 +100,115 @@ export default function StudentSpaceLayouts({
                                 </div>
                                 {!isOpenSidebarNav && (
                                     <Menu
-                                        className="text-black"
+                                        className="dark:text-gray-400"
                                         onClick={handleSidebarTrigger}
                                     />
                                 )}
                             </div>
 
                             {/* Desktop Navigation */}
-                            <div className="hidden lg:flex lg:items-center lg:gap-8">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
-                                    >
-                                        {subStrText(item.title, 0, 25)}
-                                    </Link>
-                                ))}
+                            <div className="flex items-center">
+                                <div className="hidden lg:flex lg:items-center lg:gap-8">
+                                    {navItems.map((item, idx) => (
+                                        <Link
+                                            key={idx}
+                                            href={item.href}
+                                            className="line-clamp-1 text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-200"
+                                        >
+                                            {item.title}
+                                        </Link>
+                                    ))}
 
-                                {/* Dropdown */}
-                            </div>
+                                    {/* Dropdown */}
+                                </div>
 
-                            {/* Right Section - Desktop */}
-                            {auth.user != null && (
-                                <div className="hidden lg:block">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                className="size-10 rounded-full p-1"
-                                            >
+                                {/* Right Section - Desktop */}
+                                <div className="flex items-center gap-4">
+                                    <AppearanceToggler />
+                                    {auth.user != null && (
+                                        <div className="hidden lg:block">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="size-10 rounded-full p-1 dark:border-gray-300"
+                                                    >
+                                                        <ProfileItemsTrigger
+                                                            user={
+                                                                auth.user as UserModel
+                                                            }
+                                                        />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent
+                                                    className="w-56 transition-all duration-300 ease-in-out dark:bg-cdcard"
+                                                    align="end"
+                                                >
+                                                    <div>
+                                                        {profileItemsTriggers.map(
+                                                            (item) => {
+                                                                const Icon =
+                                                                    item.icon;
+                                                                return (
+                                                                    <Link
+                                                                        key={
+                                                                            item.href
+                                                                        }
+                                                                        href={
+                                                                            item.href
+                                                                        }
+                                                                        className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-300"
+                                                                        onClick={() => {
+                                                                            setIsOpenMobileNav(
+                                                                                false,
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <Icon
+                                                                            size={
+                                                                                16
+                                                                            }
+                                                                        />
+                                                                        {
+                                                                            item.title
+                                                                        }
+                                                                    </Link>
+                                                                );
+                                                            },
+                                                        )}
+
+                                                        <LogoutUserBtn />
+                                                    </div>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                                    )}
+                                </div>
+                                {/* Mobile Menu Button */}
+
+                                <button
+                                    onClick={handleMenuOpenNav}
+                                    className="rounded-lg p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
+                                >
+                                    {isOpenMobileNav ? (
+                                        <X size={24} />
+                                    ) : (
+                                        <div>
+                                            {auth.user == null ? (
+                                                <DefualtProfileSvg />
+                                            ) : (
                                                 <ProfileItemsTrigger
                                                     user={
-                                                        auth.user as UserModel
+                                                        auth.user as
+                                                            | UserModel
+                                                            | undefined
                                                     }
                                                 />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent
-                                            className="w-56 transition-all duration-300 ease-in-out"
-                                            align="end"
-                                        >
-                                            <div>
-                                                {profileItemsTriggers.map(
-                                                    (item) => {
-                                                        const Icon = item.icon;
-                                                        return (
-                                                            <Link
-                                                                key={item.href}
-                                                                href={item.href}
-                                                                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                                                                onClick={() => {
-                                                                    setIsOpenMobileNav(
-                                                                        false,
-                                                                    );
-                                                                }}
-                                                            >
-                                                                <Icon
-                                                                    size={16}
-                                                                />
-                                                                {item.title}
-                                                            </Link>
-                                                        );
-                                                    },
-                                                )}
-
-                                                <LogoutUserBtn />
-                                            </div>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                            )}
-
-                            {/* Mobile Menu Button */}
-
-                            <button
-                                onClick={handleMenuOpenNav}
-                                className="rounded-lg p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
-                            >
-                                {isOpenMobileNav ? (
-                                    <X size={24} />
-                                ) : (
-                                    <div>
-                                        {auth.user == null ? (
-                                            <DefualtProfileSvg />
-                                        ) : (
-                                            <ProfileItemsTrigger
-                                                user={
-                                                    auth.user as
-                                                        | UserModel
-                                                        | undefined
-                                                }
-                                            />
-                                        )}
-                                    </div>
-                                )}
-                            </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </nav>
@@ -202,22 +220,24 @@ export default function StudentSpaceLayouts({
                             className="fixed top-0 z-40 h-full w-full bg-black/50 transition-all duration-300 ease-in-out"
                         ></div>
                         <div
-                            className={`fixed right-0 bottom-0 z-50 w-full animate-in gap-4 overflow-y-auto rounded-t-lg bg-white p-4 shadow-lg transition-all duration-300 ease-in-out ${isOpenMobileNav ? 'slide-in-from-bottom' : 'slide-out-to-bottom'}`}
+                            className={`fixed right-0 bottom-0 z-50 w-full animate-in gap-4 overflow-y-auto rounded-t-lg bg-white p-4 shadow-lg transition-all duration-300 ease-in-out dark:bg-cdcard ${isOpenMobileNav ? 'slide-in-from-bottom' : 'slide-out-to-bottom'}`}
                         >
                             <div className="flex justify-end">
-                                <button
-                                    onClick={handleMenuOpenNav}
-                                    className="rounded-lg p-2 text-gray-700 hover:bg-gray-100"
-                                >
-                                    {<X size={24} />}
+                                <button onClick={handleMenuOpenNav}>
+                                    {
+                                        <X
+                                            size={24}
+                                            className="dark:text-gray-300"
+                                        />
+                                    }
                                 </button>
                             </div>
 
-                            {navItems.map((item) => (
+                            {navItems.map((item, idx) => (
                                 <Link
-                                    key={item.href}
+                                    key={idx}
                                     href={item.href}
-                                    className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
+                                    className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-300"
                                 >
                                     {item.title}
                                 </Link>
@@ -232,7 +252,7 @@ export default function StudentSpaceLayouts({
                                         />
 
                                         <div>
-                                            <p className="text-sm font-medium text-gray-900">
+                                            <p className="text-sm font-medium text-gray-900 dark:text-gray-300">
                                                 {auth.user.first_name == null &&
                                                 auth.user.last_name == null ? (
                                                     <span>
@@ -245,7 +265,7 @@ export default function StudentSpaceLayouts({
                                                     </span>
                                                 )}
                                             </p>
-                                            <p className="text-xs text-gray-600">
+                                            <p className="text-xs text-gray-600 dark:text-gray-300">
                                                 {auth.user.email}
                                             </p>
                                         </div>
@@ -256,7 +276,7 @@ export default function StudentSpaceLayouts({
                                             <Link
                                                 key={item.href}
                                                 href={item.href}
-                                                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                                                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-300"
                                                 onClick={() => {
                                                     setIsOpenMobileNav(false);
                                                 }}
@@ -289,7 +309,7 @@ export default function StudentSpaceLayouts({
                 ></div>
 
                 <div
-                    className={`fixed top-0 left-0 z-50 h-full overflow-y-auto border-t border-r bg-white px-6 text-black shadow-sm transition-all duration-300 ease-in-out sm:top-[56px] ${
+                    className={`fixed top-0 left-0 z-50 h-full overflow-y-auto border-t border-r bg-white px-6 text-black shadow-sm transition-all duration-300 ease-in-out sm:top-[56px] dark:bg-cdark ${
                         isOpenSidebarNav
                             ? `w-full translate-x-0 sm:w-[300px]`
                             : '-translate-x-full'
@@ -298,10 +318,14 @@ export default function StudentSpaceLayouts({
                     <div className="mb-4">
                         {isOpenSidebarNav && (
                             <div className="my-3 flex items-center justify-between">
-                                <h3 className="text-xs font-bold text-gray-500 uppercase">
+                                <h3 className="text-xs font-bold text-gray-500 uppercase dark:text-gray-200">
                                     {auth.user.username}
                                 </h3>
-                                <X size={24} onClick={handleSidebarTrigger} />
+                                <X
+                                    size={24}
+                                    className="dark:text-gray-200"
+                                    onClick={handleSidebarTrigger}
+                                />
                             </div>
                         )}
                         <ul>
@@ -312,7 +336,7 @@ export default function StudentSpaceLayouts({
                                     <Link
                                         key={idx}
                                         href={item.href}
-                                        className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 ${
+                                        className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-300 ${
                                             page.url.startsWith(
                                                 resolveUrl(item.href),
                                             )
@@ -333,7 +357,7 @@ export default function StudentSpaceLayouts({
             {/* main */}
             <div
                 className={cn(
-                    'p-1 transition-all duration-300 sm:p-6',
+                    'p-2 transition-all duration-300 sm:p-4',
                     mainMarginClass,
                 )}
             >

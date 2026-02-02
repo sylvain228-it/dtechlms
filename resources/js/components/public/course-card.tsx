@@ -40,7 +40,7 @@ export default function CourseCard({ course }: { course: Course }) {
                     <div className="my-2">
                         <div className="flex items-center gap-2">
                             <FaGraduationCap />
-                            <p className="text-sm text-app-blue">
+                            <p className="text-cblue text-sm">
                                 Obtenir un diplôme
                             </p>
                         </div>

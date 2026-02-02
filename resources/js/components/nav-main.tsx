@@ -16,7 +16,7 @@ export function NavMain({
     items: NavItem[];
     dashName?: string;
 }) {
-    const isActiveClass = '!bg-app-blue !text-white';
+    const isActiveClass = '!bg-cblue !text-white';
     const page = usePage();
     return (
         <SidebarGroup className="px-2 py-0">
@@ -25,7 +25,7 @@ export function NavMain({
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton
-                            className={`hover:bg-app-blue hover:text-white ${
+                            className={`hover:bg-cblue hover:text-white ${
                                 page.url.startsWith(resolveUrl(item.href))
                                     ? isActiveClass
                                     : ''
