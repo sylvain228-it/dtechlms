@@ -23,4 +23,8 @@ class StudentDashboardController extends Controller
         $activities = $activities->take(9)->get();
         return inertia('students/index', ['student' => $student, 'activities' => $activities, 'totalCourses' => $totalCourses, 'totalUpComingActivities' => $totalUpComingActivities]);
     }
+    public function docs()
+    {
+        return inertia('students/docs/index');
+    }
 }

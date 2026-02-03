@@ -41,7 +41,6 @@ export default function PartnerLogin({ status }: PartnerLoginProps) {
         }));
     }
 
-    console.log(errors);
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setProcessing(true);

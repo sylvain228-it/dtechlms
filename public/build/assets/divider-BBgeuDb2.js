@@ -1,1 +1,0 @@
-import{c as o,j as c}from"./app-BOmU1wmL.js";import{c as m}from"./utils-e8IeQt0G.js";function n(i){const s=o.c(4),{className:r}=i;let t;s[0]!==r?(t=m("my-5 h-0.5 w-full bg-gray-300",r),s[0]=r,s[1]=t):t=s[1];let e;return s[2]!==t?(e=c.jsx("div",{className:t}),s[2]=t,s[3]=e):e=s[3],e}export{n as D};

@@ -27,4 +27,8 @@ class TeacherDashboardController extends Controller
         $studentsCount = TeacherStudent::where('teacher_id', $this->teacher()->id)->count();
         return Inertia::render('teachers/index', ['teacher', $this->teacher(), 'activities' => $activities, 'totalCourses' => $totalCourses, 'totalUpComingActivities' => $totalUpComingActivities, 'studentsCount' => $studentsCount]);
     }
+    public function docs()
+    {
+        return inertia('teachers/docs/index');
+    }
 }

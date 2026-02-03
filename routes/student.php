@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/apprenants', 'middleware' => ['status.user', 'student'], 'as' => 'students.'], function () {
     Route::get('/dashboard', [StudentDashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/docs', [StudentDashboardController::class, 'docs'])->name('docs');
     Route::group(['as' => 'courses.'], function () {
         Route::get('/mes-cours', [StudentCoursController::class, 'courses'])->name('index');
         Route::get('/apprentissage/{course}', [StudentCoursController::class, 'details'])->name('details');

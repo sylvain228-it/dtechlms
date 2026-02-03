@@ -3,6 +3,7 @@ import {
     allEvaluations,
     allQuizzes,
     dashboard,
+    docs,
 } from '@/routes/teachers';
 import { index as courses } from '@/routes/teachers/courses';
 import { type NavItem } from '@/types';
@@ -84,7 +85,7 @@ export const teacherMainNavItems: NavItem[] = [
 export const teacherFooterNavItems: NavItem[] = [
     {
         title: 'Documentation',
-        href: '#',
+        href: docs(),
         icon: BookOpen,
     },
 ];

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/institut', 'middleware' => ['auth.institut'], 'as' => 'institut.'], function () {
     Route::get('/dashboard', [InstitutDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/docs', [InstitutDashboardController::class, 'docs'])->name('docs');
     Route::resource('domaines', InstitutDomaineController::class);
     Route::group(['prefix' => 'utilisateurs', 'as' => 'users.'], function () {
         Route::get('/', [InstitutUserController::class, 'index'])->name('index');

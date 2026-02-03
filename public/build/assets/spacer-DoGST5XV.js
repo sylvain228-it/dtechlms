@@ -1,1 +1,0 @@
-import{c as n,j as a}from"./app-BOmU1wmL.js";import{c as l}from"./utils-e8IeQt0G.js";function f(r){const t=n.c(5),{className:o,height:i}=r,c=`h-${i===void 0?"12":i}`;let s;t[0]!==o||t[1]!==c?(s=l("w-full",o,c),t[0]=o,t[1]=c,t[2]=s):s=t[2];let e;return t[3]!==s?(e=a.jsx("div",{className:s}),t[3]=s,t[4]=e):e=t[4],e}export{f as S};

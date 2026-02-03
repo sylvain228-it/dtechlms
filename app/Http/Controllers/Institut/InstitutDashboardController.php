@@ -22,4 +22,8 @@ class InstitutDashboardController extends Controller
 
         return Inertia::render('instituts/dashboard', compact('teachers_count', 'courses_count', 'students_count'));
     }
+    public function docs()
+    {
+        return inertia('instituts/docs/index');
+    }
 }

@@ -14,8 +14,9 @@ import { login, register } from '@/routes/auth';
 import { index as profile } from '@/routes/auth/profile';
 import { index as settings } from '@/routes/auth/settings';
 import { dashboard as studentDash } from '@/routes/students';
+import { index as courses } from '@/routes/students/courses';
 import { dashboard as teacherDash } from '@/routes/teachers';
-import { SharedData, User as UserModel } from '@/types';
+import { NavItem, SharedData, User as UserModel } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { Eclipse, Settings, User, X } from 'lucide-react';
 import { useState } from 'react';
@@ -25,11 +26,11 @@ function AuthButton() {
         <div className="flex items-center space-x-2">
             <Link
                 href={login()}
-                className="btn-primary !hover:bg-cblue !hover:text-white !my-1 border border-current !bg-transparent !text-cblue"
+                className="btn-primary !hover:bg-cblue !hover:text-white border border-current !bg-transparent !py-[6px] !text-cblue"
             >
                 Se connecter
             </Link>
-            <Link href={register()} className="btn-primary">
+            <Link href={register()} className="btn-primary !py-[6px]">
                 S'inscrire
             </Link>
         </div>
@@ -39,16 +40,23 @@ export default function PublicNavbar() {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const [isOpenMobileNav, setIsOpenMobileNav] = useState(false);
-    const navItems = [{ title: 'Mes Cours', href: '/' }];
+    const navItems: NavItem[] = [];
 
+    if (auth.user) {
+        navItems.push({ title: 'Mon apprentissage', href: courses() });
+    }
     const profileItemsTriggers = [
         { title: 'Mon Profil', href: profile().url, icon: User },
         { title: 'Paramètres', href: settings().url, icon: Settings },
     ];
 
-    if (auth.user) {
+    if (
+        auth.user &&
+        (auth.user.account_role == 'student' ||
+            auth.user.account_role == 'teacher')
+    ) {
         profileItemsTriggers.push({
-            title: 'Mon interface',
+            title: 'Tableau de bord',
             href:
                 auth.user.account_role == 'student'
                     ? studentDash().url
@@ -81,9 +89,9 @@ export default function PublicNavbar() {
                         <div className="flex items-center">
                             {/* Desktop Navigation */}
                             <div className="hidden lg:flex lg:items-center lg:gap-8">
-                                {navItems.map((item) => (
+                                {navItems.map((item, idx) => (
                                     <Link
-                                        key={item.href}
+                                        key={idx}
                                         href={item.href}
                                         className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-200"
                                     >
@@ -202,9 +210,9 @@ export default function PublicNavbar() {
                             </button>
                         </div>
 
-                        {navItems.map((item) => (
+                        {navItems.map((item, idx) => (
                             <Link
-                                key={item.href}
+                                key={idx}
                                 href={item.href}
                                 className="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-300"
                             >

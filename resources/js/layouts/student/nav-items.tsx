@@ -1,6 +1,6 @@
 import { index as profile } from '@/routes/auth/profile';
 import { index as settings } from '@/routes/auth/settings';
-import { dashboard } from '@/routes/students';
+import { dashboard, docs } from '@/routes/students';
 import { calendars } from '@/routes/students/activities';
 import { index as courses } from '@/routes/students/courses';
 import { index as evaluations } from '@/routes/students/evaluations';
@@ -78,7 +78,7 @@ export const studentMainNavItems: NavItem[] = [
 export const studentFooterNavItems: NavItem[] = [
     {
         title: 'Documentation',
-        href: '#',
+        href: docs(),
         icon: BookOpen,
     },
 ];

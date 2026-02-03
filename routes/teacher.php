@@ -17,6 +17,9 @@ use App\Http\Controllers\Teacher\TeacherStudentController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/enseignants', 'middleware' => ['status.user', 'teacher'], 'as' => 'teachers.'], function () {
+    Route::get('dashboard', [TeacherDashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('docs', [TeacherDashboardController::class, 'docs'])->name('docs');
+    Route::get('mes-cours', [TeacherCoursManageController::class, 'courses'])->name('mycourses');
 
     Route::resource('courses', TeacherCoursController::class);
     Route::group(['prefix' => 'courses/{course}', 'as' => 'courses.'], function () {
@@ -54,8 +57,6 @@ Route::group(['prefix' => '/enseignants', 'middleware' => ['status.user', 'teach
     Route::resource('events', TeacherEventCalendarController::class);
 
 
-    Route::get('dashboard', [TeacherDashboardController::class, 'dashboard'])->name('dashboard');
-    Route::get('mes-cours', [TeacherCoursManageController::class, 'courses'])->name('mycourses');
 
     Route::group(['prefix' => '/{activity}'], function () {
         Route::resource('quizzes', TeacherQuizeController::class);

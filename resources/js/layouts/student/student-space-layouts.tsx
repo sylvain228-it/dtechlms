@@ -24,7 +24,11 @@ import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { Menu, X } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import { IconType } from 'react-icons/lib';
-import { profileItemsTriggers, studentMainNavItems } from './nav-items';
+import {
+    profileItemsTriggers,
+    studentFooterNavItems,
+    studentMainNavItems,
+} from './nav-items';
 
 export default function StudentSpaceLayouts({
     children,
@@ -40,10 +44,13 @@ export default function StudentSpaceLayouts({
             setMainMarginClass(`lg:ml-[300px]`);
         }
     });
-
+    // const sidebarHeight = {
+    //     minHeight: `calc(100vh - 56px)`,
+    // };
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const [isOpenMobileNav, setIsOpenMobileNav] = useState(false);
+
     const [isOpenSidebarNav, setIsOpenSidebarNav] = useState(
         window.innerWidth >= 1024,
     );
@@ -52,7 +59,7 @@ export default function StudentSpaceLayouts({
 
     if (auth.user != null && auth.user.account_role == 'student') {
         navItems.push({
-            title: 'Mes Cours',
+            title: 'Mon apprentissage',
             href: index(),
         });
     }
@@ -79,6 +86,7 @@ export default function StudentSpaceLayouts({
         }
     }
     const isActiveClass = '!bg-cblue !text-white';
+
     return (
         <>
             {/* header */}
@@ -309,48 +317,75 @@ export default function StudentSpaceLayouts({
                 ></div>
 
                 <div
-                    className={`fixed top-0 left-0 z-50 h-full overflow-y-auto border-t border-r bg-white px-6 text-black shadow-sm transition-all duration-300 ease-in-out sm:top-[56px] dark:bg-cdark ${
+                    className={`fixed top-0 left-0 z-50 h-full border-t border-r bg-white text-black shadow-sm transition-all duration-300 ease-in-out sm:top-[56px] lg:h-[92vh] dark:bg-cdark ${
                         isOpenSidebarNav
                             ? `w-full translate-x-0 sm:w-[300px]`
                             : '-translate-x-full'
                     }`}
                 >
-                    <div className="mb-4">
-                        {isOpenSidebarNav && (
-                            <div className="my-3 flex items-center justify-between">
-                                <h3 className="text-xs font-bold text-gray-500 uppercase dark:text-gray-200">
-                                    {auth.user.username}
-                                </h3>
-                                <X
-                                    size={24}
-                                    className="dark:text-gray-200"
-                                    onClick={handleSidebarTrigger}
-                                />
-                            </div>
-                        )}
-                        <ul>
-                            {studentMainNavItems.map((item, idx) => {
-                                const Icon = item.icon as IconType;
+                    <div className="relative">
+                        <div className="overflow-y-auto px-6">
+                            {isOpenSidebarNav && (
+                                <div className="my-3 flex items-center justify-between">
+                                    <h3 className="text-xs font-bold text-gray-500 uppercase dark:text-gray-200">
+                                        {auth.user.username}
+                                    </h3>
+                                    <X
+                                        size={24}
+                                        className="dark:text-gray-200"
+                                        onClick={handleSidebarTrigger}
+                                    />
+                                </div>
+                            )}
+                            <ul className="grid gap-1">
+                                {studentMainNavItems.map((item, idx) => {
+                                    const Icon = item.icon as IconType;
 
-                                return (
-                                    <Link
-                                        key={idx}
-                                        href={item.href}
-                                        className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-300 ${
-                                            page.url.startsWith(
-                                                resolveUrl(item.href),
-                                            )
-                                                ? isActiveClass
-                                                : ''
-                                        }`}
-                                        onClick={handleSidebarItemClic}
-                                    >
-                                        <Icon size={16} />
-                                        {item.title}
-                                    </Link>
-                                );
-                            })}
-                        </ul>
+                                    return (
+                                        <Link
+                                            key={idx}
+                                            href={item.href}
+                                            className={`text-md flex items-center gap-2 rounded-lg px-4 py-2 font-semibold text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-300 ${
+                                                page.url.startsWith(
+                                                    resolveUrl(item.href),
+                                                )
+                                                    ? isActiveClass
+                                                    : ''
+                                            }`}
+                                            onClick={handleSidebarItemClic}
+                                        >
+                                            <Icon size={16} />
+                                            {item.title}
+                                        </Link>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                        <div className="fixed bottom-0 left-0 w-full border-t border-gray-500 bg-gray-100 p-4 shadow-md dark:border-gray-200 dark:bg-cdcard">
+                            <ul>
+                                {studentFooterNavItems.map((item, idx) => {
+                                    const Icon = item.icon as IconType;
+
+                                    return (
+                                        <Link
+                                            key={idx}
+                                            href={item.href}
+                                            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:text-gray-300 ${
+                                                page.url.startsWith(
+                                                    resolveUrl(item.href),
+                                                )
+                                                    ? isActiveClass
+                                                    : ''
+                                            }`}
+                                            onClick={handleSidebarItemClic}
+                                        >
+                                            <Icon size={16} />
+                                            {item.title}
+                                        </Link>
+                                    );
+                                })}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
