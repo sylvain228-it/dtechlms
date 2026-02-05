@@ -76,7 +76,8 @@ Route::group(['prefix' => '/enseignants', 'middleware' => ['status.user', 'teach
     });
 
     // evaluations
-    Route::group(['prefix' => '/{activity}'], function () {
-        Route::resource('evaluations', TeacherEvaluationController::class);
+    Route::group(['prefix' => 'courses/{course}', 'as' => 'evaluations.'], function () {
+        Route::get('evaluations', [TeacherEvaluationController::class, 'allEvaluations'])->name('index');
+        // Route::get('evaluations/{activity}', [TeacherEvaluationController::class, 'show'])->name('show');
     });
 });

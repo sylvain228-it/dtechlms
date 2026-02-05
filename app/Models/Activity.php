@@ -116,8 +116,14 @@ class Activity extends Model
 
         // Feedback et accompagnement
         'requires_feedback',
+        'feedback_instructions',
         'allows_resubmission',
         'max_attempts',
+        'allow_late_submission',
+        'late_penalty_percentage',
+        'allowed_tools',
+        'lock_after_end',
+
         'is_synchronous',
 
         // Planification
@@ -149,6 +155,7 @@ class Activity extends Model
         'teaching_methods' => 'array',
         'tools' => 'array',
         'resources_summary' => 'array',
+        'allowed_tools' => 'array',
 
         // Booléens
         'is_individual' => 'boolean',

@@ -1,0 +1,1 @@
+import{c as n,j as c}from"./app-klcUL3EL.js";import{c as a}from"./utils-e8IeQt0G.js";function m(r){const s=n.c(4),{className:e}=r;let t;s[0]!==e?(t=a("h-[56px] object-contain",e),s[0]=e,s[1]=t):t=s[1];let o;return s[2]!==t?(o=c.jsx(c.Fragment,{children:c.jsx("img",{src:"/assets/logo/logo_rect.png",className:t,alt:""})}),s[2]=t,s[3]=o):o=s[3],o}export{m as A};

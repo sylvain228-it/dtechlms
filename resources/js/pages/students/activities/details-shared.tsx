@@ -15,7 +15,6 @@ import {
     formatCompleteDate,
     formatMinutes,
 } from '@/lib/utils';
-import { details as evaluationDetails } from '@/routes/students/evaluations';
 import { details as quizeDetails } from '@/routes/students/quizzes';
 import { CourseActivity } from '@/types/models/course';
 import { EntityResource, Resource } from '@/types/models/others';
@@ -36,8 +35,6 @@ export default function ActivityDetailsShered({
         activity.activity_type == 'discussion';
 
     const quiz = activity.activity_type == 'quiz' ? activity.quiz : null;
-    const evaluation =
-        activity.activity_type == 'assessment' ? activity.evaluation : null;
     return (
         <div className="min-h-screen">
             {/* Main Content */}
@@ -306,56 +303,7 @@ export default function ActivityDetailsShered({
                                             </div>
                                         </div>
                                     )}
-                                    {evaluation && (
-                                        <div className="my-5 border-b border-gray-200 bg-gray-50 p-4 shadow-sm">
-                                            <Separator className="my-3" />
-                                            <div className="grid gap-4 md:grid-cols-2">
-                                                <div>
-                                                    <div className="text-md font-semibold text-gray-500">
-                                                        {'Evaluation'}
-                                                    </div>
-                                                </div>
-                                                {evaluation.weight && (
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="text-sm text-gray-500">
-                                                            Moyènne
-                                                        </div>
-                                                        <div className="mt-1 text-sm font-bold text-gray-900">
-                                                            {Number(
-                                                                evaluation.weight,
-                                                            )}
-                                                            {activity.note_unit}
-                                                        </div>
-                                                    </div>
-                                                )}
-                                                <div className="md:col-span-2">
-                                                    <div className="text-sm text-gray-500">
-                                                        Titre
-                                                    </div>
-                                                    <div className="text-md mt-1 line-clamp-1 font-bold text-gray-600">
-                                                        <Link
-                                                            href={evaluationDetails(
-                                                                evaluation.slug,
-                                                            )}
-                                                        >
-                                                            {evaluation.title}
-                                                        </Link>
-                                                    </div>
-                                                    <div className="text-md mt-4 font-bold text-blue-600">
-                                                        <Link
-                                                            className="btn-primary flex max-w-[300px] items-center justify-center gap-2"
-                                                            href={evaluationDetails(
-                                                                evaluation.slug,
-                                                            )}
-                                                        >
-                                                            Détails évaluation
-                                                            <ArrowRight />
-                                                        </Link>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
+
                                     <Divider />
                                     {activity.resources_summary && (
                                         <div>

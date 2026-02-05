@@ -1,483 +1,544 @@
-import { TagsInputBadge } from '@/components/shared/tags-input';
-import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
-import {
-    getDeliverableTypeLabel,
-    getEvaluateTypeLabel,
-    getModalityTypeLabel,
-    getPlateformeConferenceLabel,
-    getSaveStatusLabel,
-} from '@/lib/type';
-import { formatBooleanText, formatDate } from '@/lib/utils';
-import { destroy, edit } from '@/routes/teachers/evaluations';
-import { Evaluation } from '@/types/models/others';
-import { Link, router, usePage } from '@inertiajs/react';
-import { Edit, Trash } from 'lucide-react';
+// import { Divider } from '@/components/divider';
+// import { Badge } from '@/components/ui/badge';
+// import { Button } from '@/components/ui/button';
+// import { Separator } from '@/components/ui/separator';
+// import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
+// import GetHtmlContent from '@/lib/get-html-content';
+// import { handleEditClicked, subStrText } from '@/lib/tasks';
+// import type {
+//     ActivityScope,
+//     ActivityType,
+//     DeliverableType,
+//     EvaluateType,
+//     ModalityType,
+// } from '@/lib/type';
+// import {
+//     getActivityScopeLabel,
+//     getActivityTypeLabel,
+//     getDeliverableTypeLabel,
+//     getEvaluateTypeLabel,
+//     getModalityTypeLabel,
+//     getPlateformeConferenceLabel,
+// } from '@/lib/type';
+// import {
+//     formatBooleanText,
+//     formatCompleteDate,
+//     formatDate,
+//     formatMinutes,
+// } from '@/lib/utils';
+// import { destroy, edit } from '@/routes/teachers/activities';
+// import { show as showCourse } from '@/routes/teachers/courses';
+// import { show as showModule } from '@/routes/teachers/modules';
+// import {
+//     create as createQuiz,
+//     show as viewQuiz,
+// } from '@/routes/teachers/quizzes';
+// import { show as showSequ } from '@/routes/teachers/sequences';
+// import { Course, CourseActivity } from '@/types/models/course';
+// import { Link, router, usePage } from '@inertiajs/react';
+// import { ArrowRight } from 'lucide-react';
 
-type Props = {
-    evaluation: Evaluation;
-};
-export default function TeacherEvaluationShow() {
-    const { evaluation } = usePage().props as unknown as Props;
+// export default function TeacherEvaluationDetails() {
+//     const { activity, current_course } = usePage().props as unknown as {
+//         activity: CourseActivity;
+//         current_course: Course;
+//     };
 
-    const handleDelete = () => {
-        if (!confirm('Confirmer la suppression de cette évaluation ?')) return;
-        router.delete(destroy([evaluation.activity?.id ?? '', evaluation.id]));
-    };
+//     const sequence =
+//         activity.scope == 'sequence' && activity.sequence_id != null
+//             ? activity.sequence
+//             : null;
+//     const module =
+//         activity.scope == 'module' && activity.module_id != null
+//             ? activity.module
+//             : null;
+//     const course =
+//         activity.scope == 'course' && activity.course_id != null
+//             ? activity.course
+//             : null;
 
-    return (
-        <TeacherLayouts title={`Evaluation : ${evaluation.title}`}>
-            <div className="mx-auto mt-6 max-w-6xl px-4">
-                {/* Header */}
-                <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div className="flex-1">
-                        <h1 className="mt-3 text-2xl font-bold text-gray-900">
-                            {evaluation.title}
-                        </h1>
-                        <div className="mt-2 flex gap-4 text-sm text-gray-600">
-                            <div>
-                                <span className="font-medium">Type : </span>
-                                <span>
-                                    {getEvaluateTypeLabel(
-                                        evaluation.evaluation_type,
-                                    )}
-                                </span>
-                            </div>
-                            <div>
-                                <span className="font-medium">Mode : </span>
-                                <span>
-                                    {getModalityTypeLabel(evaluation.modality)}
-                                </span>
-                            </div>
-                            {evaluation.duration_minutes && (
-                                <div>
-                                    <span className="font-medium">
-                                        Durée :{' '}
-                                    </span>
-                                    <span>
-                                        {evaluation.duration_minutes} min
-                                    </span>
-                                </div>
-                            )}
-                        </div>
+//     // Actions
+//     const handleDelete = () => {
+//         if (!confirm('Confirmer la suppression de cette activité ?')) return;
+//         if (!activity || !current_course) return;
+//         router.delete(destroy([current_course.slug ?? '', activity.id!]));
+//     };
+//     const editUrl = edit([current_course.slug ?? '', activity.slug]).url;
+//     const showQuiz = activity.activity_type == 'quiz';
+//     return (
+//         <TeacherLayouts title={`Activité : ${activity.title}`}>
+//             <div className="mx-auto md:max-w-6xl">
+//                 <div className="mb-6">
+//                     <div className="mb-3">
+//                         <div className="mt-2 line-clamp-2 text-sm text-gray-500">
+//                             {course && (
+//                                 <>
+//                                     <Link
+//                                         href={showCourse(course?.slug)}
+//                                         className="inline-block hover:text-cblue"
+//                                     >
+//                                         {course?.title ?? 'Cours inconnu'}
+//                                     </Link>
+//                                     <span>/</span>
+//                                 </>
+//                             )}
+//                             {module && (
+//                                 <>
+//                                     <Link
+//                                         href={showModule([
+//                                             current_course.slug ?? '',
+//                                             module?.id,
+//                                         ])}
+//                                         className="inline-block hover:text-cblue"
+//                                     >
+//                                         {module?.title ?? 'Module'}
+//                                         <span> /</span>
+//                                     </Link>
+//                                 </>
+//                             )}
+//                             {sequence && (
+//                                 <>
+//                                     <Link
+//                                         href={showSequ([
+//                                             current_course.slug ?? '',
+//                                             sequence.module?.id ?? 0,
+//                                             sequence?.id,
+//                                         ])}
+//                                         className="inline-block hover:text-cblue"
+//                                     >
+//                                         {sequence?.title ?? 'Séquence'}
+//                                         <span> /</span>
+//                                     </Link>{' '}
+//                                 </>
+//                             )}
+//                             <span className="mt-1 inline-block text-lg font-semibold text-gray-600">
+//                                 {activity.title}
+//                             </span>
+//                         </div>
+//                         <p className="mt-2 line-clamp-2 text-sm text-gray-600">
+//                             {activity.description
+//                                 ? activity.description
+//                                 : 'Aucune description fournie.'}
+//                         </p>
+//                     </div>
+//                     <div className="flex items-center gap-3">
+//                         <Button
+//                             onClick={(e) =>
+//                                 handleEditClicked(
+//                                     e,
+//                                     activity.resources_summary ?? '',
+//                                     editUrl,
+//                                 )
+//                             }
+//                             className="rounded-md border border-gray-200 bg-white px-4 py-2 text-sm text-cblue"
+//                         >
+//                             Modifier
+//                         </Button>
+//                         <Button
+//                             variant="destructive"
+//                             onClick={handleDelete}
+//                             className="rounded-md px-4 py-2 text-sm"
+//                         >
+//                             Supprimer
+//                         </Button>
+//                     </div>
+//                 </div>
 
-                        {evaluation.description && (
-                            <p className="mt-3 line-clamp-3 text-sm text-gray-600">
-                                {evaluation.description}
-                            </p>
-                        )}
-                    </div>
+//                 <div className="grid gap-6 md:grid-cols-3">
+//                     <div className="md:col-span-2">
+//                         <div className="rounded-lg border bg-white p-3 shadow-sm sm:p-6">
+//                             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
+//                                 <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+//                                     <Badge
+//                                         variant="outline"
+//                                         className="capitalize"
+//                                     >
+//                                         {subStrText(
+//                                             getActivityTypeLabel(
+//                                                 activity.activity_type as ActivityType,
+//                                             ),
+//                                             0,
+//                                             35,
+//                                         )}
+//                                     </Badge>
+//                                     <div className="text-sm text-gray-500">
+//                                         <b>Portée : </b>
+//                                         <Badge>
+//                                             {subStrText(
+//                                                 getActivityScopeLabel(
+//                                                     activity.scope as ActivityScope,
+//                                                 ),
+//                                                 0,
+//                                                 35,
+//                                             )}
+//                                         </Badge>
+//                                     </div>
+//                                     <div className="text-sm text-gray-500">
+//                                         <b>Mode : </b>
+//                                         <Badge>
+//                                             {subStrText(
+//                                                 getModalityTypeLabel(
+//                                                     activity.modality as ModalityType,
+//                                                 ),
+//                                                 0,
+//                                                 35,
+//                                             )}
+//                                         </Badge>
+//                                     </div>
+//                                 </div>
+//                                 <div className="text-sm text-gray-500">
+//                                     <span
+//                                         className={`${activity.is_visible ? 'text-green-600' : 'text-red-600'}`}
+//                                     >
+//                                         {activity.is_visible
+//                                             ? 'Visible'
+//                                             : 'Invisible'}
+//                                     </span>
+//                                 </div>
+//                             </div>
 
-                    <div className="flex items-center gap-3">
-                        <Link
-                            href={edit([
-                                evaluation?.activity?.slug ?? '',
-                                evaluation.slug,
-                            ])}
-                            className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
-                        >
-                            <Edit size={16} /> Modifier
-                        </Link>
-                        <button
-                            onClick={handleDelete}
-                            className="inline-flex items-center gap-2 rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-                        >
-                            <Trash size={16} /> Supprimer
-                        </button>
-                    </div>
-                </div>
+//                             <Separator className="my-4" />
 
-                {/* Content grid */}
-                <div className="grid gap-6 lg:grid-cols-3">
-                    {/* Main column */}
-                    <div className="space-y-4 lg:col-span-2">
-                        {/* Organisation */}
-                        <div className="rounded-lg border bg-white p-6 shadow-sm">
-                            <h2 className="text-lg font-medium text-gray-900">
-                                Organisation
-                            </h2>
-                            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                                <div>
-                                    <p className="text-xs text-gray-500">
-                                        Poids
-                                    </p>
-                                    <div className="mt-1 text-sm font-medium text-gray-800">
-                                        {evaluation.weight
-                                            ? `${evaluation.weight}${evaluation.note_unit || '%'}`
-                                            : '—'}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">
-                                        Score maximum
-                                    </p>
-                                    <div className="mt-1 text-sm font-medium text-gray-800">
-                                        {evaluation.max_score ?? '—'}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">
-                                        Durée
-                                    </p>
-                                    <div className="mt-1 text-sm text-gray-800">
-                                        {evaluation.duration_minutes
-                                            ? `${evaluation.duration_minutes} min`
-                                            : '—'}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">
-                                        Programmée
-                                    </p>
-                                    <div className="mt-1 text-sm text-gray-800">
-                                        {formatDate(evaluation.scheduled_at) ||
-                                            '—'}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">
-                                        Obligatoire
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {formatBooleanText(
-                                            !!evaluation.is_mandatory,
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+//                             <div className="grid gap-3 md:grid-cols-3">
+//                                 <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-50 p-3">
+//                                     <div className="text-xs text-gray-500">
+//                                         Durée estimée
+//                                     </div>
+//                                     <div className="mt-1 text-lg font-bold text-gray-900">
+//                                         {formatMinutes(
+//                                             activity.estimated_minutes,
+//                                         )}
+//                                     </div>
+//                                 </div>
+//                                 <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-50 p-3">
+//                                     <div className="text-xs text-gray-500">
+//                                         Durée planifiée
+//                                     </div>
+//                                     <div className="mt-1 text-lg font-bold text-gray-900">
+//                                         {formatMinutes(
+//                                             activity.duration_minutes,
+//                                         )}
+//                                     </div>
+//                                 </div>
+//                                 <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-50 p-3">
+//                                     <div className="text-xs text-gray-500">
+//                                         Ordre
+//                                     </div>
+//                                     <div className="mt-1 text-lg font-bold text-gray-900">
+//                                         {activity.order ?? '-'}
+//                                     </div>
+//                                 </div>
+//                             </div>
 
-                        {/* Ressources */}
-                        <div className="rounded-lg border bg-white p-6 shadow-sm">
-                            <h2 className="text-lg font-medium text-gray-900">
-                                Ressources et outils
-                            </h2>
-                            <div className="mt-4 space-y-3 text-sm text-gray-700">
-                                {evaluation.allowed_tools && (
-                                    <div>
-                                        <p className="mb-2 text-xs font-medium text-gray-600">
-                                            Outils autorisés
-                                        </p>
-                                        <TagsInputBadge
-                                            tags={JSON.parse(
-                                                evaluation.allowed_tools ??
-                                                    '[]',
-                                            )}
-                                        />
-                                    </div>
-                                )}
-                                {evaluation.resources_summary && (
-                                    <div>
-                                        <p className="text-xs font-medium text-gray-600">
-                                            Résumé des ressources
-                                        </p>
-                                        <p className="mt-1">
-                                            {evaluation.resources_summary}
-                                        </p>
-                                    </div>
-                                )}
-                                {!evaluation.allowed_tools &&
-                                    !evaluation.resources_summary && (
-                                        <p className="text-gray-400">
-                                            Aucune ressource ou outil défini.
-                                        </p>
-                                    )}
-                            </div>
-                        </div>
+//                             {activity.description && (
+//                                 <>
+//                                     <Separator className="my-4" />
+//                                     <h3 className="text-sm font-semibold text-gray-700">
+//                                         Description
+//                                     </h3>
+//                                     <div className="mt-2 text-sm text-gray-600">
+//                                         {activity.description ?? ''}
+//                                     </div>
+//                                 </>
+//                             )}
+//                         </div>
 
-                        {/* Feedback */}
-                        <div className="rounded-lg border bg-white p-6 shadow-sm">
-                            <h2 className="text-lg font-medium text-gray-900">
-                                Retour d'information
-                            </h2>
-                            <div className="mt-4 space-y-3">
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Fournir des retours
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {formatBooleanText(
-                                            !!evaluation.provides_feedback,
-                                        )}
-                                    </div>
-                                </div>
-                                {evaluation.feedback_instructions && (
-                                    <div>
-                                        <p className="text-xs font-medium text-gray-600">
-                                            Instructions
-                                        </p>
-                                        <p className="mt-1 text-sm text-gray-700">
-                                            {evaluation.feedback_instructions}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+//                         {/* Evaluation & Livrables */}
+//                         <div className="mt-6 rounded-lg border bg-white p-6 shadow-sm">
+//                             <h3 className="text-lg font-semibold text-gray-800">
+//                                 Évaluation & Livrables
+//                             </h3>
+//                             <Separator className="my-3" />
+//                             <div className="grid gap-4 md:grid-cols-3">
+//                                 <div className="flex items-center justify-between gap-4">
+//                                     <div className="text-sm text-gray-500">
+//                                         Evaluée
+//                                     </div>
+//                                     <div className="mt-1 text-sm font-bold text-gray-900">
+//                                         {activity.is_evaluated ? 'Oui' : 'Non'}
+//                                     </div>
+//                                 </div>
+//                                 <div className="flex items-center justify-between gap-4">
+//                                     <div className="text-sm text-gray-500">
+//                                         Type d'évaluation
+//                                     </div>
+//                                     <div className="mt-1 text-sm font-bold text-gray-900">
+//                                         {activity.evaluation_type
+//                                             ? getEvaluateTypeLabel(
+//                                                   activity.evaluation_type as EvaluateType,
+//                                               )
+//                                             : '-'}
+//                                     </div>
+//                                 </div>
+//                                 <div className="flex items-center justify-between gap-4">
+//                                     <div className="text-sm text-gray-500">
+//                                         Poids
+//                                     </div>
+//                                     <div className="mt-1 text-sm font-bold text-gray-900">
+//                                         {activity.evaluation_weight ?? '-'}
+//                                         {activity.note_unit}
+//                                     </div>
+//                                 </div>
+//                             </div>
 
-                        {/* Paramètres avancés */}
-                        <div className="rounded-lg border bg-white p-6 shadow-sm">
-                            <h2 className="text-lg font-medium text-gray-900">
-                                Paramètres avancés
-                            </h2>
-                            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Travail en groupe
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {formatBooleanText(
-                                            !!evaluation.is_group,
-                                        )}
-                                    </div>
-                                </div>
-                                {evaluation.is_group &&
-                                    evaluation.max_group_size && (
-                                        <div>
-                                            <p className="text-xs text-gray-600">
-                                                Taille max groupe
-                                            </p>
-                                            <div className="mt-1 font-medium">
-                                                {evaluation.max_group_size}
-                                            </div>
-                                        </div>
-                                    )}
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Resoumission autorisée
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {formatBooleanText(
-                                            !!evaluation.allows_resubmission,
-                                        )}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Max tentatives
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {evaluation.max_attempts ?? '—'}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Mélanger questions
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {formatBooleanText(
-                                            !!evaluation.shuffle_questions,
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+//                             <Separator className="my-3" />
 
-                        {/* Fenêtre temporelle */}
-                        <div className="rounded-lg border bg-white p-6 shadow-sm">
-                            <h2 className="text-lg font-medium text-gray-900">
-                                Fenêtre temporelle
-                            </h2>
-                            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Début
-                                    </p>
-                                    <div className="mt-1 text-sm">
-                                        {formatDate(evaluation.start_at) || '—'}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-600">Fin</p>
-                                    <div className="mt-1 text-sm">
-                                        {formatDate(evaluation.end_at) || '—'}
-                                    </div>
-                                </div>
-                            </div>
-                            {evaluation.deliverable_type && (
-                                <div className="mt-3">
-                                    <p className="text-xs text-gray-600">
-                                        Type de livrable
-                                    </p>
-                                    <div className="mt-1 text-sm">
-                                        {getDeliverableTypeLabel(
-                                            evaluation.deliverable_type as
-                                                | 'file'
-                                                | 'link'
-                                                | 'text'
-                                                | 'video'
-                                                | 'audio'
-                                                | 'github_repo_link',
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+//                             <div className="grid gap-4 md:grid-cols-3">
+//                                 <div className="flex items-center justify-between gap-4">
+//                                     <div className="text-sm text-gray-500">
+//                                         A un livrable
+//                                     </div>
+//                                     <div className="mt-1 text-sm font-bold text-gray-900">
+//                                         {formatBooleanText(
+//                                             activity.has_deliverable == 1,
+//                                         )}
+//                                     </div>
+//                                 </div>
+//                                 {activity.has_deliverable && (
+//                                     <>
+//                                         <div>
+//                                             <div className="text-sm text-gray-500">
+//                                                 Type de livraison
+//                                             </div>
+//                                             <div className="mt-1 text-sm font-bold text-gray-900">
+//                                                 {activity.deliverable_type
+//                                                     ? getDeliverableTypeLabel(
+//                                                           activity.deliverable_type as DeliverableType,
+//                                                       )
+//                                                     : '-'}
+//                                             </div>
+//                                         </div>
+//                                         <div className="flex items-center justify-between gap-4">
+//                                             <div className="text-sm text-gray-500">
+//                                                 Date limite
+//                                             </div>
+//                                             <div className="mt-1 text-sm font-bold text-gray-900">
+//                                                 {formatDate(
+//                                                     activity.deliverable_deadline,
+//                                                 )}
+//                                             </div>
+//                                         </div>
+//                                     </>
+//                                 )}
+//                             </div>
 
-                        {/* Accès et soumission */}
+//                             <Separator className="my-3" />
 
-                        <fieldset className="mb-6 rounded border border-gray-200 p-4">
-                            <legend className="text-base font-semibold text-gray-900">
-                                Accès et soumission
-                            </legend>
-                            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Synchrone
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {formatBooleanText(
-                                            !!evaluation.is_synchronous,
-                                        )}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Soumission tardive autorisée
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {formatBooleanText(
-                                            !!evaluation.allow_late_submission,
-                                        )}
-                                    </div>
-                                </div>
-                                {evaluation.allow_late_submission &&
-                                    evaluation.late_penalty_percentage !==
-                                        null && (
-                                        <div>
-                                            <p className="text-xs text-gray-600">
-                                                Pénalité tardive
-                                            </p>
-                                            <div className="mt-1 font-medium">
-                                                {
-                                                    evaluation.late_penalty_percentage
-                                                }
-                                                %
-                                            </div>
-                                        </div>
-                                    )}
-                                <div>
-                                    <p className="text-xs text-gray-600">
-                                        Verrouiller après fin
-                                    </p>
-                                    <div className="mt-1 font-medium">
-                                        {formatBooleanText(
-                                            !!evaluation.lock_after_end,
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
+//                             <div className="grid gap-4 md:grid-cols-3">
+//                                 {activity.requires_feedback && (
+//                                     <div className="flex items-center justify-between gap-4">
+//                                         <div className="text-sm text-gray-500">
+//                                             Feedback requis
+//                                         </div>
+//                                         <div className="mt-1 text-sm font-bold text-gray-900">
+//                                             {activity.requires_feedback
+//                                                 ? 'Oui'
+//                                                 : 'Non'}
+//                                         </div>
+//                                     </div>
+//                                 )}
+//                                 {activity.has_deliverable && (
+//                                     <>
+//                                         <div className="flex items-center justify-between gap-4">
+//                                             <div className="text-sm text-gray-500">
+//                                                 Autorise resoumission
+//                                             </div>
+//                                             <div className="mt-1 text-sm font-bold text-gray-900">
+//                                                 {activity.allows_resubmission
+//                                                     ? 'Oui'
+//                                                     : 'Non'}
+//                                             </div>
+//                                         </div>
+//                                         {activity.max_attempts && (
+//                                             <div className="flex items-center justify-between gap-4">
+//                                                 <div className="text-sm text-gray-500">
+//                                                     Nombre max de tentatives
+//                                                 </div>
+//                                                 <div className="mt-1 text-sm font-bold text-gray-900">
+//                                                     {activity.max_attempts ??
+//                                                         '-'}
+//                                                 </div>
+//                                             </div>
+//                                         )}
+//                                     </>
+//                                 )}
+//                             </div>
+//                         </div>
+//                         <Divider />
+//                         {activity.resources_summary && (
+//                             <div>
+//                                 <Separator className="my-4" />
+//                                 <h3 className="text-sm font-semibold text-gray-700">
+//                                     Consignes pédagogiques, Ressources & résumé
+//                                 </h3>
+//                                 <div className="mt-2 text-sm text-gray-600">
+//                                     <GetHtmlContent
+//                                         contentHtml={
+//                                             activity.resources_summary ?? ''
+//                                         }
+//                                     />
+//                                 </div>
+//                             </div>
+//                         )}
+//                     </div>
 
-                        {/* Visioconférence */}
-                        {evaluation.is_synchronous && (
-                            <fieldset className="mb-6 rounded border border-gray-200 p-4">
-                                <legend className="text-base font-semibold text-gray-900">
-                                    Visioconférence
-                                </legend>
-                                <div className="mt-4 space-y-3">
-                                    {evaluation.conference_platform && (
-                                        <div>
-                                            <p className="text-xs text-gray-600">
-                                                Plateforme
-                                            </p>
-                                            <div className="mt-1 text-sm">
-                                                {getPlateformeConferenceLabel(
-                                                    evaluation.conference_platform as
-                                                        | 'zoom'
-                                                        | 'teams'
-                                                        | 'google_meet',
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                    {evaluation.conference_url && (
-                                        <div>
-                                            <p className="text-xs text-gray-600">
-                                                URL
-                                            </p>
-                                            <div className="mt-1">
-                                                <a
-                                                    href={
-                                                        evaluation.conference_url
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-sm text-blue-600 hover:underline"
-                                                >
-                                                    {evaluation.conference_url}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {evaluation.conference_meeting_id && (
-                                        <div>
-                                            <p className="text-xs text-gray-600">
-                                                ID de réunion
-                                            </p>
-                                            <div className="mt-1 font-mono text-sm text-gray-800">
-                                                {
-                                                    evaluation.conference_meeting_id
-                                                }
-                                            </div>
-                                        </div>
-                                    )}
-                                    {evaluation.conference_passcode && (
-                                        <div>
-                                            <p className="text-xs text-gray-600">
-                                                Code d'accès
-                                            </p>
-                                            <div className="mt-1 font-mono text-sm text-gray-800">
-                                                {evaluation.conference_passcode}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </fieldset>
-                        )}
-                    </div>
+//                     {/* Right column */}
+//                     <aside className="order-first lg:order-last">
+//                         {showQuiz && (
+//                             <div className="top-24 my-4 rounded-lg border border-gray-400 bg-white p-6 shadow-sm sm:sticky dark:bg-cdcard">
+//                                 <h4 className="inline-block border-b border-gray-300 pb-1 text-sm font-semibold">
+//                                     Quize
+//                                 </h4>
+//                                 {activity.quiz ? (
+//                                     <div className="mt-3">
+//                                         <h3 className="text-md font-semibold text-cblue">
+//                                             <Link
+//                                                 href={viewQuiz([
+//                                                     activity.slug,
+//                                                     activity.quiz?.slug,
+//                                                 ])}
+//                                             >
+//                                                 {activity.quiz?.title}
+//                                             </Link>
+//                                         </h3>
+//                                     </div>
+//                                 ) : (
+//                                     <Link
+//                                         href={createQuiz(activity.slug)}
+//                                         className="btn-primary mt-3 flex items-center justify-center gap-3 text-white"
+//                                     >
+//                                         Ajouter <ArrowRight />
+//                                     </Link>
+//                                 )}
+//                             </div>
+//                         )}
+//                         <div className="my-4 rounded-lg border bg-white p-3 shadow-sm sm:p-4">
+//                             <h4 className="text-sm font-semibold text-gray-700">
+//                                 Planification
+//                             </h4>
+//                             <div className="mt-3 text-sm text-gray-600">
+//                                 <div className="flex items-center justify-between">
+//                                     <div className="text-xs text-gray-500">
+//                                         Début
+//                                     </div>
+//                                     <div className="font-medium text-gray-900">
+//                                         {formatCompleteDate(
+//                                             activity.start_at ?? '',
+//                                         )}
+//                                     </div>
+//                                 </div>
+//                                 <div className="mt-3 flex items-center justify-between">
+//                                     <div className="text-xs text-gray-500">
+//                                         Synchronous
+//                                     </div>
+//                                     <div className="font-medium text-gray-900">
+//                                         {formatBooleanText(
+//                                             activity.is_synchronous,
+//                                         )}
+//                                     </div>
+//                                 </div>
+//                                 <div className="mt-3 flex items-center justify-between">
+//                                     <div className="text-xs text-gray-500">
+//                                         Durée
+//                                     </div>
+//                                     <div className="font-medium text-gray-900">
+//                                         {formatMinutes(
+//                                             activity.duration_minutes,
+//                                         )}
+//                                     </div>
+//                                 </div>
+//                             </div>
 
-                    {/* Right column (meta) */}
-                    <aside className="col-span-1">
-                        <fieldset className="mb-6 rounded border border-gray-200 p-4">
-                            <legend className="text-base font-semibold text-gray-900">
-                                Métadonnées
-                            </legend>
+//                             {activity.conference_platform ||
+//                             activity.conference_url ? (
+//                                 <>
+//                                     <Separator className="my-3" />
+//                                     <h5 className="text-sm font-semibold text-gray-700">
+//                                         Visioconférence
+//                                     </h5>
+//                                     <div className="mt-2 text-sm text-gray-600">
+//                                         <div className="flex items-center gap-2">
+//                                             <div className="w-28 text-xs text-gray-500">
+//                                                 Plateforme
+//                                             </div>
+//                                             <div className="font-medium text-gray-900">
+//                                                 {activity.conference_platform
+//                                                     ? subStrText(
+//                                                           getPlateformeConferenceLabel(
+//                                                               activity.conference_platform,
+//                                                           ),
+//                                                           0,
+//                                                           30,
+//                                                       )
+//                                                     : '-'}
+//                                             </div>
+//                                         </div>
+//                                         <div className="mt-2 flex flex-wrap items-center gap-2">
+//                                             <div className="w-28 text-xs text-gray-500">
+//                                                 URL
+//                                             </div>
+//                                             <div className="font-medium text-cblue">
+//                                                 <a
+//                                                     href={
+//                                                         activity.conference_url ??
+//                                                         '#'
+//                                                     }
+//                                                     target="_blank"
+//                                                     rel="noreferrer"
+//                                                 >
+//                                                     {activity.conference_url}
+//                                                 </a>
+//                                             </div>
+//                                         </div>
+//                                         {activity.conference_meeting_id && (
+//                                             <div className="mt-2 flex items-center gap-2">
+//                                                 <div className="w-28 text-xs text-gray-500">
+//                                                     ID
+//                                                 </div>
+//                                                 <div className="font-medium text-gray-900">
+//                                                     {
+//                                                         activity.conference_meeting_id
+//                                                     }
+//                                                 </div>
+//                                             </div>
+//                                         )}
+//                                     </div>
+//                                 </>
+//                             ) : null}
 
-                            <div className="mt-4 space-y-3 text-sm text-gray-700">
-                                <div>
-                                    <div className="text-xs text-gray-500">
-                                        Statut
-                                    </div>
-                                    <div className="mt-1 font-medium">
-                                        {getSaveStatusLabel(
-                                            evaluation.status,
-                                        ) || '—'}
-                                    </div>
-                                </div>
+//                             <Separator className="my-3" />
 
-                                <hr className="my-3" />
-
-                                <div>
-                                    <div className="text-xs text-gray-500">
-                                        Créé
-                                    </div>
-                                    <div className="mt-1 text-xs">
-                                        {formatDate(evaluation.created_at)}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="text-xs text-gray-500">
-                                        Mis à jour
-                                    </div>
-                                    <div className="mt-1 text-xs">
-                                        {formatDate(evaluation.updated_at)}
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </aside>
-                </div>
-            </div>
-        </TeacherLayouts>
-    );
-}
+//                             <h5 className="text-sm font-semibold text-gray-700">
+//                                 Visibilité & présence
+//                             </h5>
+//                             <div className="mt-2 text-sm text-gray-600">
+//                                 <div className="flex items-center justify-between">
+//                                     <div className="text-xs text-gray-500">
+//                                         Présence requise
+//                                     </div>
+//                                     <div className="font-medium text-gray-900">
+//                                         {formatBooleanText(
+//                                             activity.attendance_required,
+//                                         )}
+//                                     </div>
+//                                 </div>
+//                                 {!activity.attendance_required && (
+//                                     <div className="mt-3 flex items-center justify-between">
+//                                         <div className="text-xs text-gray-500">
+//                                             Obligatoire
+//                                         </div>
+//                                         <div className="font-medium text-gray-900">
+//                                             {activity.is_mandatory
+//                                                 ? 'Oui'
+//                                                 : 'Non'}
+//                                         </div>
+//                                     </div>
+//                                 )}
+//                             </div>
+//                         </div>
+//                     </aside>
+//                 </div>
+//             </div>
+//         </TeacherLayouts>
+//     );
+// }

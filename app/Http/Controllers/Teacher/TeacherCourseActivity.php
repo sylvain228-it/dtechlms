@@ -26,7 +26,7 @@ class TeacherCourseActivity extends Controller
     {
         $course = Course::where('slug', $courseSlug)->firstOrFail();
         $activities = Activity::with('parentCourse')->where('parent_course_id', $course->id)->orderByDesc('created_at')->get();
-        return Inertia::render('teachers/courses/activities/index', [
+        return Inertia::render('teachers/activities/index', [
             'course' => $course,
             'activities' => $activities,
         ]);
@@ -47,9 +47,15 @@ class TeacherCourseActivity extends Controller
     public function create($courseSlug)
     {
         $course = Course::where('slug', $courseSlug)->firstOrFail();
-        return Inertia::render('teachers/courses/activities/form', [
+        $lastCoursActivity = Activity::where('parent_course_id', $course->id)->where('scope', 'course')->orderBy('order', 'DESC')->first();
+        $nextOrder = 1;
+        if ($lastCoursActivity) {
+            $nextOrder = $lastCoursActivity->order + 1;
+        }
+        return Inertia::render('teachers/activities/form', [
             'course' => $course,
-            'c_modality' => $course->modality
+            'c_modality' => $course->modality,
+            'nextOrder' => $nextOrder,
         ]);
     }
 
@@ -66,13 +72,19 @@ class TeacherCourseActivity extends Controller
             }
             $scope = $request->scope;
 
+            $lastActivity = Activity::where('parent_course_id', $course->id)->where('scope', $scope)->orderBy('order', 'DESC')->first();
+            $nextOrder = 1;
+            if ($lastActivity) {
+                $nextOrder = $lastActivity->order + 1;
+            }
+
             // Si téléphone (local ou international)
             if ($scope == 'module') {
                 $modules = Module::orderBy('title', 'DESC')->where('course_id', $course->id)->get();
-                return response()->json(['data' => $modules, 'status' => 200], 200);
+                return response()->json(['data' => $modules, 'nextOrder' => $nextOrder, 'status' => 200], 200);
             } elseif ($scope == 'sequence') {
                 $sequences = Sequence::orderBy('title', 'DESC')->where('parent_course_id', $course->id)->get();
-                return response()->json(['data' => $sequences, 'status' => 200], 200);
+                return response()->json(['data' => $sequences, 'nextOrder' => $nextOrder, 'status' => 200], 200);
             }
             return response()->json(['message' => "Aucune donnée trouvée", 'status' => 404], 404);
         } catch (\Exception $e) {
@@ -118,10 +130,10 @@ class TeacherCourseActivity extends Controller
         $course = Course::where('slug', $courseSlug)->firstOrFail();
         $activity = Activity::where('slug', $slug)->first();
         $related = ['resources.resource'];
-        if (in_array($activity->activity_type, ['quiz', 'assessment'], true)) {
+        if ($activity->activity_type == 'quiz') {
             $related[] = 'quiz';
-            $related[] = 'evaluation';
-        } elseif ($activity->module_id !== null && $activity->scope === 'module') {
+        }
+        if ($activity->module_id !== null && $activity->scope === 'module') {
             $related[] = 'module';
         } elseif ($activity->sequence_id !== null && $activity->scope === 'sequence') {
             $related[] = 'sequence.module';
@@ -131,7 +143,7 @@ class TeacherCourseActivity extends Controller
 
         $related = array_values(array_unique($related));
         $activity = Activity::with($related)->where('slug', $slug)->firstOrFail();
-        return Inertia::render('teachers/courses/activities/show', [
+        return Inertia::render('teachers/activities/show', [
             'activity' => $activity,
             'current_course' => $course
         ]);
@@ -144,7 +156,7 @@ class TeacherCourseActivity extends Controller
     {
         $course = Course::where('slug', $courseSlug)->firstOrFail();
         $activity = Activity::with(['course'])->where('slug', $slug)->first();
-        return Inertia::render('teachers/courses/activities/form', [
+        return Inertia::render('teachers/activities/form', [
             'course' => $course,
             'activity' => $activity,
             'c_modality' => $course->modality

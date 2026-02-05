@@ -42,28 +42,6 @@ import { MdDelete } from 'react-icons/md';
 
 export const columns: ColumnDef<Location>[] = [
     {
-        accessorKey: 'name',
-        header: 'Name',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('name')}</div>
-        ),
-    },
-    {
-        accessorKey: 'city',
-        header: 'Ville',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('city')}</div>
-        ),
-    },
-    {
-        accessorKey: 'address',
-        header: 'Adresse',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('address')}</div>
-        ),
-    },
-
-    {
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) => {
@@ -126,6 +104,27 @@ export const columns: ColumnDef<Location>[] = [
             );
         },
     },
+    {
+        accessorKey: 'name',
+        header: 'Name',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('name')}</div>
+        ),
+    },
+    {
+        accessorKey: 'city',
+        header: 'Ville',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('city')}</div>
+        ),
+    },
+    {
+        accessorKey: 'address',
+        header: 'Adresse',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('address')}</div>
+        ),
+    },
 ];
 
 export default function LocationsDataTable({
@@ -179,7 +178,7 @@ export default function LocationsDataTable({
                     <div className="space-x-3">
                         <Link
                             href={create()}
-                            className="btn-primary bg-cblue ml-auto inline-block !py-2 text-white"
+                            className="btn-primary ml-auto inline-block bg-cblue !py-2 text-white"
                         >
                             Ajouter <IoAdd className="inline-block h-7 w-7" />
                         </Link>

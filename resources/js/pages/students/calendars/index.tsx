@@ -3,7 +3,7 @@ import { CourseActivity } from '@/types/models/course';
 import { usePage } from '@inertiajs/react';
 import { Calendar } from 'lucide-react';
 import { useState } from 'react';
-import StudentActivities from './activities';
+import StudentActivitiesShared from './activities';
 import StudentCalendar from './calendar';
 
 type ActivitysIndexProps = {
@@ -32,7 +32,9 @@ export default function StudentAllActivitiesIndex() {
                 </div>
             )}
             {/* Additional content can go here */}
-            {!showCalendar && <StudentActivities activities={activities} />}
+            {!showCalendar && (
+                <StudentActivitiesShared activities={activities} />
+            )}
         </StudentLayouts>
     );
 }

@@ -78,7 +78,7 @@ export default function UsersIndex() {
                 {filtered.length == 0 ? (
                     <div>Pas d'utilisateur</div>
                 ) : (
-                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-5 md:grid-cols-8">
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                         {filtered.map((u) => (
                             <div
                                 className="flex flex-col justify-center rounded border border-gray-200 bg-white p-3 shadow-xs"

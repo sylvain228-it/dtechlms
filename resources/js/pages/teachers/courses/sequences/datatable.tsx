@@ -45,77 +45,6 @@ import { MdDelete } from 'react-icons/md';
 
 export const columns: ColumnDef<Sequence>[] = [
     {
-        id: 'select',
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && 'indeterminate')
-                }
-                onCheckedChange={(value) =>
-                    table.toggleAllPageRowsSelected(!!value)
-                }
-                aria-label="Sélectionner tout"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Sélectionner la ligne"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: 'order',
-        header: 'Numéro',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('order')}</div>
-        ),
-    },
-
-    {
-        accessorKey: 'title',
-        header: 'Titre',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('title')}</div>
-        ),
-    },
-
-    {
-        accessorKey: 'sequence_type',
-        header: 'Type',
-        cell: ({ row }) => (
-            <div className="capitalize">
-                {getSequenceTypeLabel(row.getValue('sequence_type'))}
-            </div>
-        ),
-    },
-    {
-        accessorKey: 'is_visible',
-        header: 'Visibilité',
-        cell: ({ row }) => (
-            <div
-                className={`capitalize ${row.getValue('is_visible') == 1 ? 'text-green-600' : 'text-red-600'}`}
-            >
-                {row.getValue('is_visible') == 1 ? 'Visible' : 'Invisible'}
-            </div>
-        ),
-    },
-    {
-        accessorKey: 'activities',
-        header: 'Total Activités',
-        cell: ({ row }) => (
-            <div className={`capitalize`}>
-                {(row.getValue('activities') as CourseActivity[])?.length ?? 0}{' '}
-                Activité(s)
-            </div>
-        ),
-    },
-
-    {
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) => {
@@ -223,6 +152,76 @@ export const columns: ColumnDef<Sequence>[] = [
             );
         },
     },
+    {
+        id: 'select',
+        header: ({ table }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected() ||
+                    (table.getIsSomePageRowsSelected() && 'indeterminate')
+                }
+                onCheckedChange={(value) =>
+                    table.toggleAllPageRowsSelected(!!value)
+                }
+                aria-label="Sélectionner tout"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Sélectionner la ligne"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
+        accessorKey: 'order',
+        header: 'Numéro',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('order')}</div>
+        ),
+    },
+
+    {
+        accessorKey: 'title',
+        header: 'Titre',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('title')}</div>
+        ),
+    },
+
+    {
+        accessorKey: 'sequence_type',
+        header: 'Type',
+        cell: ({ row }) => (
+            <div className="capitalize">
+                {getSequenceTypeLabel(row.getValue('sequence_type'))}
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'is_visible',
+        header: 'Visibilité',
+        cell: ({ row }) => (
+            <div
+                className={`capitalize ${row.getValue('is_visible') == 1 ? 'text-green-600' : 'text-red-600'}`}
+            >
+                {row.getValue('is_visible') == 1 ? 'Visible' : 'Invisible'}
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'activities',
+        header: 'Total Activités',
+        cell: ({ row }) => (
+            <div className={`capitalize`}>
+                {(row.getValue('activities') as CourseActivity[])?.length ?? 0}{' '}
+                Activité(s)
+            </div>
+        ),
+    },
 ];
 
 export default function ModuleSequenceDataTable({
@@ -311,7 +310,7 @@ export default function ModuleSequenceDataTable({
                                 ? create([module.course?.slug, module.id])
                                 : '#'
                         }
-                        className="btn-primary bg-cblue inline-block !py-2 text-center text-white"
+                        className="btn-primary inline-block bg-cblue !py-2 text-center text-white"
                     >
                         Ajouter <IoAdd className="inline-block h-7 w-7" />
                     </Link>

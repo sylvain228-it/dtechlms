@@ -86,6 +86,11 @@ class ActivityRequest extends FormRequest
                 ]),
             ],
 
+            // Ressources
+            'allowed_tools' => ['nullable', 'array'],
+            'allowed_tools.*' => ['string', 'max:500'],
+            'resources_summary' => ['nullable', 'string'],
+
             'is_individual' => ['boolean'],
             'is_collaborative' => ['boolean'],
             'max_group_size' => ['nullable', 'integer', 'min:1'],
@@ -120,12 +125,17 @@ class ActivityRequest extends FormRequest
                 ]),
             ],
 
-            'resources_summary' => ['nullable', 'string'],
 
             // Feedback et accompagnement
             'requires_feedback' => ['boolean'],
+            'feedback_instructions' => ['nullable', 'string'],
+
             'allows_resubmission' => ['boolean'],
             'max_attempts' => ['nullable', 'integer', 'min:1'],
+            'allow_late_submission' => ['required', 'boolean'],
+            'late_penalty_percentage' => ['nullable', 'integer', 'between:0,100'],
+
+            'lock_after_end' => ['required', 'boolean'],
 
             'is_synchronous' => ['boolean'],
 

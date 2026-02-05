@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Institut\CoursManageController;
-use App\Http\Controllers\Institut\InstCourseController;
 use App\Http\Controllers\Institut\InstitutCoursController;
 use App\Http\Controllers\Institut\InstitutCourseModuleController;
 use App\Http\Controllers\Institut\InstitutDashboardController;
@@ -92,8 +91,8 @@ Route::group(['prefix' => '/institut', 'middleware' => ['auth.institut'], 'as' =
         Route::post('/api/assign-to-user', [InstitutStudentsController::class, 'assignToUser'])->name('assigntouser');
     });
 });
+Route::post('/institut-logout', [InstitutLoginController::class, 'logout'])->name('institut.auth.logout')->middleware('auth.institut');
 Route::group(['as' => 'institut.', 'middleware' => ['guest.custom']], function () {
     Route::get('/institut-login', [InstitutLoginController::class, 'showLoginForm'])->name('login');
     Route::post('/institut-login', [InstitutLoginController::class, 'login'])->name('login.store');
-    Route::post('/institut-logout', [InstitutLoginController::class, 'logout'])->name('logout');
 });

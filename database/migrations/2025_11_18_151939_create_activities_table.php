@@ -43,8 +43,8 @@ return new class extends Migration
 
             // Consignes pédagogiques
             $table->longText('instructions')->nullable();
-            $table->json('steps')->nullable();              // étapes guidées
-            $table->json('expected_outcomes')->nullable(); // résultats attendus
+            $table->text('steps')->nullable();              // étapes guidées
+            $table->text('expected_outcomes')->nullable(); // résultats attendus
 
             // Organisation
             $table->unsignedInteger('order');
@@ -89,8 +89,17 @@ return new class extends Migration
 
             // Feedback et accompagnement
             $table->boolean('requires_feedback')->default(false);
+            $table->text('feedback_instructions')->nullable();
             $table->boolean('allows_resubmission')->default(false);
             $table->unsignedInteger('max_attempts')->default(1);
+
+            // new field
+            $table->boolean('allow_late_submission')->default(false);
+            $table->integer('late_penalty_percentage')->nullable();
+            $table->text('allowed_tools')->nullable();
+            $table->text('support_instructions')->nullable();
+            $table->boolean('lock_after_end')->default(true);
+
 
             $table->boolean('is_synchronous')->default(false);
 
@@ -108,20 +117,18 @@ return new class extends Migration
             $table->boolean('attendance_required')->default(false);
 
             // États
+
             $table->enum('status', [
                 'draft',
                 'scheduled',
                 'live',
                 'completed',
-                'cancelled'
+                'cancelled',
+                'open',
+                'closed',
+                'corrected',
+                'archived',
             ])->default('draft');
-
-            $table->enum('activity_status', [
-                'scheduled',
-                'live',
-                'completed',
-                'cancelled'
-            ])->default('scheduled');
 
             $table->boolean('is_mandatory')->default(true);
             $table->boolean('is_visible')->default(true);

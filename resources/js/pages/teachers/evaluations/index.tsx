@@ -1,10 +1,10 @@
 import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
-import { Evaluation } from '@/types/models/others';
+import { CourseActivity } from '@/types/models/course';
 import { usePage } from '@inertiajs/react';
 import EvaluationsDataTable from './datatable';
 
 type Props = {
-    evaluations: Evaluation[];
+    evaluations: CourseActivity[];
 };
 export default function TeacherEvaluationsIndex() {
     const { evaluations } = usePage().props as unknown as Props;

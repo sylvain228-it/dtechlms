@@ -44,66 +44,6 @@ import { MdDelete } from 'react-icons/md';
 
 export const columns: ColumnDef<Module>[] = [
     {
-        id: 'select',
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && 'indeterminate')
-                }
-                onCheckedChange={(value) =>
-                    table.toggleAllPageRowsSelected(!!value)
-                }
-                aria-label="Sélectionner tout"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Sélectionner la ligne"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: 'order',
-        header: 'Numéro',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('order')}</div>
-        ),
-    },
-
-    {
-        accessorKey: 'title',
-        header: 'Titre',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('title')}</div>
-        ),
-    },
-    {
-        accessorKey: 'is_visible',
-        header: 'Visibilité',
-        cell: ({ row }) => (
-            <div
-                className={`capitalize ${row.getValue('is_visible') == 1 ? 'text-green-600' : 'text-red-600'}`}
-            >
-                {row.getValue('is_visible') == 1 ? 'Visible' : 'Invisible'}
-            </div>
-        ),
-    },
-    {
-        accessorKey: 'sequences',
-        header: 'Sequences',
-        cell: ({ row }) => (
-            <div className="capitalize">
-                {(row.getValue('sequences') as Sequence[]).length}
-            </div>
-        ),
-    },
-
-    {
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) => {
@@ -197,6 +137,65 @@ export const columns: ColumnDef<Module>[] = [
             );
         },
     },
+    {
+        id: 'select',
+        header: ({ table }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected() ||
+                    (table.getIsSomePageRowsSelected() && 'indeterminate')
+                }
+                onCheckedChange={(value) =>
+                    table.toggleAllPageRowsSelected(!!value)
+                }
+                aria-label="Sélectionner tout"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Sélectionner la ligne"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
+        accessorKey: 'order',
+        header: 'Numéro',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('order')}</div>
+        ),
+    },
+
+    {
+        accessorKey: 'title',
+        header: 'Titre',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('title')}</div>
+        ),
+    },
+    {
+        accessorKey: 'is_visible',
+        header: 'Visibilité',
+        cell: ({ row }) => (
+            <div
+                className={`capitalize ${row.getValue('is_visible') == 1 ? 'text-green-600' : 'text-red-600'}`}
+            >
+                {row.getValue('is_visible') == 1 ? 'Visible' : 'Invisible'}
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'sequences',
+        header: 'Sequences',
+        cell: ({ row }) => (
+            <div className="capitalize">
+                {(row.getValue('sequences') as Sequence[]).length}
+            </div>
+        ),
+    },
 ];
 
 export default function CoursesModulesDataTable({
@@ -281,7 +280,7 @@ export default function CoursesModulesDataTable({
                 <div className="flex items-center gap-2">
                     <Link
                         href={create(course.slug)}
-                        className="btn-primary bg-cblue flex w-full items-center justify-center !py-1 text-center text-white"
+                        className="btn-primary flex w-full items-center justify-center bg-cblue !py-1 text-center text-white"
                     >
                         Ajouter <IoAdd size={30} />
                     </Link>

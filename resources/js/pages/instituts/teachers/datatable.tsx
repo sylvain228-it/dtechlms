@@ -15,7 +15,6 @@ import { ImProfile } from 'react-icons/im';
 
 import GetDatableProfile from '@/components/datatable-img';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -44,68 +43,6 @@ import { IoAdd } from 'react-icons/io5';
 import { MdDelete } from 'react-icons/md';
 
 export const columns: ColumnDef<Teacher>[] = [
-    {
-        id: 'select',
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && 'indeterminate')
-                }
-                onCheckedChange={(value) =>
-                    table.toggleAllPageRowsSelected(!!value)
-                }
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: 'profile_picture_url',
-        header: 'Photo profile',
-        cell: ({ row }) => (
-            <div className="h-14 w-14 overflow-hidden rounded-lg border-2 border-gray-300 bg-gray-100">
-                <GetDatableProfile url={row.getValue('profile_picture_url')} />
-            </div>
-        ),
-    },
-    {
-        accessorKey: 'last_name',
-        header: 'Nom',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('last_name')}</div>
-        ),
-    },
-    {
-        accessorKey: 'first_name',
-        header: 'Prénom',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('first_name')}</div>
-        ),
-    },
-    {
-        accessorKey: 'phone_number',
-        header: 'Téléphone',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('phone_number')}</div>
-        ),
-    },
-    {
-        accessorKey: 'email',
-        header: 'Email',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('email')}</div>
-        ),
-    },
-
     {
         id: 'actions',
         enableHiding: false,
@@ -166,6 +103,43 @@ export const columns: ColumnDef<Teacher>[] = [
                 </DropdownMenu>
             );
         },
+    },
+    {
+        accessorKey: 'profile_picture_url',
+        header: 'Photo profile',
+        cell: ({ row }) => (
+            <div className="h-14 w-14 overflow-hidden rounded-lg border-2 border-gray-300 bg-gray-100">
+                <GetDatableProfile url={row.getValue('profile_picture_url')} />
+            </div>
+        ),
+    },
+    {
+        accessorKey: 'last_name',
+        header: 'Nom',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('last_name')}</div>
+        ),
+    },
+    {
+        accessorKey: 'first_name',
+        header: 'Prénom',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('first_name')}</div>
+        ),
+    },
+    {
+        accessorKey: 'phone_number',
+        header: 'Téléphone',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('phone_number')}</div>
+        ),
+    },
+    {
+        accessorKey: 'email',
+        header: 'Email',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('email')}</div>
+        ),
     },
 ];
 
@@ -248,7 +222,7 @@ export default function TeachersDataTable({
                 </div>
                 <Link
                     href={create()}
-                    className="btn-primary bg-cblue inline-block !py-2 text-center text-white"
+                    className="btn-primary inline-block bg-cblue !py-2 text-center text-white"
                 >
                     Ajouter <IoAdd className="inline-block h-7 w-7" />
                 </Link>

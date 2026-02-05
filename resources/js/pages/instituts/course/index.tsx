@@ -113,9 +113,9 @@ export default function InstitutCoursesListe() {
                                         <div>Séquences: {sequencesCount}</div>
                                     </div>
 
-                                    <div className="px-4 pt-2 pb-4">
+                                    <div className="px-4 pb-4">
                                         <Link href={details(c.slug)}>
-                                            <h3 className="mb-2 line-clamp-1 text-[15px] font-semibold text-gray-800 capitalize">
+                                            <h3 className="line-clamp-1 text-[15px] font-semibold text-gray-800 capitalize">
                                                 {c.title}
                                             </h3>
                                         </Link>

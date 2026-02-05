@@ -38,10 +38,12 @@ type FilterState = {
     modality: string;
 };
 
-export default function StudentActivities({
+export default function StudentActivitiesShared({
     activities,
+    isAssessment = false,
 }: {
     activities: CourseActivity[];
+    isAssessment?: boolean;
 }) {
     const [filters, setFilters] = useState<FilterState>({
         search: '',
@@ -158,10 +160,13 @@ export default function StudentActivities({
                 <div className="mb-8 flex items-center justify-between">
                     <div>
                         <h1 className="text-xl font-bold text-gray-900 sm:text-2xl dark:text-gray-300">
-                            Calendrier des activités
+                            {isAssessment
+                                ? 'Évaluations'
+                                : 'Activités pédagogiques'}
                         </h1>
                         <p className="mt-2 text-gray-600 dark:text-gray-400">
-                            Gérez et organisez vos activités pédagogiques
+                            Consultez et gérez vos activités
+                            {isAssessment ? " d'évaluation" : ''} ici.
                         </p>
                     </div>
                 </div>

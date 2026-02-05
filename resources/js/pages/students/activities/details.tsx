@@ -57,49 +57,47 @@ export default function StudentActivityDetails() {
 
             <div>
                 <div className="mt-2 gap-2 text-sm text-gray-500">
-                    {course && (
-                        <>
-                            <Link
-                                href={details(course?.slug)}
-                                className="line-clamp-2 inline-block text-blue-400"
-                            >
-                                {course?.title ?? 'Cours inconnu'}
-                            </Link>
-                            <span>/</span>
-                        </>
-                    )}
-                    {module && (
-                        <span>
-                            <Link
-                                href={moduleDetails([
-                                    current_course.slug,
-                                    module?.slug,
-                                ])}
-                                className="line-clamp-2 inline-block text-blue-400"
-                            >
-                                {module?.title ?? 'Module'}
-                            </Link>
+                    <span>
+                        {course && (
+                            <>
+                                <Link
+                                    href={details(course?.slug)}
+                                    className="text-blue-400"
+                                >
+                                    {course?.title ?? 'Cours inconnu'}
+                                </Link>
+                            </>
+                        )}
+                        {module && (
+                            <span>
+                                <Link
+                                    href={moduleDetails([
+                                        current_course.slug,
+                                        module?.slug,
+                                    ])}
+                                    className="text-blue-400"
+                                >
+                                    {module?.title ?? 'Module'}
+                                </Link>
+                            </span>
+                        )}
+                        {sequence && (
+                            <span>
+                                <Link
+                                    href={sequenceDetails([
+                                        current_course.slug,
+                                        sequence?.slug,
+                                    ])}
+                                    className="text-blue-400"
+                                >
+                                    {sequence?.title ?? 'Séquence'}
+                                </Link>{' '}
+                            </span>
+                        )}
 
-                            <span>/</span>
+                        <span className="text-md mt-1 font-semibold text-gray-600">
+                            / {activity.title}
                         </span>
-                    )}
-                    {sequence && (
-                        <span>
-                            <Link
-                                href={sequenceDetails([
-                                    current_course.slug,
-                                    sequence?.slug,
-                                ])}
-                                className="line-clamp-2 inline-block text-blue-400"
-                            >
-                                {sequence?.title ?? 'Séquence'}
-                            </Link>{' '}
-                            <span>/</span>
-                        </span>
-                    )}
-
-                    <span className="text-md mt-1 line-clamp-2 inline-block font-semibold text-gray-600">
-                        {activity.title}
                     </span>
                 </div>
             </div>

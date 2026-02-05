@@ -46,74 +46,6 @@ import { MdDelete } from 'react-icons/md';
 
 export const columns: ColumnDef<Course>[] = [
     {
-        id: 'select',
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && 'indeterminate')
-                }
-                onCheckedChange={(value) =>
-                    table.toggleAllPageRowsSelected(!!value)
-                }
-                aria-label="Sélectionner tout"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Sélectionner la ligne"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: 'cover_url',
-        header: 'Couverture',
-        cell: ({ row }) => (
-            <div className="h-14 w-14 overflow-hidden rounded-lg border-2 border-gray-300 bg-gray-100">
-                <GetDatableProfile url={row.getValue('cover_url')} />
-            </div>
-        ),
-    },
-
-    {
-        accessorKey: 'title',
-        header: 'Titre',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('title')}</div>
-        ),
-    },
-    {
-        accessorKey: 'price',
-        header: 'Prix',
-        cell: ({ row }) => (
-            <div className="capitalize">{parseInt(row.getValue('price'))}F</div>
-        ),
-    },
-    {
-        accessorKey: 'modules',
-        header: 'Modules',
-        cell: ({ row }) => (
-            <div className="capitalize">
-                {(row.getValue('modules') as Module[]).length}
-            </div>
-        ),
-    },
-
-    {
-        accessorKey: 'status',
-        header: 'Status',
-        cell: ({ row }) => (
-            <div className="capitalize">
-                <BuildCoursStatusBadge status={row.getValue('status')} />
-            </div>
-        ),
-    },
-
-    {
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) => {
@@ -183,6 +115,73 @@ export const columns: ColumnDef<Course>[] = [
                 </DropdownMenu>
             );
         },
+    },
+    {
+        id: 'select',
+        header: ({ table }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected() ||
+                    (table.getIsSomePageRowsSelected() && 'indeterminate')
+                }
+                onCheckedChange={(value) =>
+                    table.toggleAllPageRowsSelected(!!value)
+                }
+                aria-label="Sélectionner tout"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Sélectionner la ligne"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
+        accessorKey: 'cover_url',
+        header: 'Couverture',
+        cell: ({ row }) => (
+            <div className="h-14 w-14 overflow-hidden rounded-lg border-2 border-gray-300 bg-gray-100">
+                <GetDatableProfile url={row.getValue('cover_url')} />
+            </div>
+        ),
+    },
+
+    {
+        accessorKey: 'title',
+        header: 'Titre',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('title')}</div>
+        ),
+    },
+    {
+        accessorKey: 'price',
+        header: 'Prix',
+        cell: ({ row }) => (
+            <div className="capitalize">{parseInt(row.getValue('price'))}F</div>
+        ),
+    },
+    {
+        accessorKey: 'modules',
+        header: 'Modules',
+        cell: ({ row }) => (
+            <div className="capitalize">
+                {(row.getValue('modules') as Module[]).length}
+            </div>
+        ),
+    },
+
+    {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ row }) => (
+            <div className="capitalize">
+                <BuildCoursStatusBadge status={row.getValue('status')} />
+            </div>
+        ),
     },
 ];
 
@@ -262,7 +261,7 @@ export default function CoursesDataTable({ courses }: { courses: Course[] }) {
                 <div className="flex items-center gap-2">
                     <Link
                         href={create()}
-                        className="btn-primary bg-cblue flex w-full items-center justify-center !py-1 text-center text-white"
+                        className="btn-primary flex w-full items-center justify-center bg-cblue !py-1 text-center text-white"
                     >
                         Ajouter <IoAdd size={30} />
                     </Link>

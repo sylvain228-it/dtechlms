@@ -19,8 +19,8 @@ import {
 } from '@/components/ui/table';
 import { subStrText } from '@/lib/tasks';
 import { getEvaluateTypeLabel } from '@/lib/type';
-import { destroy, edit, show } from '@/routes/teachers/evaluations';
-import { Evaluation } from '@/types/models/others';
+import { destroy, edit, show } from '@/routes/teachers/activities';
+import { CourseActivity } from '@/types/models/course';
 import { Link, router } from '@inertiajs/react';
 import {
     ColumnDef,
@@ -40,7 +40,78 @@ import { FaEdit } from 'react-icons/fa';
 import { FcViewDetails } from 'react-icons/fc';
 import { MdDelete } from 'react-icons/md';
 
-export const columns: ColumnDef<Evaluation>[] = [
+export const columns: ColumnDef<CourseActivity>[] = [
+    {
+        id: 'actions',
+        enableHiding: false,
+        cell: ({ row }) => {
+            const evaluation = row.original;
+            function handleDelete(e: React.MouseEvent) {
+                e.preventDefault();
+                if (confirm('Êtes-vous sûr de vouloir supprimer ce quize ?')) {
+                    router.delete(
+                        destroy([
+                            evaluation?.parent_course?.id ?? '',
+                            evaluation.id,
+                        ]),
+                    );
+                }
+            }
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Ouvrir</span>
+                            <MoreHorizontal />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                navigator.clipboard.writeText(evaluation.title)
+                            }
+                        >
+                            Copier le titre
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <Link
+                            href={show([
+                                evaluation?.parent_course?.slug ?? '',
+                                evaluation.slug,
+                            ])}
+                        >
+                            <DropdownMenuItem>
+                                Détails
+                                <DropdownMenuShortcut>
+                                    <FcViewDetails className="text-blue-500" />
+                                </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </Link>
+                        <Link
+                            href={edit([
+                                evaluation?.parent_course?.slug ?? '',
+                                evaluation.slug,
+                            ])}
+                        >
+                            <DropdownMenuItem>
+                                Modifier
+                                <DropdownMenuShortcut>
+                                    <FaEdit className="text-blue-500" />
+                                </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuItem onClick={handleDelete}>
+                            Supprimer
+                            <DropdownMenuShortcut>
+                                <MdDelete className="text-red-500" />
+                            </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            );
+        },
+    },
     {
         accessorKey: 'title',
         header: 'Titre',
@@ -73,82 +144,10 @@ export const columns: ColumnDef<Evaluation>[] = [
             </div>
         ),
     },
-
-    {
-        id: 'actions',
-        enableHiding: false,
-        cell: ({ row }) => {
-            const evaluation = row.original;
-            function handleDelete(e: React.MouseEvent) {
-                e.preventDefault();
-                if (confirm('Êtes-vous sûr de vouloir supprimer ce quize ?')) {
-                    router.delete(
-                        destroy([
-                            evaluation?.activity?.id ?? '',
-                            evaluation.id,
-                        ]),
-                    );
-                }
-            }
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Ouvrir</span>
-                            <MoreHorizontal />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() =>
-                                navigator.clipboard.writeText(evaluation.title)
-                            }
-                        >
-                            Copier le titre
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <Link
-                            href={show([
-                                evaluation?.activity?.slug ?? '',
-                                evaluation.slug,
-                            ])}
-                        >
-                            <DropdownMenuItem>
-                                Détails
-                                <DropdownMenuShortcut>
-                                    <FcViewDetails className="text-blue-500" />
-                                </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                        </Link>
-                        <Link
-                            href={edit([
-                                evaluation?.activity?.slug ?? '',
-                                evaluation.slug,
-                            ])}
-                        >
-                            <DropdownMenuItem>
-                                Modifier
-                                <DropdownMenuShortcut>
-                                    <FaEdit className="text-blue-500" />
-                                </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                        </Link>
-                        <DropdownMenuItem onClick={handleDelete}>
-                            Supprimer
-                            <DropdownMenuShortcut>
-                                <MdDelete className="text-red-500" />
-                            </DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            );
-        },
-    },
 ];
 
 type Props = {
-    evaluations: Evaluation[];
+    evaluations: CourseActivity[];
 };
 export default function EvaluationsDataTable({ evaluations }: Props) {
     const [sorting, setSorting] = React.useState<SortingState>([]);

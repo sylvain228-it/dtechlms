@@ -1,17 +1,21 @@
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { logout } from '@/routes/auth';
-import { router } from '@inertiajs/react';
+import { logout as userLogout } from '@/routes/auth';
+import { logout as instLogout } from '@/routes/institut/auth/index';
+import { InstitutSharedData } from '@/types/models/institut';
+import { router, usePage } from '@inertiajs/react';
 import { LogOut } from 'lucide-react';
 import { useState } from 'react';
 
 export default function LogoutUserBtn() {
     const [processing, setProcessing] = useState(false);
+    const page = usePage<InstitutSharedData>();
+    const { auth } = page.props;
     async function submit(e: React.FormEvent) {
         e.preventDefault();
         setProcessing(true);
         await router.post(
-            logout(),
+            auth.institut != null ? instLogout() : userLogout(),
             {},
             {
                 onFinish: onFinish,

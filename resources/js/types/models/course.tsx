@@ -307,6 +307,11 @@ export interface CourseActivity {
     instructions?: string | null;
     steps?: string | null; // JSON array
     expected_outcomes?: string | null; // JSON array
+    allowed_tools?: string | null; // JSON array
+    feedback_instructions?: string | null;
+    lock_after_end?: boolean;
+    allow_late_submission?: boolean;
+    late_penalty_percentage?: number | null; // integer (0-100)
 
     // Organisation
     order?: number;

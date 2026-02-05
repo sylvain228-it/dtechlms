@@ -13,7 +13,6 @@ import {
 import { ChevronDown, MoreHorizontal } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -41,38 +40,6 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 
 export const columns: ColumnDef<Domaine>[] = [
-    {
-        id: 'select',
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && 'indeterminate')
-                }
-                onCheckedChange={(value) =>
-                    table.toggleAllPageRowsSelected(!!value)
-                }
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: 'name',
-        header: 'Name',
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('name')}</div>
-        ),
-    },
-
     {
         id: 'actions',
         enableHiding: false,
@@ -125,6 +92,14 @@ export const columns: ColumnDef<Domaine>[] = [
                 </DropdownMenu>
             );
         },
+    },
+
+    {
+        accessorKey: 'name',
+        header: 'Name',
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue('name')}</div>
+        ),
     },
 ];
 

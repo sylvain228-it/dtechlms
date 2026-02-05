@@ -7,6 +7,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import AvatarFallbackShared from '@/layouts/public/avatar-fallback';
+import LogoutUserBtn from '@/lib/logout-user';
 import { cn, resolveUrl } from '@/lib/utils';
 import { index as profile } from '@/routes/institut/profile';
 import { dashboard } from '@/routes/students';
@@ -17,7 +18,7 @@ import {
 } from '@/types/models/institut';
 import { Link, usePage } from '@inertiajs/react';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
-import { LogOut, Menu, Settings, User, X } from 'lucide-react';
+import { Menu, Settings, User, X } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import { IconType } from 'react-icons/lib';
 import { institutFooterNavItems, institutMainNavItems } from './nav-items';
@@ -71,7 +72,6 @@ export default function InstitutSpaceLayouts({
     const profileItemsTriggers = [
         { title: 'Mon Profil', href: profile().url, icon: User },
         { title: 'Paramètres', href: '/settings', icon: Settings },
-        { title: 'Déconnexion', href: '/logout', icon: LogOut },
     ];
 
     function handleMenuOpenNav() {
@@ -176,6 +176,7 @@ export default function InstitutSpaceLayouts({
                                                         );
                                                     },
                                                 )}
+                                                <LogoutUserBtn />
                                             </div>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
@@ -232,40 +233,45 @@ export default function InstitutSpaceLayouts({
                                 </Link>
                             ))}
 
-                            <Divider />
-                            {/* profile nav */}
-                            <div className="mb-3 flex items-center gap-3 px-4 py-2">
-                                <ProfileItemsTrigger
-                                    institut={
-                                        auth.institut as InstitutProfileProps
-                                    }
-                                />
-
+                            {auth.institut != null && (
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900">
-                                        Jean Dupont
-                                    </p>
-                                    <p className="text-xs text-gray-600">
-                                        jean@example.com
-                                    </p>
+                                    <Divider />
+                                    {/* profile nav */}
+                                    <div className="mb-3 flex items-center gap-3 px-4 py-2">
+                                        <ProfileItemsTrigger
+                                            institut={
+                                                auth.institut as InstitutProfileProps
+                                            }
+                                        />
+
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-900">
+                                                Jean Dupont
+                                            </p>
+                                            <p className="text-xs text-gray-600">
+                                                jean@example.com
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {profileItemsTriggers.map((item) => {
+                                        const Icon = item.icon;
+                                        return (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                                                onClick={() => {
+                                                    setIsOpenMobileNav(false);
+                                                }}
+                                            >
+                                                <Icon size={16} />
+                                                {item.title}
+                                            </Link>
+                                        );
+                                    })}
+                                    <LogoutUserBtn />
                                 </div>
-                            </div>
-                            {profileItemsTriggers.map((item) => {
-                                const Icon = item.icon;
-                                return (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                                        onClick={() => {
-                                            setIsOpenMobileNav(false);
-                                        }}
-                                    >
-                                        <Icon size={16} />
-                                        {item.title}
-                                    </Link>
-                                );
-                            })}
+                            )}
                         </div>
                     </div>
                 )}

@@ -26,8 +26,6 @@ return new class extends Migration
             $table->enum('quiz_type', ['diagnostic', 'formative', 'summative'])->default('formative');
             $table->integer('time_limit_minutes')->nullable();
             $table->integer('max_attempts')->default(1);
-            $table->boolean('is_mandatory')->default(true);
-            $table->enum('note_unit', ['%', 'pt'])->nullable();
             // Comportement
             $table->boolean('shuffle_questions')->default(true);
             $table->boolean('shuffle_answers')->default(true);

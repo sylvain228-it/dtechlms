@@ -29,11 +29,9 @@ class StudentActivityController extends Controller
         $activity = Activity::whereIn('parent_course_id', $courseIds)->where('slug', $slug)->firstOrFail();
         $related = ['resources.resource'];
 
-        if (in_array($activity->activity_type, ['quiz', 'assessment'], true)) {
+        if ($activity->activity_type == 'quiz') {
             $related[] = 'quiz';
-            $related[] = 'evaluation';
         }
-
         if ($activity->module_id !== null && $activity->scope === 'module') {
             $related[] = 'module';
         } elseif ($activity->sequence_id !== null && $activity->scope === 'sequence') {
