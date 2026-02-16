@@ -1,12 +1,13 @@
 import { index as profile } from '@/routes/auth/profile';
 import { index as settings } from '@/routes/auth/settings';
 import { dashboard, docs } from '@/routes/students';
-import { calendars } from '@/routes/students/activities';
+import { calendars, submissions } from '@/routes/students/activities';
 import { index as courses } from '@/routes/students/courses';
 import { index as evaluations } from '@/routes/students/evaluations';
 import { index as quizzes } from '@/routes/students/quizzes';
 import { type NavItem } from '@/types';
 import { Book, BookOpen, Calendar, Gauge, Settings, User } from 'lucide-react';
+import { FaCloudUploadAlt } from 'react-icons/fa';
 import { MdPlaylistAddCheck } from 'react-icons/md';
 export const profileItemsTriggers = [
     { title: 'Mon Profil', href: profile().url, icon: User },
@@ -73,6 +74,11 @@ export const studentMainNavItems: NavItem[] = [
     //     href: '#',
     //     icon: FaGraduationCap,
     // },
+    {
+        title: 'Soumissions',
+        href: submissions(),
+        icon: FaCloudUploadAlt,
+    },
 ];
 
 export const studentFooterNavItems: NavItem[] = [

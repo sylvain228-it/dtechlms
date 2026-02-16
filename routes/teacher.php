@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\Teacher\ActivitySubmissionController;
+use App\Http\Controllers\Teacher\EvaluationCriteriaController;
+use App\Http\Controllers\Teacher\FeedbackGuidelineController;
+use App\Http\Controllers\Teacher\GrandingScaleController;
 use App\Http\Controllers\Teacher\ProfileTeacherController;
+use App\Http\Controllers\Teacher\RebricController;
 use App\Http\Controllers\Teacher\SkillController;
 use App\Http\Controllers\Teacher\TeacherCoursController;
 use App\Http\Controllers\Teacher\TeacherCourseModuleController;
@@ -57,10 +62,16 @@ Route::group(['prefix' => '/enseignants', 'middleware' => ['status.user', 'teach
     Route::resource('events', TeacherEventCalendarController::class);
 
 
+    // 
+    Route::resource('rubrics', RebricController::class);
+    Route::resource('granding-scale', GrandingScaleController::class);
+    Route::resource('feedback-guideline', FeedbackGuidelineController::class);
 
     Route::group(['prefix' => '/{activity}'], function () {
         Route::resource('quizzes', TeacherQuizeController::class);
+        Route::resource('criterias', EvaluationCriteriaController::class);
     });
+
     Route::group(['prefix' => '/{quiz}', 'as' => 'quizzes.'], function () {
         // quize questions
         Route::resource('questions', TeacherQuizeQuestionController::class);
@@ -79,5 +90,15 @@ Route::group(['prefix' => '/enseignants', 'middleware' => ['status.user', 'teach
     Route::group(['prefix' => 'courses/{course}', 'as' => 'evaluations.'], function () {
         Route::get('evaluations', [TeacherEvaluationController::class, 'allEvaluations'])->name('index');
         // Route::get('evaluations/{activity}', [TeacherEvaluationController::class, 'show'])->name('show');
+    });
+
+
+    // submissions
+    Route::group(['prefix' => 'activites'], function () {
+        Route::get('/submissions', [ActivitySubmissionController::class, 'index'])->name('submissions');
+        Route::group(['prefix' => '{activity}/submissions', 'as' => 'submissions.'], function () {;
+            Route::get('details', [ActivitySubmissionController::class, 'show'])->name('show');
+            Route::put('update', [ActivitySubmissionController::class, 'update'])->name('update');
+        });
     });
 });

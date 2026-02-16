@@ -5,6 +5,7 @@ import {
     activityStatusTypeLabels,
     activityTypeLabels,
     eventVisibilityTypeLabels,
+    getActivityStatusColorClass,
     getActivityStatusTypeLabel,
     getActivityTypeLabel,
     getModalityTypeLabel,
@@ -110,21 +111,6 @@ export default function TeacherActivities({
 
     const isFiltered = Object.values(filters).some((val) => val !== '');
 
-    const getStatusBadgeColor = (activity_status: string) => {
-        switch (activity_status) {
-            case 'upcoming':
-                return 'bg-blue-100 text-blue-800 border-blue-300';
-            case 'ongoing':
-                return 'bg-green-100 text-green-800 border-green-300';
-            case 'completed':
-                return 'bg-gray-100 text-gray-800 border-gray-300';
-            case 'canceled':
-                return 'bg-red-100 text-red-800 border-red-300';
-            default:
-                return 'bg-gray-100 text-gray-800';
-        }
-    };
-
     const getactivityTypeColor = (type: string) => {
         switch (type) {
             case 'formative':
@@ -191,7 +177,9 @@ export default function TeacherActivities({
                                 <p className="mt-2 text-3xl font-bold text-blue-600">
                                     {
                                         activities.filter(
-                                            (e) => e.status === 'scheduled',
+                                            (e) =>
+                                                e.activity_status ===
+                                                'scheduled',
                                         ).length
                                     }
                                 </p>
@@ -425,7 +413,7 @@ export default function TeacherActivities({
                                                     )}
                                                 </Badge>
                                                 <Badge
-                                                    className={`text-xs font-semibold ${getStatusBadgeColor(activity.status)}`}
+                                                    className={`text-xs font-semibold ${getActivityStatusColorClass(activity.activity_status)}`}
                                                 >
                                                     {subStrText(
                                                         getActivityStatusTypeLabel(
@@ -541,7 +529,7 @@ export default function TeacherActivities({
                                                         )}
                                                     </Badge>
                                                     <span
-                                                        className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-semibold whitespace-nowrap ${getStatusBadgeColor(activity.status)}`}
+                                                        className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-semibold whitespace-nowrap ${getActivityStatusColorClass(activity.activity_status)}`}
                                                     >
                                                         {getActivityStatusTypeLabel(
                                                             activity.activity_status,

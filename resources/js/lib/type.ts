@@ -45,6 +45,7 @@ export type DeliverableType =
     | 'link'
     | 'text'
     | 'video'
+    | 'image'
     | 'audio'
     | 'github_repo_link';
 export type PrerequisiteType =
@@ -79,18 +80,6 @@ export type SkillType =
     | 'methodological'
     | 'behavioral'
     | 'transversal';
-
-export type ResourceType =
-    | 'video'
-    | 'document'
-    | 'link'
-    | 'tool'
-    | 'dataset'
-    | 'audio'
-    | 'image'
-    | 'slide'
-    | 'external_activity'
-    | 'other';
 
 export type AccountRole =
     | 'admin'
@@ -194,6 +183,7 @@ export const deliverableTypeLabels: Array<{
     { key: 'text', value: 'Texte' },
     { key: 'video', value: 'Vidéo' },
     { key: 'audio', value: 'Audio' },
+    { key: 'image', value: 'Image' },
     { key: 'github_repo_link', value: 'Lien du dépôt GitHub' },
 ];
 
@@ -260,18 +250,6 @@ export const skillTypeLabels: Array<{ key: SkillType; value: string }> = [
     },
 ];
 
-export const resourceTypeLabels: Array<{ key: ResourceType; value: string }> = [
-    { key: 'video', value: 'Vidéo' },
-    { key: 'document', value: 'Document' },
-    { key: 'link', value: 'Lien' },
-    // { key: 'tool', value: 'Outil' },
-    // { key: 'dataset', value: 'Jeu de données' },
-    { key: 'audio', value: 'Audio' },
-    { key: 'image', value: 'Image' },
-    // { key: 'slide', value: 'Diapositive Powerpoint' },
-    // { key: 'external_activity', value: 'Activité externe' },
-    // { key: 'other', value: 'Autre' },
-];
 export const storageTypeLabels: Array<{ key: StorageType; value: string }> = [
     { key: 'local', value: 'Stockage local' },
     // { key: 's3', value: 'Amazon S3' },
@@ -423,6 +401,30 @@ export function getStudyLevelLabel(level: StudyLevel): string {
 export function getSkillTypeLabel(level: SkillType): string {
     return skillTypeLabels.find((item) => item.key === level)?.value || '';
 }
+
+export type ResourceType =
+    | 'video'
+    | 'document'
+    | 'link'
+    | 'tool'
+    | 'dataset'
+    | 'audio'
+    | 'image'
+    | 'slide'
+    | 'external_activity'
+    | 'other';
+export const resourceTypeLabels: Array<{ key: ResourceType; value: string }> = [
+    { key: 'video', value: 'Vidéo' },
+    { key: 'document', value: 'Document' },
+    { key: 'link', value: 'Lien' },
+    // { key: 'tool', value: 'Outil' },
+    // { key: 'dataset', value: 'Jeu de données' },
+    { key: 'audio', value: 'Audio' },
+    { key: 'image', value: 'Image' },
+    // { key: 'slide', value: 'Diapositive Powerpoint' },
+    // { key: 'external_activity', value: 'Activité externe' },
+    // { key: 'other', value: 'Autre' },
+];
 export function getResourceTypeLabel(level: ResourceType): string {
     return resourceTypeLabels.find((item) => item.key === level)?.value || '';
 }
@@ -473,15 +475,7 @@ export function getQuizQuestionTypeLabel(type: QuizQuestionType): string {
     );
 }
 
-export type SaveStatus =
-    | 'draft'
-    | 'scheduled'
-    | 'open'
-    | 'review'
-    | 'published'
-    | 'closed'
-    | 'corrected'
-    | 'archived';
+export type SaveStatus = 'draft' | 'review' | 'published' | 'archived';
 
 export const saveStatusLabels: Array<{
     key: SaveStatus;
@@ -490,10 +484,6 @@ export const saveStatusLabels: Array<{
     { key: 'draft', value: 'Brouillon' },
     { key: 'review', value: 'En révision' },
     { key: 'published', value: 'Publié' },
-    { key: 'scheduled', value: 'Planifié' },
-    { key: 'open', value: 'Ouvert' },
-    { key: 'closed', value: 'Fermé' },
-    { key: 'corrected', value: 'Corrigé' },
     { key: 'archived', value: 'Archivé' },
 ];
 
@@ -572,11 +562,14 @@ export function getEventVisibilityLabel(
 }
 
 export type ActivityStatusType =
-    | 'draft'
     | 'scheduled'
     | 'live'
     | 'completed'
-    | 'cancelled';
+    | 'cancelled'
+    | 'open'
+    | 'closed'
+    | 'corrected'
+    | 'archived';
 export const activityStatusTypeLabels: Array<{
     key: ActivityStatusType;
     value: string;
@@ -585,6 +578,10 @@ export const activityStatusTypeLabels: Array<{
     { key: 'live', value: 'En cours' },
     { key: 'completed', value: 'Terminé' },
     { key: 'cancelled', value: 'Annulé' },
+    { key: 'open', value: 'Ouvert' },
+    { key: 'closed', value: 'Fermé' },
+    { key: 'corrected', value: 'Corrigé' },
+    { key: 'archived', value: 'Archivé' },
 ];
 export function getActivityStatusTypeLabel(status: ActivityStatusType): string {
     return (
@@ -630,4 +627,83 @@ export const activityScopeLabels: Array<{
 
 export function getActivityScopeLabel(scope: ActivityScope): string {
     return activityScopeLabels.find((item) => item.key === scope)?.value || '';
+}
+
+export type FileType = 'pdf' | 'docx' | 'xlsx' | 'pptx' | 'zip' | 'sql';
+export const fileTypeLabels: Array<{ key: FileType; value: string }> = [
+    { key: 'pdf', value: 'PDF' },
+    { key: 'docx', value: 'Word (DOCX)' },
+    { key: 'xlsx', value: 'Excel (XLSX)' },
+    { key: 'pptx', value: 'PowerPoint (PPTX)' },
+    { key: 'zip', value: 'Archive ZIP' },
+    { key: 'sql', value: 'Fichier Sql' },
+];
+export function getFileTypeLabel(type: FileType): string {
+    return fileTypeLabels.find((item) => item.key === type)?.value || '';
+}
+
+export type SubmissionStatus = 'draft' | 'submitted' | 'graded' | 'resubmitted';
+export const submissionStatusLabels: Array<{
+    key: SubmissionStatus;
+    value: string;
+}> = [
+    { key: 'draft', value: 'Brouillon' },
+    { key: 'submitted', value: 'Soumis' },
+    { key: 'graded', value: 'Noté' },
+    { key: 'resubmitted', value: 'Resoumis' },
+];
+export function getSubmissionStatusLabel(status: SubmissionStatus): string {
+    return (
+        submissionStatusLabels.find((item) => item.key === status)?.value || ''
+    );
+}
+
+export type CriterionType = 'knowledge' | 'skill' | 'attitude' | 'transversal';
+
+export const criterionTypeLabels = [
+    { key: 'knowledge', value: 'Connaissance' },
+    { key: 'skill', value: 'Compétence' },
+    { key: 'attitude', value: 'Attitude' },
+    { key: 'transversal', value: 'Transversal' },
+];
+export function getCriterionTypeLabel(type: CriterionType): string {
+    return criterionTypeLabels.find((item) => item.key === type)?.value || '';
+}
+
+export type EvaluationMethod = 'points' | 'rubric' | 'pass_fail';
+
+export const evaluationMethodLabels = [
+    { key: 'points', value: 'Points' },
+    { key: 'rubric', value: "Grille d'évaluation" },
+    { key: 'pass_fail', value: 'Validé/Non validé' },
+];
+export function getEvaluationMethodLabel(method: EvaluationMethod): string {
+    return (
+        evaluationMethodLabels.find((item) => item.key === method)?.value || ''
+    );
+}
+
+export function getSaveStatusColorClass(status: SaveStatus): string {
+    const statusColorClasses: Record<SaveStatus, string> = {
+        draft: 'bg-yellow-50 text-yellow-700',
+        review: 'bg-blue-50 text-blue-700',
+        published: 'bg-green-50 text-green-700',
+        archived: 'bg-gray-50 text-gray-700',
+    };
+    return statusColorClasses[status] || '';
+}
+export function getActivityStatusColorClass(
+    status: ActivityStatusType,
+): string {
+    const activityStatusColorClasses: Record<ActivityStatusType, string> = {
+        scheduled: 'bg-purple-50 text-purple-700',
+        open: 'bg-green-50 text-green-700',
+        live: 'bg-blue-50 text-blue-700',
+        completed: 'bg-gray-50 text-gray-700',
+        cancelled: 'bg-red-50 text-red-700',
+        closed: 'bg-red-50 text-red-700',
+        corrected: 'bg-indigo-50 text-indigo-700',
+        archived: 'bg-gray-50 text-gray-700',
+    };
+    return activityStatusColorClasses[status] || '';
 }

@@ -17,7 +17,7 @@ class StudentActivityController extends Controller
     public function index()
     {
         $studentCoursesIds = $this->studentsCoursesIds();
-        $activities = Activity::whereIn('parent_course_id', $studentCoursesIds)->whereNot('start_at', null)
+        $activities = Activity::whereIn('parent_course_id', $studentCoursesIds)
             ->orderBy('start_at', 'DESC')
             ->get();
         $student = $this->student();
@@ -27,7 +27,7 @@ class StudentActivityController extends Controller
     {
         $courseIds = $this->studentsCoursesIds();
         $activity = Activity::whereIn('parent_course_id', $courseIds)->where('slug', $slug)->firstOrFail();
-        $related = ['resources.resource'];
+        $related = ['resources.resource', 'delivRequirements', 'submission'];
 
         if ($activity->activity_type == 'quiz') {
             $related[] = 'quiz';
@@ -36,12 +36,12 @@ class StudentActivityController extends Controller
             $related[] = 'module';
         } elseif ($activity->sequence_id !== null && $activity->scope === 'sequence') {
             $related[] = 'sequence.module';
-        } else {
+        } else if ($activity->scope === 'course' && $activity->course_id !== null) {
             $related[] = 'course';
         }
 
         $related = array_values(array_unique($related));
-        $activity = Activity::with($related)->whereIn('parent_course_id', $courseIds)->where('slug', $slug)->firstOrFail();
+        $activity = Activity::with($related)->where('slug', $slug)->firstOrFail();
         // dd($activity);
         return Inertia::render('students/activities/details', [
             'activity' => $activity,

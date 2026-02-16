@@ -1,0 +1,1 @@
+import{c as u,j as x}from"./app-BzXwBPBx.js";function f(p){const t=u.c(7),{text:s,start:o,end:e,elipse:c}=p,a=c===void 0?!0:c;let n;t[0]!==e||t[1]!==o||t[2]!==s?(n=s.substring(o,e),t[0]=e,t[1]=o,t[2]=s,t[3]=n):n=t[3];const r=n,l=a&&s.length>e?"...":"";let i;return t[4]!==l||t[5]!==r?(i=x.jsxs("span",{children:[r,l]}),t[4]=l,t[5]=r,t[6]=i):i=t[6],i}export{f as S};

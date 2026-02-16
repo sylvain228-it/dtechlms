@@ -14,12 +14,9 @@ return new class extends Migration
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
             // Relations
+            $table->foreignId('parent_course_id')->constrained('courses')->cascadeOnDelete();
             $table->foreignId('student_id')
                 ->constrained('students')
-                ->cascadeOnDelete();
-
-            $table->foreignId('course_id')
-                ->constrained('courses')
                 ->cascadeOnDelete();
 
             $table->foreignId('activity_id')
@@ -33,8 +30,8 @@ return new class extends Migration
 
             // Contenu
             $table->string('title')->nullable();
+            $table->integer('nb_attempt')->nullable();
             $table->text('description')->nullable();
-            $table->json('submitted_files')->nullable(); // JSON contenant chemins / URLs
             $table->timestamp('submitted_at')->nullable();
 
             // Statut
@@ -44,7 +41,7 @@ return new class extends Migration
             // Note et feedback
             $table->decimal('score', 5, 2)->nullable();
             $table->text('feedback')->nullable();
-            $table->json('feedback_details')->nullable();
+            $table->text('feedback_details')->nullable();
 
             // Traçabilité
             $table->timestamps();

@@ -66,3 +66,21 @@ export interface PaginatedResponse<T> {
     data: T[];
     meta: PaginationMeta;
 }
+export type UploadElementType = {
+    key: number;
+    value: string | null;
+};
+
+export type SubmittedFile = {
+    id: number;
+    original_name: string;
+    url: string;
+    [key: string]: unknown;
+};
+
+export type UploadedFile = {
+    file: File;
+    tmp_path: string;
+    preview_url: string | null;
+    upload_progress: number;
+};

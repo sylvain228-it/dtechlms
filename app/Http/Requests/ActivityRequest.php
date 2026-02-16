@@ -87,8 +87,7 @@ class ActivityRequest extends FormRequest
             ],
 
             // Ressources
-            'allowed_tools' => ['nullable', 'array'],
-            'allowed_tools.*' => ['string', 'max:500'],
+            'allowed_tools' => ['nullable', 'string'],
             'resources_summary' => ['nullable', 'string'],
 
             'is_individual' => ['boolean'],
@@ -97,17 +96,9 @@ class ActivityRequest extends FormRequest
 
             // Livrables
             'has_deliverable' => ['boolean'],
-            'deliverable_type' => [
-                'nullable',
-                Rule::in([
-                    'file',
-                    'link',
-                    'github_repo_link',
-                    'video',
-                    'audio',
-                    'text'
-                ]),
-            ],
+            'deliverable_requirements' => ['required_if:has_deliverable,true', 'string'],
+            'deliverable_count' => ['required_if:has_deliverable,true', 'integer', 'min:1'],
+
             'deliverable_deadline' => ['nullable', 'date'],
 
             // Évaluation
@@ -116,9 +107,10 @@ class ActivityRequest extends FormRequest
                 'nullable',
                 Rule::in(['formative', 'summative', 'certifying']),
             ],
-            'evaluation_weight' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'evaluation_weight' => ['required_if:is_evaluated,true', 'numeric', 'min:0', 'max:100'],
+            'evaluation_max_weight' => ['required_if:is_evaluated,true', 'numeric', 'min:0', 'max:100'],
             'note_unit' => [
-                'nullable',
+                'required_if:is_evaluated,true',
                 Rule::in([
                     '%',
                     'pt',

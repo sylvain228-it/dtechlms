@@ -18,4 +18,9 @@ trait TeacherTrait
         $teacher = Teacher::with(['courses'])->where('user_id', Auth::user()->id)->firstOrFail();
         return $teacher;
     }
+    public function teacherCourseIds()
+    {
+        $teacher = $this->teacher();
+        return $teacher->courses->pluck('id')->toArray();
+    }
 }

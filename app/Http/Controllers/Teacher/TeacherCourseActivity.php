@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivityRequest;
 use App\Models\Activity;
 use App\Models\Course;
+use App\Models\DeliverableRequirement;
 use App\Models\Module;
 use App\Models\Sequence;
 use App\Traits\AppUtilityTrait;
@@ -33,9 +34,8 @@ class TeacherCourseActivity extends Controller
     }
     public function allActivities()
     {
-        $teacher = $this->teacher();
-        $courseIds = Course::where('teacher_id', $teacher->id)->pluck('id')->toArray();
-        $activities = Activity::with('parentCourse')->whereIn('parent_course_id', $courseIds)->whereNot('start_at', null)->get();
+        $courseIds = $this->teacherCourseIds();
+        $activities = Activity::with('parentCourse')->whereIn('parent_course_id', $courseIds)->orderByDesc('start_at', null)->get();
         return Inertia::render('teachers/calendars/index', [
             'activities' => $activities,
         ]);
@@ -104,13 +104,17 @@ class TeacherCourseActivity extends Controller
             $data = array_merge($data, [
                 'resources_summary' => $request->session()->get('text_syllabus'),
                 'slug' => $this->uniqueSlug(Activity::class, $request->title),
-                'activity_id' => $activity->id,
                 'version' => 1,
                 'parent_course_id' => $course->id,
             ]);
             $activity->fill($data);
             $activity->save();
             $request->session()->forget('text_syllabus');
+            $deliverable_requirements = json_decode($data['deliverable_requirements'], true);
+            foreach ($deliverable_requirements as $item) {
+                $item = array_merge($item, ['activity_id' => $activity->id]);
+                DeliverableRequirement::create($item);
+            }
 
 
             return redirect()->route('teachers.activities.index', $course->slug)
@@ -129,7 +133,7 @@ class TeacherCourseActivity extends Controller
     {
         $course = Course::where('slug', $courseSlug)->firstOrFail();
         $activity = Activity::where('slug', $slug)->first();
-        $related = ['resources.resource'];
+        $related = ['resources.resource', 'delivRequirements'];
         if ($activity->activity_type == 'quiz') {
             $related[] = 'quiz';
         }
@@ -137,7 +141,7 @@ class TeacherCourseActivity extends Controller
             $related[] = 'module';
         } elseif ($activity->sequence_id !== null && $activity->scope === 'sequence') {
             $related[] = 'sequence.module';
-        } else {
+        } else if ($activity->scope === 'course' && $activity->course_id !== null) {
             $related[] = 'course';
         }
 
@@ -155,7 +159,7 @@ class TeacherCourseActivity extends Controller
     public function edit($courseSlug, string $slug)
     {
         $course = Course::where('slug', $courseSlug)->firstOrFail();
-        $activity = Activity::with(['course'])->where('slug', $slug)->first();
+        $activity = Activity::with(['course', 'delivRequirements'])->where('slug', $slug)->first();
         return Inertia::render('teachers/activities/form', [
             'course' => $course,
             'activity' => $activity,
@@ -175,13 +179,21 @@ class TeacherCourseActivity extends Controller
             $data = array_merge($data, [
                 'resources_summary' => $request->session()->get('text_edit_syllabus'),
                 'slug' => $this->uniqueSlug(Activity::class, $request->title, $activity->id),
-                'activity_id' => $activity->id,
                 'parent_course_id' => $course->id,
             ]);
             $activity->fill($data);
             $activity->update();
             $request->session()->forget('text_edit_syllabus');
-
+            $deliverable_requirements = json_decode($data['deliverable_requirements'], true);
+            foreach ($deliverable_requirements as $item) {
+                $item = array_merge($item, ['activity_id' => $activity->id]);
+                $deliv = DeliverableRequirement::where('activity_id', $activity->id)->where('order', $item['order'])->first();
+                if ($deliv) {
+                    $deliv->update($item);
+                } else {
+                    DeliverableRequirement::create($item);
+                }
+            }
             return redirect()->route('teachers.activities.index', $course->slug)
                 ->with('success', 'Activité modifié avec succès');
         } catch (Exception $e) {

@@ -19,6 +19,7 @@ export const InputField: React.FC<{
     type?: string;
     value: string | number;
     max?: string;
+    min?: string;
     onChange: (value: string) => void;
     error?: string;
     required?: boolean;
@@ -28,6 +29,7 @@ export const InputField: React.FC<{
     type = 'text',
     value,
     max,
+    min,
     onChange,
     error,
     required,
@@ -38,6 +40,7 @@ export const InputField: React.FC<{
             type={type}
             value={value ?? ''}
             max={max ?? ''}
+            min={min ?? ''}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className={`w-full ${
@@ -51,6 +54,7 @@ export const SelectField: React.FC<{
     label: string;
     value: string;
     disabled?: boolean;
+    isSelectMulti?: boolean;
     emptyOption?: string;
     onChange: (value: string) => void;
     options: Array<{ key: string; value: string }>;
@@ -60,6 +64,7 @@ export const SelectField: React.FC<{
     label,
     value,
     disabled,
+    isSelectMulti,
     emptyOption,
     onChange,
     options,
@@ -72,7 +77,9 @@ export const SelectField: React.FC<{
             onChange={(e) => {
                 onChange(e.target.value);
             }}
+            required={required}
             disabled={disabled ?? false}
+            multiple={isSelectMulti ?? false}
             className={`form-input w-full ${
                 error ? 'border-red-300' : 'border-gray-300'
             } `}

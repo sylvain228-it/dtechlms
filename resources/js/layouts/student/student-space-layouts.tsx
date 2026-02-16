@@ -392,7 +392,7 @@ export default function StudentSpaceLayouts({
             {/* main */}
             <div
                 className={cn(
-                    'p-2 transition-all duration-300 sm:p-4',
+                    'p-4 transition-all duration-300 sm:p-6',
                     mainMarginClass,
                 )}
             >

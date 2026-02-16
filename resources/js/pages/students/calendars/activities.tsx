@@ -8,6 +8,7 @@ import {
     getActivityStatusTypeLabel,
     getActivityTypeLabel,
     getModalityTypeLabel,
+    getSaveStatusLabel,
     modalityTypeLabels,
 } from '@/lib/type';
 import { formatCompleteDate, formatMinutes } from '@/lib/utils';
@@ -27,7 +28,7 @@ import {
     Video,
     X,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type FilterState = {
     search: string;
@@ -152,6 +153,30 @@ export default function StudentActivitiesShared({
         }
         return <MapPin className="h-4 w-4 text-purple-500" />;
     };
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(9);
+
+    useEffect(() => {
+        const total = Math.max(
+            1,
+            Math.ceil(filteredActivities.length / pageSize),
+        );
+        (() => {
+            setCurrentPage((p) => (p > total ? total : p));
+        })();
+    }, [filteredActivities.length, pageSize]);
+
+    const totalPages = Math.max(
+        1,
+        Math.ceil(filteredActivities.length / pageSize),
+    );
+
+    const paginatedActivities = useMemo(() => {
+        const start = (currentPage - 1) * pageSize;
+        return filteredActivities.slice(start, start + pageSize);
+    }, [filteredActivities, currentPage, pageSize]);
 
     return (
         <div className="min-h-screen py-8">
@@ -382,7 +407,7 @@ export default function StudentActivitiesShared({
                         {/* Grid View */}
                         {viewMode === 'grid' && (
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                                {filteredActivities.map((activity) => (
+                                {paginatedActivities.map((activity) => (
                                     <div
                                         key={activity.id}
                                         className="group overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:shadow-lg dark:bg-cdcard"
@@ -424,8 +449,8 @@ export default function StudentActivitiesShared({
                                                 <span
                                                     className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getStatusBadgeColor(activity.status)}`}
                                                 >
-                                                    {getActivityStatusTypeLabel(
-                                                        activity.activity_status,
+                                                    {getSaveStatusLabel(
+                                                        activity.status,
                                                     )}
                                                 </span>
                                             </div>
@@ -487,7 +512,7 @@ export default function StudentActivitiesShared({
                         {/* List View */}
                         {viewMode === 'list' && (
                             <div className="space-y-2 overflow-hidden rounded-xl shadow-md">
-                                {filteredActivities.map((activity) => (
+                                {paginatedActivities.map((activity) => (
                                     <div
                                         key={activity.id}
                                         className="group flex flex-col gap-4 border-b border-gray-200 bg-white p-4 transition-colors last:border-b-0 hover:bg-gray-50 sm:p-6 lg:flex-row lg:items-center lg:justify-between dark:bg-cdcard dark:hover:bg-gray-800"
@@ -583,6 +608,72 @@ export default function StudentActivitiesShared({
                             </div>
                         )}
                     </>
+                )}
+
+                {/* Pagination Controls */}
+                {filteredActivities.length > pageSize && (
+                    <div className="mt-6 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() =>
+                                    setCurrentPage((p) => Math.max(1, p - 1))
+                                }
+                                disabled={currentPage === 1}
+                                className="rounded border px-3 py-1 text-sm disabled:opacity-50"
+                            >
+                                Préc
+                            </button>
+
+                            <div className="hidden items-center gap-1 sm:flex">
+                                {Array.from(
+                                    { length: totalPages },
+                                    (_, i) => i + 1,
+                                ).map((page) => (
+                                    <button
+                                        key={page}
+                                        onClick={() => setCurrentPage(page)}
+                                        className={`rounded px-2 py-1 text-sm ${
+                                            page === currentPage
+                                                ? 'bg-blue-600 text-white'
+                                                : 'hover:bg-gray-100'
+                                        }`}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() =>
+                                    setCurrentPage((p) =>
+                                        Math.min(totalPages, p + 1),
+                                    )
+                                }
+                                disabled={currentPage === totalPages}
+                                className="rounded border px-3 py-1 text-sm disabled:opacity-50"
+                            >
+                                Suiv
+                            </button>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <label className="text-sm text-gray-700">
+                                Afficher
+                            </label>
+                            <select
+                                value={pageSize}
+                                onChange={(e) =>
+                                    setPageSize(Number(e.target.value))
+                                }
+                                className="rounded border px-2 py-1 text-sm"
+                            >
+                                <option value={6}>6</option>
+                                <option value={9}>9</option>
+                                <option value={12}>12</option>
+                                <option value={24}>24</option>
+                            </select>
+                        </div>
+                    </div>
                 )}
 
                 {/* Summary */}

@@ -10,7 +10,7 @@ class Activity extends Model
     use HasPrerequisites;
     public function module()
     {
-        return $this->hasOneThrough(Module::class, Course::class,);
+        return $this->belongsTo(Module::class);
     }
     public function sequence()
     {
@@ -26,7 +26,7 @@ class Activity extends Model
     }
     public function submission()
     {
-        return $this->hasMany(Submission::class);
+        return $this->hasOne(Submission::class);
     }
     public function quiz()
     {
@@ -59,6 +59,10 @@ class Activity extends Model
     public function evaluations()
     {
         return $this->morphMany(Evaluation::class, 'evaluable');
+    }
+    public function delivRequirements()
+    {
+        return $this->hasMany(DeliverableRequirement::class);
     }
 
 
@@ -95,14 +99,14 @@ class Activity extends Model
 
         // Livrables
         'has_deliverable',
-        'deliverable_type',
-        'deliverable_requirements',
+        'deliverable_count',
         'deliverable_deadline',
 
         // Évaluation
         'is_evaluated',
         'evaluation_type',
         'evaluation_weight',
+        'evaluation_max_weight',
         'note_unit',
 
         // Prérequis et dépendances
@@ -117,7 +121,7 @@ class Activity extends Model
         // Feedback et accompagnement
         'requires_feedback',
         'feedback_instructions',
-        'allows_resubmission',
+        'allow_resubmission',
         'max_attempts',
         'allow_late_submission',
         'late_penalty_percentage',
@@ -141,21 +145,12 @@ class Activity extends Model
 
         // États
         'status',
+        'activity_status',
         'is_mandatory',
         'is_visible',
     ];
 
     protected $casts = [
-        // JSON
-        'steps' => 'array',
-        'expected_outcomes' => 'array',
-        'deliverable_requirements' => 'array',
-        'prerequisites' => 'array',
-        'dependencies' => 'array',
-        'teaching_methods' => 'array',
-        'tools' => 'array',
-        'resources_summary' => 'array',
-        'allowed_tools' => 'array',
 
         // Booléens
         'is_individual' => 'boolean',

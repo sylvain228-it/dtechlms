@@ -4,18 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
 import GetHtmlContent from '@/lib/get-html-content';
+import { DeliverableRequirementsList } from '@/lib/simple-utility';
 import { handleEditClicked, subStrText } from '@/lib/tasks';
 import type {
     ActivityScope,
     ActivityType,
-    DeliverableType,
     EvaluateType,
     ModalityType,
 } from '@/lib/type';
 import {
     getActivityScopeLabel,
     getActivityTypeLabel,
-    getDeliverableTypeLabel,
     getEvaluateTypeLabel,
     getModalityTypeLabel,
     getPlateformeConferenceLabel,
@@ -28,6 +27,7 @@ import {
 } from '@/lib/utils';
 import { destroy, edit } from '@/routes/teachers/activities';
 import { show as showCourse } from '@/routes/teachers/courses';
+import { index as listCriterias } from '@/routes/teachers/criterias';
 import { show as showModule } from '@/routes/teachers/modules';
 import {
     create as createQuiz,
@@ -65,6 +65,7 @@ export default function ActivityDetails() {
     };
     const editUrl = edit([current_course.slug ?? '', activity.slug]).url;
     const showQuiz = activity.activity_type == 'quiz';
+    const deliverableRequirements = activity.deliv_requirements;
     return (
         <TeacherLayouts title={`Activité : ${activity.title}`}>
             <div className="mx-auto md:max-w-6xl">
@@ -269,7 +270,16 @@ export default function ActivityDetails() {
                                 </div>
                                 <div className="flex items-center justify-between gap-4">
                                     <div className="text-sm text-gray-500">
-                                        Poids
+                                        Note maximale
+                                    </div>
+                                    <div className="mt-1 text-sm font-bold text-gray-900">
+                                        {activity.evaluation_max_weight ?? '-'}
+                                        {activity.note_unit}
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="text-sm text-gray-500">
+                                        Moyènne
                                     </div>
                                     <div className="mt-1 text-sm font-bold text-gray-900">
                                         {activity.evaluation_weight ?? '-'}
@@ -291,20 +301,23 @@ export default function ActivityDetails() {
                                         )}
                                     </div>
                                 </div>
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="text-sm text-gray-500">
+                                        Nombre de livrables
+                                    </div>
+                                    <div className="mt-1 text-sm font-bold text-gray-900">
+                                        {activity.deliverable_count}
+                                    </div>
+                                </div>
                                 {activity.has_deliverable && (
                                     <>
-                                        <div>
-                                            <div className="text-sm text-gray-500">
-                                                Type de livraison
-                                            </div>
-                                            <div className="mt-1 text-sm font-bold text-gray-900">
-                                                {activity.deliverable_type
-                                                    ? getDeliverableTypeLabel(
-                                                          activity.deliverable_type as DeliverableType,
-                                                      )
-                                                    : '-'}
-                                            </div>
-                                        </div>
+                                        {deliverableRequirements && (
+                                            <DeliverableRequirementsList
+                                                requirements={
+                                                    deliverableRequirements
+                                                }
+                                            />
+                                        )}
                                         <div className="flex items-center justify-between gap-4">
                                             <div className="text-sm text-gray-500">
                                                 Date limite
@@ -381,6 +394,20 @@ export default function ActivityDetails() {
 
                     {/* Right column */}
                     <aside className="order-first lg:order-last">
+                        {activity.is_evaluated && (
+                            <div className="my-4 rounded-lg border bg-white p-3 shadow-sm sm:p-4">
+                                <h2 className="mb-2 text-xl font-bold">
+                                    Critères d'évaluation
+                                </h2>
+                                <Link
+                                    href={listCriterias(activity.slug)}
+                                    className="btn-primary flex w-full items-center justify-center gap-2 text-white"
+                                >
+                                    Voir les critères
+                                    <ArrowRight className="ml-2" />
+                                </Link>
+                            </div>
+                        )}
                         {showQuiz && (
                             <div className="top-24 my-4 rounded-lg border border-gray-400 bg-white p-6 shadow-sm sm:sticky dark:bg-cdcard">
                                 <h4 className="inline-block border-b border-gray-300 pb-1 text-sm font-semibold">

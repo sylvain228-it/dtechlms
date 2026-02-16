@@ -9,8 +9,9 @@ import { index as courses } from '@/routes/teachers/courses';
 import { type NavItem } from '@/types';
 import { BookOpen, Calendar, Gauge } from 'lucide-react';
 
+import { submissions } from '@/routes/teachers/';
 import { index as listStudents } from '@/routes/teachers/students';
-import { FaBook } from 'react-icons/fa';
+import { FaBook, FaCloudUploadAlt } from 'react-icons/fa';
 import { FaUsersLine } from 'react-icons/fa6';
 import { MdPlaylistAddCheck } from 'react-icons/md';
 export const teacherMainNavItems: NavItem[] = [
@@ -80,6 +81,11 @@ export const teacherMainNavItems: NavItem[] = [
     //     href: '#',
     //     icon: FaGraduationCap,
     // },
+    {
+        title: 'Soumissions',
+        href: submissions(),
+        icon: FaCloudUploadAlt,
+    },
 ];
 
 export const teacherFooterNavItems: NavItem[] = [

@@ -14,14 +14,20 @@ import {
     activityScopeLabels,
     ActivityType,
     activityTypeLabels,
+    DeliverableType,
     deliverableTypeLabels,
     evaluateTypeLabels,
+    FileType,
+    fileTypeLabels,
+    getDeliverableTypeLabel,
+    getFileTypeLabel,
     ModalityType,
     modalityTypeLabels,
     noteUnitLabels,
     plateformeConferenceLabels,
 } from '@/lib/type';
 
+import { Divider } from '@/components/divider';
 import { TagsInput } from '@/components/shared/tags-input';
 import { Button } from '@/components/ui/button';
 import TeacherLayouts from '@/layouts/teacher/teacher-layouts';
@@ -29,7 +35,12 @@ import { ACTIVITY_RULES } from '@/lib/activityRules';
 import { sendSyllabusToApi } from '@/lib/tasks';
 import { getEntityData } from '@/routes/teachers';
 import { store, update } from '@/routes/teachers/activities';
-import { Course, CourseActivity } from '@/types/models/course';
+import {
+    Course,
+    CourseActivity,
+    DeliverableRequirements,
+} from '@/types/models/course';
+import { Trash2 } from 'lucide-react';
 import CustomTextEditor from '../courses/text-editor';
 
 type DataType = {
@@ -45,7 +56,6 @@ export default function ActivityForm() {
         nextOrder?: number;
     };
     const { errors } = usePage().props;
-    console.log('error', errors);
 
     const isEdit = Boolean(activity);
 
@@ -68,12 +78,24 @@ export default function ActivityForm() {
         max_group_size: activity?.max_group_size ?? null,
 
         has_deliverable: !!activity?.has_deliverable,
-        deliverable_type: activity?.deliverable_type ?? '',
-        deliverable_deadline: activity?.deliverable_deadline ?? null,
+        deliverable_deadline: activity?.deliverable_deadline
+            ? new Date(activity.deliverable_deadline).toISOString().slice(0, 16)
+            : null,
+        deliverable_count: activity?.deliverable_count ?? 1,
+        deliverable_type: '',
+        allow_deliverable_file_type: '',
+        deliverable_title: '',
+        deliverable_max_size: 1,
+        deliverable_types: '',
+        deliverable_requirements: isEdit
+            ? (activity?.deliv_requirements ??
+              ([] as DeliverableRequirements[]))
+            : ([] as DeliverableRequirements[]),
 
         is_evaluated: !!activity?.is_evaluated,
         evaluation_type: activity?.evaluation_type ?? '',
         evaluation_weight: activity?.evaluation_weight ?? null,
+        evaluation_max_weight: activity?.evaluation_max_weight ?? null,
         note_unit: activity?.note_unit ?? '',
         allow_late_submission: !!activity?.allow_late_submission,
 
@@ -109,6 +131,7 @@ export default function ActivityForm() {
         is_visible: activity?.is_visible ?? true,
     });
 
+    console.log('req ', activity?.deliv_requirements);
     const [processing, setProcessing] = useState(false);
 
     const rules = useMemo(
@@ -136,7 +159,6 @@ export default function ActivityForm() {
     useEffect(() => {
         if (!rules?.canHaveDeliverable && data.has_deliverable) {
             setData('has_deliverable', false);
-            setData('deliverable_type', '');
             setData('deliverable_deadline', null);
         }
     }, [data.has_deliverable, rules?.canHaveDeliverable, setData]);
@@ -231,23 +253,35 @@ export default function ActivityForm() {
         e.preventDefault();
         setProcessing(true);
         async function submitSyllabusToApi() {
-            await sendSyllabusToApi(isEdit ? activity?.id : 0).then(() => {
-                const payload = {
-                    ...data,
-                    _method: isEdit ? 'put' : 'post',
-                };
-                setData('is_synchronous', is_synchronous);
+            await sendSyllabusToApi(isEdit ? (activity?.id ?? 0) : 0).then(
+                () => {
+                    setData('is_synchronous', is_synchronous);
+                    const payload = {
+                        ...data,
+                        allowed_tools: JSON.stringify(data.allowed_tools),
+                        deliverable_requirements: JSON.stringify(
+                            data.deliverable_requirements,
+                        ),
+                    };
 
-                if (isEdit && activity) {
-                    router.put(update([course.slug, activity.id]), payload, {
-                        onFinish: () => setProcessing(false),
-                    });
-                } else {
-                    router.post(store(course.slug), payload, {
-                        onFinish: () => setProcessing(false),
-                    });
-                }
-            });
+                    if (isEdit && activity) {
+                        router.put(
+                            update([course.slug, activity.id]),
+                            payload,
+                            {
+                                onFinish: () => setProcessing(false),
+                            },
+                        );
+                    } else {
+                        router.post(store(course.slug), payload, {
+                            onFinish: () => {
+                                setProcessing(false);
+                                console.log('errors', errors);
+                            },
+                        });
+                    }
+                },
+            );
         }
         submitSyllabusToApi();
     };
@@ -262,13 +296,62 @@ export default function ActivityForm() {
             data.modality &&
             (!is_synchronous || (data.start_at && data.duration_minutes)) &&
             (!data.is_evaluated || data.evaluation_type) &&
-            (!data.has_deliverable || data.deliverable_type),
+            (!data.has_deliverable ||
+                data.deliverable_requirements.length ===
+                    data.deliverable_count),
     );
     const showSelectEntity =
         modulesData.length > 0 ||
         sequencesData.length > 0 ||
         data.scope == 'course';
+    function setDeliverableRequirements(e: React.MouseEvent) {
+        e.preventDefault();
+        if (
+            !data.has_deliverable ||
+            !data.deliverable_title ||
+            !data.deliverable_type ||
+            data.deliverable_requirements.length === data.deliverable_count
+        )
+            return;
+        let id = 1;
+        if (
+            data.deliverable_requirements &&
+            data.deliverable_requirements.length > 0
+        ) {
+            id =
+                data.deliverable_requirements[
+                    data.deliverable_requirements.length - 1
+                ].id + 1;
+        }
+        setData('deliverable_requirements', [
+            ...data.deliverable_requirements,
 
+            {
+                id: id,
+                order: id,
+                title: data.deliverable_title,
+                file_type: data.deliverable_type as DeliverableType,
+                max_size_mb: data.deliverable_max_size,
+                allowed_file_type:
+                    data.deliverable_type == 'file'
+                        ? data.allow_deliverable_file_type
+                        : undefined,
+            },
+        ]);
+    }
+    const showRequirementsForm =
+        data.has_deliverable &&
+        data.deliverable_count > 0 &&
+        data.deliverable_requirements.length < data.deliverable_count;
+    const showRequirements = Boolean(
+        data.has_deliverable && data.deliverable_requirements.length > 0,
+    );
+    const disabledRequirementBtn = Boolean(
+        !data.deliverable_title ||
+            !data.deliverable_type ||
+            (data.deliverable_type == 'file' &&
+                !data.allow_deliverable_file_type),
+    );
     return (
         <TeacherLayouts
             title={isEdit ? 'Modifier activité' : 'Nouvelle activité'}
@@ -335,6 +418,7 @@ export default function ActivityForm() {
                             }}
                             options={activityScopeLabels}
                             required
+                            error={errors.scope}
                         />
                         {c_modality != 'asynchronous' && (
                             <SelectField
@@ -345,6 +429,7 @@ export default function ActivityForm() {
                                 }
                                 options={modalityTypeLabels}
                                 required
+                                error={errors.modality}
                             />
                         )}{' '}
                     </div>
@@ -365,6 +450,7 @@ export default function ActivityForm() {
                                         }
                                         options={modulesData}
                                         required
+                                        error={errors.module_id}
                                     />
                                 </div>
                             )}
@@ -379,6 +465,7 @@ export default function ActivityForm() {
                                         }
                                         options={sequencesData}
                                         required
+                                        error={errors.sequence_id}
                                     />
                                 </div>
                             )}
@@ -397,6 +484,7 @@ export default function ActivityForm() {
                                     onChange={(v) =>
                                         setData('order', Number(v))
                                     }
+                                    error={errors.order}
                                 />
                             </div>
                         </fieldset>
@@ -426,6 +514,8 @@ export default function ActivityForm() {
                                             setData('evaluation_type', v)
                                         }
                                         options={evaluateTypeLabels}
+                                        required
+                                        error={errors.evaluation_type}
                                     />
                                     <SelectField
                                         label="Unité de notation"
@@ -437,17 +527,36 @@ export default function ActivityForm() {
                                         required
                                         error={errors.note_unit}
                                     />
-                                    <InputField
-                                        label={`Poids (${data.note_unit})`}
-                                        type="number"
-                                        value={data.evaluation_weight ?? ''}
-                                        onChange={(v) =>
-                                            setData(
-                                                'evaluation_weight',
-                                                v ? Number(v) : null,
-                                            )
-                                        }
-                                    />
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <InputField
+                                            label={`Note maximale (${data.note_unit})`}
+                                            type="number"
+                                            value={
+                                                data.evaluation_max_weight ?? ''
+                                            }
+                                            required
+                                            onChange={(v) =>
+                                                setData(
+                                                    'evaluation_max_weight',
+                                                    v ? Number(v) : null,
+                                                )
+                                            }
+                                            error={errors.evaluation_max_weight}
+                                        />
+                                        <InputField
+                                            label={`Moyènne (${data.note_unit})`}
+                                            type="number"
+                                            required
+                                            value={data.evaluation_weight ?? ''}
+                                            onChange={(v) =>
+                                                setData(
+                                                    'evaluation_weight',
+                                                    v ? Number(v) : null,
+                                                )
+                                            }
+                                            error={errors.evaluation_weight}
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -465,14 +574,16 @@ export default function ActivityForm() {
                     {data.has_deliverable && (
                         <div className="my-6">
                             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                                <SelectField
-                                    label="Type de soumission"
-                                    value={data.deliverable_type}
-                                    onChange={(v) =>
-                                        setData('deliverable_type', v)
-                                    }
-                                    options={deliverableTypeLabels}
+                                <InputField
+                                    label="Nombre de soumissions attendues"
+                                    type="number"
+                                    value={data.deliverable_count ?? 1}
+                                    min="1"
                                     required
+                                    onChange={(v) =>
+                                        setData('deliverable_count', Number(v))
+                                    }
+                                    error={errors.deliverable_count}
                                 />
 
                                 <InputField
@@ -482,7 +593,183 @@ export default function ActivityForm() {
                                     onChange={(v) =>
                                         setData('deliverable_deadline', v)
                                     }
+                                    error={errors.deliverable_deadline}
                                 />
+                                <fieldset className="mb-4 rounded border border-gray-200 p-4 shadow-md sm:col-span-2">
+                                    <legend className="text-sm font-medium text-gray-900">
+                                        Infos sur le(s) livrable(s) attendue(s)
+                                    </legend>
+                                    {errors &&
+                                        errors.deliverable_requirements && (
+                                            <p className="mt-1 text-sm text-red-600">
+                                                {
+                                                    errors.deliverable_requirements
+                                                }
+                                            </p>
+                                        )}
+                                    {showRequirementsForm && (
+                                        <div>
+                                            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                                <InputField
+                                                    label="Titre du livrable"
+                                                    type="text"
+                                                    value={
+                                                        data.deliverable_title
+                                                    }
+                                                    placeholder='ex: "Rapport de laboratoire", "Fichier de code", "Document de réflexion", etc.'
+                                                    required
+                                                    onChange={(v) =>
+                                                        setData(
+                                                            'deliverable_title',
+                                                            v,
+                                                        )
+                                                    }
+                                                />
+                                                <InputField
+                                                    label="Taille maximum (en Mo)"
+                                                    type="number"
+                                                    value={
+                                                        data.deliverable_max_size ??
+                                                        1
+                                                    }
+                                                    min="1"
+                                                    required
+                                                    onChange={(v) =>
+                                                        setData(
+                                                            'deliverable_max_size',
+                                                            Number(v),
+                                                        )
+                                                    }
+                                                />
+                                                <SelectField
+                                                    label="Type de soumission"
+                                                    value={
+                                                        data.deliverable_type as DeliverableType
+                                                    }
+                                                    emptyOption='ex: "Fichier", "Texte en ligne", "Lien vers un dépôt Git", etc.'
+                                                    onChange={(v) =>
+                                                        setData(
+                                                            'deliverable_type',
+                                                            v,
+                                                        )
+                                                    }
+                                                    options={
+                                                        deliverableTypeLabels
+                                                    }
+                                                    required
+                                                />
+
+                                                {data.deliverable_type ==
+                                                    'file' && (
+                                                    <SelectField
+                                                        label="Type de fichier autorisé"
+                                                        value={
+                                                            data.allow_deliverable_file_type ??
+                                                            ('' as FileType)
+                                                        }
+                                                        onChange={(v) =>
+                                                            setData(
+                                                                'allow_deliverable_file_type',
+                                                                v as FileType,
+                                                            )
+                                                        }
+                                                        options={fileTypeLabels}
+                                                        disabled={
+                                                            data.deliverable_type !=
+                                                            'file'
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
+                                            <button
+                                                className={`btn-primary mt-4 ${
+                                                    disabledRequirementBtn &&
+                                                    'cursor-not-allowed opacity-50'
+                                                }`}
+                                                onClick={
+                                                    setDeliverableRequirements
+                                                }
+                                                disabled={
+                                                    disabledRequirementBtn
+                                                }
+                                            >
+                                                Ajouter un livrable attendu
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {showRequirements && (
+                                        <div className="mt-4">
+                                            {showRequirementsForm && (
+                                                <Divider />
+                                            )}
+                                            <h3 className="mb-2 text-lg font-semibold">
+                                                Livrables attendus
+                                            </h3>
+
+                                            {data.deliverable_requirements.map(
+                                                (req) => (
+                                                    <div
+                                                        key={req.id}
+                                                        className="p- mb-2 rounded border bg-gray-100 p-3 shadow-sm"
+                                                    >
+                                                        <div className="flex flex-wrap items-center justify-between">
+                                                            <div>
+                                                                <p className="font-medium">
+                                                                    {req.title}
+                                                                </p>
+                                                                <p className="text-sm text-gray-600">
+                                                                    Type:{' '}
+                                                                    {getDeliverableTypeLabel(
+                                                                        req.file_type as DeliverableType,
+                                                                    )}
+                                                                </p>
+                                                                {req.file_type ==
+                                                                    'file' && (
+                                                                    <p className="text-sm text-gray-600">
+                                                                        Fichier
+                                                                        autorisé
+                                                                        :{' '}
+                                                                        {getFileTypeLabel(
+                                                                            req.allowed_file_type as FileType,
+                                                                        )}
+                                                                    </p>
+                                                                )}
+                                                                {req.max_size_mb && (
+                                                                    <p className="text-sm text-gray-600">
+                                                                        Taille
+                                                                        max:{' '}
+                                                                        {
+                                                                            req.max_size_mb
+                                                                        }{' '}
+                                                                        Mo
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                            <Button
+                                                                variant="destructive"
+                                                                onClick={() => {
+                                                                    setData(
+                                                                        'deliverable_requirements',
+                                                                        data.deliverable_requirements.filter(
+                                                                            (
+                                                                                r,
+                                                                            ) =>
+                                                                                r.id !==
+                                                                                req.id,
+                                                                        ),
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                ),
+                                            )}
+                                        </div>
+                                    )}
+                                </fieldset>
                             </div>
                             <div className="mt-4 flex gap-3">
                                 <CheckboxField
@@ -503,6 +790,7 @@ export default function ActivityForm() {
                                                 v ? Number(v) : null,
                                             )
                                         }
+                                        error={errors.max_attempts}
                                     />
                                 )}
                             </div>
@@ -590,6 +878,7 @@ export default function ActivityForm() {
                                                     v ? Number(v) : null,
                                                 )
                                             }
+                                            error={errors.max_group_size}
                                         />
                                     )}
                                 </div>
@@ -608,6 +897,7 @@ export default function ActivityForm() {
                                         type="datetime-local"
                                         value={data.start_at ?? ''}
                                         onChange={(v) => setData('start_at', v)}
+                                        error={errors.start_at}
                                     />
 
                                     <InputField
@@ -621,6 +911,7 @@ export default function ActivityForm() {
                                                 v ? Number(v) : null,
                                             )
                                         }
+                                        error={errors.duration_minutes}
                                     />
                                 </div>
                                 {showConference && (
@@ -644,6 +935,9 @@ export default function ActivityForm() {
                                                     plateformeConferenceLabels
                                                 }
                                                 required
+                                                error={
+                                                    errors.conference_platform
+                                                }
                                             />
 
                                             <InputField
@@ -653,6 +947,7 @@ export default function ActivityForm() {
                                                 onChange={(v) =>
                                                     setData('conference_url', v)
                                                 }
+                                                error={errors.conference_url}
                                             />
                                             <InputField
                                                 label="Meeting ID"
@@ -665,6 +960,9 @@ export default function ActivityForm() {
                                                         v,
                                                     )
                                                 }
+                                                error={
+                                                    errors.conference_meeting_id
+                                                }
                                             />
                                             <InputField
                                                 label="Code"
@@ -674,6 +972,9 @@ export default function ActivityForm() {
                                                         'conference_passcode',
                                                         v,
                                                     )
+                                                }
+                                                error={
+                                                    errors.conference_passcode
                                                 }
                                             />
                                         </div>
@@ -725,7 +1026,7 @@ export default function ActivityForm() {
                             onChange={() => null}
                         />
                     </div>
-                    <div className="my-6 grid gap-3 sm:grid-cols-2">
+                    <div className="my-6">
                         {/* Feedback */}
                         {rules?.canRequestFeedback && (
                             <fieldset className="mb-6 rounded border border-gray-200 p-4">
@@ -756,12 +1057,12 @@ export default function ActivityForm() {
                                 </div>
                             </fieldset>
                         )}
-                        <CheckboxField
-                            label="Visible"
-                            checked={data.is_visible == true}
-                            onChange={(v) => setData('is_visible', v)}
-                        />
                     </div>
+                    <CheckboxField
+                        label="Visible"
+                        checked={data.is_visible == true}
+                        onChange={(v) => setData('is_visible', v)}
+                    />
 
                     <div className="my-6">
                         <h3 className="mb-3 text-2xl font-semibold">

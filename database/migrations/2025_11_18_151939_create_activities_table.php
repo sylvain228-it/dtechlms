@@ -16,6 +16,8 @@ return new class extends Migration
             // Relation séquence
 
             $table->foreignId('parent_course_id')->constrained('courses')->cascadeOnDelete();
+            $table->foreignId('grading_scale_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('rubric_id')->nullable()->constrained()->nullOnDelete();
 
             $table->enum('scope', ['course', 'module', 'sequence'])->default('sequence');
             $table->foreignId('course_id')->nullable()->constrained('courses')->nullOnDelete();
@@ -64,7 +66,7 @@ return new class extends Migration
 
             // Livrables
             $table->boolean('has_deliverable')->default(false);
-            $table->enum('deliverable_type', ['file', 'link', 'github_repo_link', 'video', 'audio', 'text'])->nullable(); // fichier, lien, dépôt git
+            $table->integer('deliverable_count')->nullable();
             $table->text('deliverable_requirements')->nullable();
             $table->timestamp('deliverable_deadline')->nullable();
 
@@ -77,6 +79,7 @@ return new class extends Migration
             ])->nullable();
 
             $table->decimal('evaluation_weight', 5, 2)->nullable();
+            $table->decimal('evaluation_max_weight', 5, 2)->nullable();
             $table->enum('note_unit', ['%', 'pt'])->nullable();
 
             $table->enum('evaluation_mode', [
@@ -90,7 +93,7 @@ return new class extends Migration
             // Feedback et accompagnement
             $table->boolean('requires_feedback')->default(false);
             $table->text('feedback_instructions')->nullable();
-            $table->boolean('allows_resubmission')->default(false);
+            $table->boolean('allow_resubmission')->default(false);
             $table->unsignedInteger('max_attempts')->default(1);
 
             // new field
@@ -120,6 +123,11 @@ return new class extends Migration
 
             $table->enum('status', [
                 'draft',
+                'review',
+                'published',
+                'archived',
+            ])->default('draft');
+            $table->enum('activity_status', [
                 'scheduled',
                 'live',
                 'completed',
@@ -128,7 +136,7 @@ return new class extends Migration
                 'closed',
                 'corrected',
                 'archived',
-            ])->default('draft');
+            ])->default('scheduled');
 
             $table->boolean('is_mandatory')->default(true);
             $table->boolean('is_visible')->default(true);

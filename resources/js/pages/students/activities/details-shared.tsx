@@ -1,11 +1,12 @@
 import { Divider } from '@/components/divider';
 import GetHtmlContent from '@/lib/get-html-content';
-import { getResourceIcon } from '@/lib/simple-utility';
 import {
-    DeliverableType,
+    DeliverableRequirementsList,
+    getResourceIcon,
+} from '@/lib/simple-utility';
+import {
     EvaluateType,
     getActivityTypeLabel,
-    getDeliverableTypeLabel,
     getEvaluateTypeLabel,
     getPlateformeConferenceLabel,
     ResourceType,
@@ -15,6 +16,7 @@ import {
     formatCompleteDate,
     formatMinutes,
 } from '@/lib/utils';
+import { create, show } from '@/routes/students/activities/submissions';
 import { details as quizeDetails } from '@/routes/students/quizzes';
 import { CourseActivity } from '@/types/models/course';
 import { EntityResource, Resource } from '@/types/models/others';
@@ -35,11 +37,13 @@ export default function ActivityDetailsShered({
         activity.activity_type == 'discussion';
 
     const quiz = activity.activity_type == 'quiz' ? activity.quiz : null;
+    const deliverableRequirements = activity.deliv_requirements;
+    const submission = activity.submission;
     return (
         <div className="min-h-screen">
             {/* Main Content */}
             <div className="px-2 py-8 sm:px-6">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-2 sm:gap-4 lg:grid-cols-3">
                     {/* Left: Content Area */}
                     <div className="space-y-6 lg:col-span-2">
                         {/* Activity Card */}
@@ -125,7 +129,7 @@ export default function ActivityDetailsShered({
                                         </h3>
                                         <Separator className="my-3" />
                                         <div className="grid gap-4 md:grid-cols-3">
-                                            <div>
+                                            <div className="flex items-center justify-between gap-3">
                                                 <div className="text-sm text-gray-500">
                                                     Evaluée
                                                 </div>
@@ -137,11 +141,11 @@ export default function ActivityDetailsShered({
                                             </div>
                                             {activity.is_evaluated && (
                                                 <>
-                                                    <div>
+                                                    <div className="flex flex-wrap items-center justify-between gap-3">
                                                         <div className="text-sm text-gray-500">
                                                             Type d'évaluation
                                                         </div>
-                                                        <div className="mt-1 text-sm font-bold text-gray-900">
+                                                        <div className="mt-1 line-clamp-1 text-sm font-bold text-gray-900">
                                                             {activity.evaluation_type
                                                                 ? getEvaluateTypeLabel(
                                                                       activity.evaluation_type as EvaluateType,
@@ -149,9 +153,19 @@ export default function ActivityDetailsShered({
                                                                 : '-'}
                                                         </div>
                                                     </div>
-                                                    <div>
+                                                    <div className="flex items-center justify-between gap-3">
                                                         <div className="text-sm text-gray-500">
-                                                            Poids
+                                                            Note maximale
+                                                        </div>
+                                                        <div className="mt-1 text-sm font-bold text-gray-900">
+                                                            {activity.evaluation_max_weight ??
+                                                                '-'}
+                                                            {activity.note_unit}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center justify-between gap-3">
+                                                        <div className="text-sm text-gray-500">
+                                                            Moyènne
                                                         </div>
                                                         <div className="mt-1 text-sm font-bold text-gray-900">
                                                             {activity.evaluation_weight ??
@@ -166,7 +180,7 @@ export default function ActivityDetailsShered({
                                         <Separator className="my-3" />
 
                                         <div className="grid gap-4 md:grid-cols-3">
-                                            <div>
+                                            <div className="flex items-center justify-between gap-3">
                                                 <div className="text-sm text-gray-500">
                                                     A un livrable
                                                 </div>
@@ -179,18 +193,24 @@ export default function ActivityDetailsShered({
                                             </div>
                                             {activity.has_deliverable && (
                                                 <>
-                                                    <div>
+                                                    <div className="flex items-center justify-between gap-3">
                                                         <div className="text-sm text-gray-500">
-                                                            Type
+                                                            Nombre de livrables
+                                                            requis
                                                         </div>
                                                         <div className="mt-1 text-sm font-bold text-gray-900">
-                                                            {activity.deliverable_type
-                                                                ? getDeliverableTypeLabel(
-                                                                      activity.deliverable_type as DeliverableType,
-                                                                  )
-                                                                : '-'}
+                                                            {
+                                                                activity.deliverable_count
+                                                            }
                                                         </div>
                                                     </div>
+                                                    {deliverableRequirements && (
+                                                        <DeliverableRequirementsList
+                                                            requirements={
+                                                                deliverableRequirements
+                                                            }
+                                                        />
+                                                    )}
                                                     <div>
                                                         <div className="text-sm text-gray-500">
                                                             Date limite
@@ -209,18 +229,6 @@ export default function ActivityDetailsShered({
                                         <Separator className="my-3" />
 
                                         <div className="grid gap-4 md:grid-cols-3">
-                                            {activity.requires_feedback && (
-                                                <div>
-                                                    <div className="text-sm text-gray-500">
-                                                        Feedback requis
-                                                    </div>
-                                                    <div className="mt-1 text-sm font-bold text-gray-900">
-                                                        {activity.requires_feedback
-                                                            ? 'Oui'
-                                                            : 'Non'}
-                                                    </div>
-                                                </div>
-                                            )}
                                             {activity.has_deliverable && (
                                                 <>
                                                     <div>
@@ -234,6 +242,7 @@ export default function ActivityDetailsShered({
                                                                 : 'Non'}
                                                         </div>
                                                     </div>
+
                                                     {activity.max_attempts && (
                                                         <div>
                                                             <div className="text-sm text-gray-500">
@@ -249,6 +258,20 @@ export default function ActivityDetailsShered({
                                                 </>
                                             )}
                                         </div>
+
+                                        {activity.has_deliverable && (
+                                            <Link
+                                                href={
+                                                    submission
+                                                        ? show(activity.slug)
+                                                        : create(activity.slug)
+                                                }
+                                                className="btn-primary mt-6 flex w-full max-w-[300px] items-center justify-center gap-2"
+                                            >
+                                                Soumission
+                                                <ArrowRight size={20} />
+                                            </Link>
+                                        )}
                                     </div>
 
                                     {quiz && (
